@@ -20,13 +20,22 @@ libraryDependencies ++= {
   val nscalaTimeV = "2.6.0"
   val mysqlConnectorV = "5.1.31"
   val codecV = "1.9"
-
+  val javaMailVersion = "1.5.3"
+  val scalaXmlV = "1.0.4"
+  val playSlickV = "1.1.1"
+  val slickV = "3.1.0"
+//  val httpclientVersion = "4.3.5"
+//  val httpcoreVersion = "4.3.2"
 
   Seq(
-    "mysql" % "mysql-connector-java" % mysqlConnectorV,
-    "com.typesafe.play" %% "anorm" % "2.4.0",
+    "com.typesafe.play" %% "play-slick" % playSlickV,
+    "org.scala-lang.modules" % "scala-xml_2.11" % scalaXmlV,
+    "com.typesafe.slick" %% "slick" % slickV withSources(),
+    "com.typesafe.slick" %% "slick-codegen" % slickV,
     "com.github.nscala-time" %% "nscala-time" % nscalaTimeV,
-    "commons-codec" % "commons-codec" % codecV
+    "commons-codec" % "commons-codec" % codecV,
+    "mysql" % "mysql-connector-java" % mysqlConnectorV,
+    "com.sun.mail" % "javax.mail" % javaMailVersion withSources()
   )
 
 }
@@ -41,13 +50,6 @@ libraryDependencies ++= Seq(
     "org.webjars.bower" % "reflux" % "0.2.11",
   "org.webjars" % "toastr" % "2.1.0",
     "org.webjars" % "font-awesome" % "4.4.0"
-  //  "org.webjars.bower" % "smalot-bootstrap-datetimepicker" % "2.3.1",//时间控件
-  //  "org.webjars" % "momentjs" % "2.10.6",//时间转换
-  //  "org.webjars.bower" % "bootstrap-daterangepicker" % "2.0.11",//时间区间控件
-  //  "org.webjars" % "lodash" % "3.10.1",//js扩展工具
-  //  "org.webjars" % "less" % "2.5.3",//.less文件预编译为css
-  //  "org.webjars" % "hammerjs" % "2.0.4",//绘图
-  //  "org.webjars.bower" % "raphael" % "2.1.4"//绘图
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
