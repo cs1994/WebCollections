@@ -23,8 +23,8 @@ class Manage @Inject() (
 
   private [this] val loggingAction = actionUtils.loggingAction
 
-  def setPassword() = loggingAction.async { implicit request =>
-    Future.successful(Ok(views.html.index("设置密码")))
+  def setPassword = loggingAction.async { implicit request =>
+    Future.successful(Ok(views.html.account.setPassword("设置密码")))
   }
 
 }

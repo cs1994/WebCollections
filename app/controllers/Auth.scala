@@ -44,7 +44,7 @@ class Auth @Inject()(  emailFunc:Email,
     )
   )
   def registerPage = Action {
-    Ok(views.html.index("注册"))
+    Ok(views.html.account.index("注册"))
   }
 
  def sendConfirmEmail(email:String) = Action.async{
