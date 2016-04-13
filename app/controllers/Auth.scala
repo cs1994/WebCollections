@@ -43,16 +43,16 @@ class Auth @Inject()(  emailFunc:Email,
       "newpwd" -> nonEmptyText
     )
   )
+  def registerPage = Action {
+    Ok(views.html.index("注册"))
+  }
 
-
-  def sendConfirmEmail(email:String) = Action.async{
-
+ def sendConfirmEmail(email:String) = Action.async{
     if(ValidateUtil.isEmail(email)){
       val token = GenCodeUtil.get64Token()
       val curTimestamp = System.currentTimeMillis()
       val expiredTime = curTimestamp + 24*60*60*1000L
-      emailFunc.SendConfirmEmailTask(token,email)
-
+      emailFunc.SendRegisterEmailTask(token,email)
       emailValidateDao.add(email,token,expiredTime,curTimestamp).map{
         result =>
           if(emailFunc.sendSuccess && result>0){
@@ -64,6 +64,18 @@ class Auth @Inject()(  emailFunc:Email,
       }
     }else{
       Future.successful(Ok(CustomerErrorCode.invalidEmailFormat))
+    }
+  }
+  def validateRegisterEmail(token:String) = Action.async{
+
+    val curTimestamp = System.currentTimeMillis()
+
+    emailValidateDao.updateStateByToken(token,1,curTimestamp).map{rows=>
+      if(rows>0){
+        Redirect(s"/register/setpassword?token=$token")
+      }else{
+        Ok(jsonResult(10000,"验证邮箱失败"))
+      }
     }
   }
 }

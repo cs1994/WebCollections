@@ -31,29 +31,30 @@ class Email @Inject()(
   def getEbuptSession = {
     Session.getInstance(props,new MyAuthenticator(appSettings.WORLDMALL_EMAIL_ADDRESS, appSettings.WORLDMALL_EMAIL_PASSWORD))
   }
-  def sendConfirmEmail(token:String,email:String) = {
-
-    val confirmUrl = s"${appSettings.deployHost}mail/validate_confirm?token=$token"
+  def sendRegisterEmail(token:String,email:String) = {
+    val confirmUrl = s"${appSettings.deployHost}mail/validate_register?token=$token"
 
     val session = getEbuptSession
 
     val FROM = appSettings.WORLDMALL_EMAIL_ADDRESS
+
     val message = new MimeMessage(session)
     message.setFrom(new InternetAddress(FROM))
 
+
     message.setRecipient(RecipientType.TO,new InternetAddress(email))
-    message.setSubject("激活账号")
+    message.setSubject("欢迎加入")
     message.setSentDate(new Date)
     val mainPart = new MimeMultipart
     val html = new MimeBodyPart
-    html.setContent(EmailUtil.getConfirmEmailHtml(appSettings.deployHost,confirmUrl,email), "text/html; charset=utf-8")
+    html.setContent(EmailUtil.getRegisterEamilHtml(appSettings.deployHost,confirmUrl,email), "text/html; charset=utf-8")
     mainPart.addBodyPart(html)
     message.setContent(mainPart)
     Transport.send(message)
   }
-  def SendConfirmEmailTask(token:String,email:String)={
+  def SendRegisterEmailTask(token:String,email:String)={
     Future{
-      sendConfirmEmail(token,email)
+      sendRegisterEmail(token,email)
     }.onComplete{
       case Success(bool) => {
         sendSuccess = true

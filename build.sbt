@@ -44,12 +44,15 @@ libraryDependencies ++= {
 // frontend
 libraryDependencies ++= Seq(
   "org.webjars" % "webjars-play_2.11" % "2.4.0-1",
-  //  "org.webjars" % "bootstrap" % "3.3.5",
-    "org.webjars" % "react" % "0.13.3",
-    "org.webjars.bower" % "react-router" % "0.13.3",
-    "org.webjars.bower" % "reflux" % "0.2.11",
+  "org.webjars" % "bootstrap" % "3.3.5",
+  "org.webjars" % "react" % "0.13.3",
+  "org.webjars.bower" % "react-router" % "0.13.3",
+  "org.webjars.bower" % "reflux" % "0.2.11",
   "org.webjars" % "toastr" % "2.1.0",
-    "org.webjars" % "font-awesome" % "4.4.0"
+  "org.webjars" % "font-awesome" % "4.4.0",
+  "org.webjars.bower" % "smalot-bootstrap-datetimepicker" % "2.3.1",
+  "org.webjars" % "momentjs" % "2.10.6",
+  "org.webjars.bower" % "bootstrap-daterangepicker" % "2.0.11"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
