@@ -4,6 +4,23 @@
     global.components = {};
     var stores = global.stores;
     var actions = global.actions;
+    components.RegisterHeader = React.createClass({
+        render:function(){
+            return(
+                <div className="registerHeader">
+                    <div style={{width:"50%",display:"inline-block"}}>
+                        <p style={{borderRight:"3px solid #777"}}>收藏</p>
+                        <p>注册</p>
+                    </div>
+                    <div style={{width:'50%',display:"inline-block",textAlign:"right"}}>
+                        <p style={{fontSize:"18px"}}>已有账号？</p>
+                        <button>登录</button>
+                    </div>
+                </div>
+            )
+        }
+    });
+
     components.Register = React.createClass({
         mixins:[
             Reflux.connect(stores.registerStore,"data"),
@@ -18,16 +35,7 @@
         render:function(){
             return(
                 <div className="register">
-                    <div className="registerHeader">
-                       <div style={{width:"50%",display:"inline-block"}}>
-                           <p style={{borderRight:"3px solid #777"}}>收藏</p>
-                           <p>注册</p>
-                       </div>
-                        <div style={{width:"50%",display:"inline-block",textAlign:"right"}}>
-                            <p style={{fontSize:"18px"}}>已有账号？</p>
-                            <button>登录</button>
-                        </div>
-                    </div>
+                    <components.RegisterHeader />
                     <div className="registerContent">
                         <p > 请输入您要注册的邮箱</p>
                         <input type="text" id="emailInput" placeholder="邮箱"/>
@@ -37,6 +45,8 @@
             )
         }
     });
+
+
 
     components.SetPassWord = React.createClass({
         mixins:[
@@ -77,16 +87,7 @@
         render:function(){
             return(
                 <div className="register">
-                    <div className="registerHeader">
-                        <div style={{width:"50%",display:"inline-block"}}>
-                            <p style={{borderRight:"3px solid #777"}}>收藏</p>
-                            <p>注册</p>
-                        </div>
-                        <div style={{width:'50%',display:"inline-block",textAlign:"right"}}>
-                            <p style={{fontSize:"18px"}}>已有账号？</p>
-                            <button>登录</button>
-                        </div>
-                    </div>
+                    <components.RegisterHeader />
                     <div className="registerContent">
                         <p> 设置用户名和密码</p>
                         <div style={{marginBottom:"20px"}}>
