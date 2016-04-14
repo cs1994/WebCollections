@@ -5,22 +5,28 @@
     global.stores.registerStore = Reflux.createStore({
         listenables: [global.actions.registerAction],
         init: function(){
-            this.notices = {}
+            this.state = 0;
+            this.email="";
         },
         getInitialState:function(){
             return{
-                notices:this.notices
+                state:this.state,
+                email:this.email
             }
         },
         updateStore: function(){
             this.trigger({
-                notices:this.notices,
+                state:this.state,
+                email:this.email
             })
         },
         onSendEmail:function(email){
             var url ="/register/sendEmail?email="+email;
             var successFunc = function (result) {
                 console.log("发送成功");
+                this.state=1;
+                this.email=email;
+                this.updateStore();
             }.bind(this);
             ajaxGet(url,successFunc);
         },

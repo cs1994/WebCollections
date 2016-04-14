@@ -32,15 +32,27 @@
                 actions.registerAction.sendEmail(email)
             }
         },
+        loginEmail:function(){
+            var emailType = this.state.data.email.split("@")[1].split(".")[0]
+            var url = WebUtil.findfullemail(emailType)
+            window.open(url);
+        },
         render:function(){
+            var dom = this.state.data.state == 0 ?
+                <div className="registerContent">
+                    <p > 请输入您要注册的邮箱</p>
+                    <input type="text" id="emailInput" placeholder="邮箱"/>
+                    <button onClick={this.submit} >同意协议并注册</button>
+                </div>
+                :
+                <div className="registerContent">
+                    <p > 一封邮件已经发送到您的：{this.state.data.email}邮箱</p>
+                    <button onClick={this.loginEmail}>马上验证</button>
+                </div>
             return(
                 <div className="register">
                     <components.RegisterHeader />
-                    <div className="registerContent">
-                        <p > 请输入您要注册的邮箱</p>
-                        <input type="text" id="emailInput" placeholder="邮箱"/>
-                        <button onClick={this.submit} >同意协议并注册</button>
-                    </div>
+                    {dom}
                 </div>
             )
         }
