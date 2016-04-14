@@ -126,9 +126,8 @@
 
     components.ForgetPassword = React.createClass({
         mixins:[
-            Reflux.connect(stores.registerStore,"data"),
-            ],
-        submit:function(){
+            Reflux.connect(stores.registerStore,"data")],
+        resetPassword:function(){
             var email = $("#emailInput").val()
             if(WebUtil.isEmail(email)){
                 actions.registerAction.sendEmail(email)
@@ -151,8 +150,10 @@
                     <div className="registerContent">
                         <p> 请输入您的邮箱</p>
                         <input type="text" id="emailInput" placeholder="邮箱"/>
+                        <br/>
                         <span>此功能将会发送一个重置密码的邮件到输入的邮箱，即可重置密码。</span>
-                        <button onClick={this.submit} >发送邮件</button>
+                        <br/>
+                        <button onClick={this.resetPassword} style={{marginTop:"20px"}}>发送邮件</button>
                     </div>
                 </div>
             )

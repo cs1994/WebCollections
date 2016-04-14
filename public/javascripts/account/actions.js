@@ -5,6 +5,7 @@
     global.actions.registerAction = Reflux.createActions([
         'sendEmail',
         'setPassWord',
+        'resetPassword',
     ]);
 
 

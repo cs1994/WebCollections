@@ -39,6 +39,16 @@
                     alert(res.msg);
                 }
             }.bind(this));
+        },
+        onResetPassword:function(){
+            var url ="/register/sendEmail?email="+email;
+            var successFunc = function (result) {
+                console.log("发送成功");
+                this.state=1;
+                this.email=email;
+                this.updateStore();
+            }.bind(this);
+            ajaxGet(url,successFunc);
         }
     });
 }(window.React, window.ReactRouter, window.Reflux, window));
