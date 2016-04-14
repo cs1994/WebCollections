@@ -161,32 +161,46 @@
             }
         },
         render:function(){
-            var Dom=
-                $TAG$==1?
-                    <div className="registerContent">
-                        <p> 请输入您的邮箱</p>
-                        <input type="text" id="emailInput" placeholder="邮箱"/>
-                        <br/>
-                        <span>此功能将会发送一个重置密码的邮件到输入的邮箱，即可重置密码。</span>
-                        <br/>
-                        <button onClick={this.resetPassword} style={{marginTop:"20px"}}>发送邮件</button>
-                    </div>
-                    :
-                    <div className="registerContent">
-                        <div style={{marginBottom:"20px"}}>
-                            <p style={{display:"inline-block",width:"80px",textAlign:"right",margin:0}}>登录密码</p>
-                            <input type="text" id="passwordInput" type="password" placeholder="登陆密码（8-20位）" style={{display:"inline-block"}}
-                                   onBlur={this.judgeStrong}   />
-                            <p id="passP"style={{margin:0,display:"none",fontSize:"14px"}}>密码格式有误（8-20位）</p>
+            var Dom= null;
+                switch(this.state.data.findState){
+                    case 1:
+                        Dom=
+                        <div className="registerContent">
+                            <p> 请输入您的邮箱</p>
+                            <input type="text" id="emailInput" placeholder="邮箱"/>
+                            <br/>
+                            <span>此功能将会发送一个重置密码的邮件到输入的邮箱，即可重置密码。</span>
+                            <br/>
+                            <button onClick={this.resetPassword} style={{marginTop:"20px"}}>发送邮件</button>
                         </div>
-                        <div style={{marginBottom:"20px"}}>
-                            <p style={{display:"inline-block",width:"80px",textAlign:"right",margin:0}}>确认密码</p>
-                            <input type="text" id="confirmInput" type="password" placeholder="确认密码" style={{display:"inline-block"}}
-                                   onBlur={this.judgeSame} />
-                            <p id="confirmP" style={{margin:0,display:"none",fontSize:"14px"}}>密码不一致</p>
-                        </div>
-                        <button onClick={this.submitNewPassword} style={{marginTop:"20px"}}>确认</button>
-                    </div>
+                        break;
+                    case 2:
+                        Dom=
+                            <div className="registerContent">
+                                <p > 一封邮件已经发送到您的：{this.state.data.email}邮箱</p>
+                                <button onClick={this.loginEmail}>马上验证</button>
+                            </div>
+                        break;
+                    case 3:
+                        Dom=
+                            <div className="registerContent">
+                                <div style={{marginBottom:"20px"}}>
+                                    <p style={{display:"inline-block",width:"80px",textAlign:"right",margin:0}}>登录密码</p>
+                                    <input type="text" id="passwordInput" type="password" placeholder="登陆密码（8-20位）" style={{display:"inline-block"}}
+                                           onBlur={this.judgeStrong}   />
+                                    <p id="passP"style={{margin:0,display:"none",fontSize:"14px"}}>密码格式有误（8-20位）</p>
+                                </div>
+                                <div style={{marginBottom:"20px"}}>
+                                    <p style={{display:"inline-block",width:"80px",textAlign:"right",margin:0}}>确认密码</p>
+                                    <input type="text" id="confirmInput" type="password" placeholder="确认密码" style={{display:"inline-block"}}
+                                           onBlur={this.judgeSame} />
+                                    <p id="confirmP" style={{margin:0,display:"none",fontSize:"14px"}}>密码不一致</p>
+                                </div>
+                                <button onClick={this.submitNewPassword} style={{marginTop:"20px"}}>确认</button>
+                            </div>
+                        break;
+
+                }
             return(
                 <div className="register">
                     <div className="registerHeader">

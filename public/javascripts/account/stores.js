@@ -7,17 +7,20 @@
         init: function(){
             this.state = 0;
             this.email="";
+            this.findState = $TAG$;
         },
         getInitialState:function(){
             return{
                 state:this.state,
-                email:this.email
+                email:this.email,
+                findState:this.findState
             }
         },
         updateStore: function(){
             this.trigger({
                 state:this.state,
-                email:this.email
+                email:this.email,
+                findState:this.findState
             })
         },
         onSendEmail:function(email){
@@ -44,7 +47,14 @@
             var checkEmailUrl = "/check/email?email="+email;
             ajaxGet(checkEmailUrl,function(res){
                 if(res.is_exists){
-                    var
+                    var confirmUrl="/mail/confirm?email"+email;
+                    var successFunc = function (result) {
+                        console.log("发送成功");
+                        this.findState=2;
+                        this.email=email;
+                        this.updateStore();
+                    }.bind(this);
+                    ajaxGet(confirmUrl,successFunc);
                 }
                 else
                 toastr.warning("账户不存在")
