@@ -10,7 +10,7 @@ GET        /register/sendEmail                         @controllers.Auth.sendReg
 GET        /mail/validate_register                     @controllers.Auth.validateRegisterEmail(token:String)
 GET        /register/setpassword                       @controllers.customer.Manage.setPassword
 POST       /customer/register/email                    @controllers.customer.Manage.registerWithEmail
-POST       /customer/findPassword                      @controllers.customer.Manage.resetPasswordType()
+GET       /customer/findPassword                      @controllers.customer.Manage.resetPasswordType
 GET        /check/email                                @controllers.Auth.checkEmailExist(email:String)
 GET        /mail/confirm                               @controllers.Auth.sendConfirmEmail(email:String)
 GET        /mail/validate_confirm                      @controllers.Auth.validateConfirmEmail(token:String)
