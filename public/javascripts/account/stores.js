@@ -7,7 +7,7 @@
         init: function(){
             this.state = 0;
             this.email="";
-            this.findState = $TAG$;
+            this.findState = 0;
         },
         getInitialState:function(){
             return{
@@ -22,6 +22,10 @@
                 email:this.email,
                 findState:this.findState
             })
+        },
+        onSetFindState:function(tag){
+            this.findState=tag;
+            this.updateStore();
         },
         onSendEmail:function(email){
             var url ="/register/sendEmail?email="+email;
@@ -44,10 +48,10 @@
             }.bind(this));
         },
         onResetPassword:function(email){
-            var checkEmailUrl = "/check/email?email="+email;
+            var checkEmailUrl = "/check/email?email="+ email;
             ajaxGet(checkEmailUrl,function(res){
                 if(res.is_exists){
-                    var confirmUrl="/mail/confirm?email"+email;
+                    var confirmUrl="/mail/confirm?email="+email;
                     var successFunc = function (result) {
                         console.log("发送成功");
                         this.findState=2;
@@ -58,7 +62,7 @@
                 }
                 else
                 toastr.warning("账户不存在")
-            })
+            }.bind(this))
         }
     });
 }(window.React, window.ReactRouter, window.Reflux, window));

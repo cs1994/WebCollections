@@ -127,6 +127,9 @@
     components.ForgetPassword = React.createClass({
         mixins:[
             Reflux.connect(stores.registerStore,"data")],
+        componentWillMount(){
+            actions.registerAction.setFindState($TAG$)
+        },
         resetPassword:function(){
             var email = $("#emailInput").val()
             if(WebUtil.isEmail(email)){
@@ -146,6 +149,11 @@
             if(passWord1 == passWord2) $("#confirmP").css("display","none");
             else $("#confirmP").css("display","block");
 
+        },
+        loginEmail:function(){
+            var emailType = this.state.data.email.split("@")[1].split(".")[0]
+            var url = WebUtil.findfullemail(emailType)
+            window.open(url);
         },
         submitNewPassword(){
             var tokenOpt = WebUtil.GetQueryString("token");
@@ -179,7 +187,7 @@
                             <div className="registerContent">
                                 <p > 一封邮件已经发送到您的：{this.state.data.email}邮箱</p>
                                 <button onClick={this.loginEmail}>马上验证</button>
-                            </div>
+                            </div>;
                         break;
                     case 3:
                         Dom=
