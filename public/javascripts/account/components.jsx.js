@@ -110,13 +110,13 @@
                         </div>
                         <div style={{marginBottom:"20px"}}>
                             <p style={{display:"inline-block",width:"80px",textAlign:"right",margin:0}}>登录密码</p>
-                            <input type="text" id="passwordInput" placeholder="登陆密码（8-20位）" style={{display:"inline-block"}}
+                            <input type="text" id="passwordInput" type="password" placeholder="登陆密码（8-20位）" style={{display:"inline-block"}}
                              onBlur={this.judgeStrong}   />
                             <p id="passP"style={{margin:0,display:"none",fontSize:"14px"}}>密码格式有误（8-20位）</p>
                         </div>
                         <div style={{marginBottom:"20px"}}>
                             <p style={{display:"inline-block",width:"80px",textAlign:"right",margin:0}}>确认密码</p>
-                            <input type="text" id="confirmInput" placeholder="确认密码" style={{display:"inline-block"}}
+                            <input type="text" id="confirmInput" type="password" placeholder="确认密码" style={{display:"inline-block"}}
                                    onBlur={this.judgeSame} />
                             <p id="confirmP" style={{margin:0,display:"none",fontSize:"14px"}}>密码不一致</p>
                         </div>

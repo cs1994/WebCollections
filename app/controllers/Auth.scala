@@ -46,6 +46,9 @@ class Auth @Inject()(  emailFunc:Email,
   def registerPage = Action {
     Ok(views.html.account.index("注册"))
   }
+  def login = Action.async {implicit request =>
+    Future.successful(Ok(views.html.account.login("用户登录")))
+  }
 
  def sendConfirmEmail(email:String) = Action.async{
     if(ValidateUtil.isEmail(email)){

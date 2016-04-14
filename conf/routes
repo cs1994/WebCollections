@@ -1,7 +1,8 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-GET          /login                                    @controllers.Auth.registerPage
+GET          /login                                    @controllers.Auth.login
+GET          /register                                    @controllers.Auth.registerPage
 
 #email register
 GET        /register/sendEmail                        @controllers.Auth.sendConfirmEmail(email:String)

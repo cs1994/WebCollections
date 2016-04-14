@@ -1,0 +1,75 @@
+@(title:String)
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>登录</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta property="wb:webmaster" content="4ac76beece76fda5" />
+        <link rel="stylesheet" href="@routes.WebJarAssets.at(WebJarAssets.locate("bootstrap/3.3.5/css","bootstrap.min.css"))">
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/webCollection/login.css")">
+    </head>
+    <body>
+        <div id="login-app">
+            <div class="loginPage">
+                <div class="logo">
+                    <img style="height: 100%;width: 100%" src="@routes.Assets.versioned("images/logo.png")">
+                </div>
+                <div class="tongtu">
+                    <div class="formArea">
+                        <div>
+                            <div style="float: left;width: 30%">
+                                <p class="title">用户登录</p>
+                            </div>
+                            @*<div style="float: left;width: 70%">*@
+                            @*<a style="margin-left:120px" href="/terra/admin/login">商户入口-></a>*@
+                            @*</div>*@
+                        </div>
+
+                        <form id="login-form">
+                            <div class="form-group">
+                                <input id="input-button" name="account" type="text" class="form-control" placeholder="邮箱" required autofocus />
+                                <input id="input-button" name="password" type="password" class="form-control" placeholder="密码" required />
+                                <a  style="margin-left:10%;color:gray" href="/terra/customer/resetpwdtype">忘记密码？</a>
+                                <button type="submit" class="loginBtn" onclick="gmLogin(event)">登&nbsp;&nbsp;&nbsp;录</button>
+
+                            </div>
+                        </form>
+                        <p style="margin-left:10%">还没有账号？<a href="/register">免费注册</a></p>
+                    </div>
+
+                </div>
+
+            </div>
+            <script src="@routes.WebJarAssets.at(WebJarAssets.locate("jquery/1.11.1/jquery.min.js"))"></script>
+
+            @*<script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>*@
+            <script type="text/javascript" src="@routes.Assets.versioned("/javascripts/common/function.js")" ></script>
+            <script >
+
+            function gmLogin(event){
+              event.preventDefault();
+              var loginForm = $("#login-form");
+              var text = loginForm.find("input[name=account]").val().trim();
+              var pwd = loginForm.find("input[name=password]").val();
+              var upPath = "/terra/loginsubmit";
+              if(!text){
+                alert("账户名为空!");
+                return false;
+              }
+              if(!pwd){
+                alert("密码为空!");
+                return false;
+              }
+                ajaxPost(upPath, {account: text, password: pwd}, function(res){
+
+                });
+
+
+            }
+    </script>
+
+        </div>
+    </body>
+</html>
