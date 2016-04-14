@@ -56,37 +56,43 @@ trait SlickTables {
   /** Entity class storing rows of table tUser
     *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey
     *  @param email Database column email SqlType(VARCHAR), Length(255,true), Default()
-    *  @param headimg Database column headImg SqlType(VARCHAR), Length(255,true), Default()
+    *  @param headImg Database column head_img SqlType(VARCHAR), Length(255,true), Default()
     *  @param sex Database column sex SqlType(INT), Default(0)
     *  @param phone Database column phone SqlType(VARCHAR), Length(255,true), Default()
     *  @param birthday Database column birthday SqlType(VARCHAR), Length(255,true), Default()
-    *  @param nickname Database column nickName SqlType(VARCHAR), Length(255,true), Default() */
-  case class rUser(id: Long, email: String = "", headimg: String = "", sex: Int = 0, phone: String = "", birthday: String = "", nickname: String = "")
+    *  @param nickName Database column nick_name SqlType(VARCHAR), Length(255,true), Default()
+    *  @param secure Database column secure SqlType(VARCHAR), Length(255,true), Default()
+    *  @param insertTime Database column insert_time SqlType(BIGINT), Default(0) */
+  case class rUser(id: Long, email: String = "", headImg: String = "", sex: Int = 0, phone: String = "", birthday: String = "", nickName: String = "", secure: String = "", insertTime: Long = 0L)
   /** GetResult implicit for fetching rUser objects using plain SQL queries */
   implicit def GetResultrUser(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rUser] = GR{
     prs => import prs._
-      rUser.tupled((<<[Long], <<[String], <<[String], <<[Int], <<[String], <<[String], <<[String]))
+      rUser.tupled((<<[Long], <<[String], <<[String], <<[Int], <<[String], <<[String], <<[String], <<[String], <<[Long]))
   }
   /** Table description of table user. Objects of this class serve as prototypes for rows in queries. */
   class tUser(_tableTag: Tag) extends Table[rUser](_tableTag, "user") {
-    def * = (id, email, headimg, sex, phone, birthday, nickname) <> (rUser.tupled, rUser.unapply)
+    def * = (id, email, headImg, sex, phone, birthday, nickName, secure, insertTime) <> (rUser.tupled, rUser.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(email), Rep.Some(headimg), Rep.Some(sex), Rep.Some(phone), Rep.Some(birthday), Rep.Some(nickname)).shaped.<>({r=>import r._; _1.map(_=> rUser.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(email), Rep.Some(headImg), Rep.Some(sex), Rep.Some(phone), Rep.Some(birthday), Rep.Some(nickName), Rep.Some(secure), Rep.Some(insertTime)).shaped.<>({r=>import r._; _1.map(_=> rUser.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get, _8.get, _9.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
     val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
     /** Database column email SqlType(VARCHAR), Length(255,true), Default() */
     val email: Rep[String] = column[String]("email", O.Length(255,varying=true), O.Default(""))
-    /** Database column headImg SqlType(VARCHAR), Length(255,true), Default() */
-    val headimg: Rep[String] = column[String]("headImg", O.Length(255,varying=true), O.Default(""))
+    /** Database column head_img SqlType(VARCHAR), Length(255,true), Default() */
+    val headImg: Rep[String] = column[String]("head_img", O.Length(255,varying=true), O.Default(""))
     /** Database column sex SqlType(INT), Default(0) */
     val sex: Rep[Int] = column[Int]("sex", O.Default(0))
     /** Database column phone SqlType(VARCHAR), Length(255,true), Default() */
     val phone: Rep[String] = column[String]("phone", O.Length(255,varying=true), O.Default(""))
     /** Database column birthday SqlType(VARCHAR), Length(255,true), Default() */
     val birthday: Rep[String] = column[String]("birthday", O.Length(255,varying=true), O.Default(""))
-    /** Database column nickName SqlType(VARCHAR), Length(255,true), Default() */
-    val nickname: Rep[String] = column[String]("nickName", O.Length(255,varying=true), O.Default(""))
+    /** Database column nick_name SqlType(VARCHAR), Length(255,true), Default() */
+    val nickName: Rep[String] = column[String]("nick_name", O.Length(255,varying=true), O.Default(""))
+    /** Database column secure SqlType(VARCHAR), Length(255,true), Default() */
+    val secure: Rep[String] = column[String]("secure", O.Length(255,varying=true), O.Default(""))
+    /** Database column insert_time SqlType(BIGINT), Default(0) */
+    val insertTime: Rep[Long] = column[Long]("insert_time", O.Default(0L))
   }
   /** Collection-like TableQuery object for table tUser */
   lazy val tUser = new TableQuery(tag => new tUser(tag))

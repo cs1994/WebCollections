@@ -11,3 +11,9 @@ WebUtil.isStrongPassword = function(str){
     var reg = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,20}$/;
     return reg.test(str);
 };
+WebUtil.GetQueryString=function(name)
+{
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if(r!=null) return  unescape(r[2]); return null;
+}
