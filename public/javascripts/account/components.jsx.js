@@ -57,9 +57,6 @@
             )
         }
     });
-
-
-
     components.SetPassWord = React.createClass({
         mixins:[
             Reflux.connect(stores.registerStore,"data"),
@@ -126,4 +123,40 @@
             )
         }
     });
+
+    components.ForgetPassword = React.createClass({
+        mixins:[
+            Reflux.connect(stores.registerStore,"data"),
+            ],
+        submit:function(){
+            var email = $("#emailInput").val()
+            if(WebUtil.isEmail(email)){
+                actions.registerAction.sendEmail(email)
+            }
+        },
+
+        render:function(){
+            return(
+                <div className="register">
+                    <div className="registerHeader">
+                        <div style={{width:"50%",display:"inline-block"}}>
+                            <p style={{borderRight:"3px solid #777"}}>收藏</p>
+                            <p>找回密码</p>
+                        </div>
+                        <div style={{width:'50%',display:"inline-block",textAlign:"right"}}>
+                            <p style={{fontSize:"18px"}}>已有账号？</p>
+                            <button>登录</button>
+                        </div>
+                    </div>
+                    <div className="registerContent">
+                        <p> 请输入您的邮箱</p>
+                        <input type="text" id="emailInput" placeholder="邮箱"/>
+                        <span>此功能将会发送一个重置密码的邮件到输入的邮箱，即可重置密码。</span>
+                        <button onClick={this.submit} >发送邮件</button>
+                    </div>
+                </div>
+            )
+        }
+    });
+
 }(window.React, window.ReactRouter, window.Reflux, window));
