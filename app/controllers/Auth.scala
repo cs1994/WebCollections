@@ -115,7 +115,7 @@ class Auth @Inject()(  emailFunc:Email,
 
     emailValidateDao.updateStateByToken(token,1,curTimestamp).map{rows=>
       if(rows>0){
-        Redirect(s"/customer/resetpwdtype?token=$token")//TODO
+        Redirect(s"/customer/findPassword?token=$token")//TODO
       }else{
         Ok(jsonResult(10000,"验证邮箱失败"))
       }
