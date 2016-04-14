@@ -77,4 +77,8 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
     }
   }
 
+  def resetPasswordType() = loggingAction.async { implicit request =>
+    Future.successful(Ok(views.html.account.forgetPassword("找回密码",2)))
+  }
+
 }

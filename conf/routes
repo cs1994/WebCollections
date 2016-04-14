@@ -6,11 +6,13 @@ GET          /register                                 @controllers.Auth.registe
 GET          /forgetPassword                           @controllers.Auth.forgetPassword
 
 #email register
-GET        /register/sendEmail                        @controllers.Auth.sendConfirmEmail(email:String)
+GET        /register/sendEmail                         @controllers.Auth.sendRegisterEmail(email:String)
 GET        /mail/validate_register                     @controllers.Auth.validateRegisterEmail(token:String)
-GET        /register/setpassword                      @controllers.customer.Manage.setPassword
-POST        /customer/register/email                      @controllers.customer.Manage.registerWithEmail
-
+GET        /register/setpassword                       @controllers.customer.Manage.setPassword
+POST       /customer/register/email                    @controllers.customer.Manage.registerWithEmail
+GET        /check/email                                @controllers.Auth.checkEmailExist
+GET        /mail/confirm                               @controllers.Auth.sendConfirmEmail(email:String)
+GET        /mail/validate_confirm                      @controllers.Auth.validateConfirmEmail(email:String)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                                               controllers.WebJarAssets.at(file)

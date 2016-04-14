@@ -14,10 +14,12 @@ import play.api.mvc.{Action, Controller}
 import scala.concurrent.duration._
 import scala.concurrent.Future
 import common.email.Email
-import models.dao.EmailValidateDao
+import models.dao.{EmailValidateDao,UserDao}
+
 
 @Singleton
 class Auth @Inject()(  emailFunc:Email,
+                       userDao: UserDao,
                        emailValidateDao:EmailValidateDao,
                       val actionUtils: ActionUtils) extends Controller with JsonProtocols{
 
@@ -47,13 +49,13 @@ class Auth @Inject()(  emailFunc:Email,
     Ok(views.html.account.index("注册"))
   }
   def forgetPassword = Action {
-    Ok(views.html.account.forgetPassword("找回密码"))
+    Ok(views.html.account.forgetPassword("找回密码",1))
   }
   def login = Action.async {implicit request =>
     Future.successful(Ok(views.html.account.login("用户登录")))
   }
 
- def sendConfirmEmail(email:String) = Action.async{
+ def sendRegisterEmail(email:String) = Action.async{
     if(ValidateUtil.isEmail(email)){
       val token = GenCodeUtil.get64Token()
       val curTimestamp = System.currentTimeMillis()
@@ -82,6 +84,54 @@ class Auth @Inject()(  emailFunc:Email,
       }else{
         Ok(jsonResult(10000,"验证邮箱失败"))
       }
+    }
+  }
+
+  def sendConfirmEmail(email:String) = Action.async{
+
+    if(ValidateUtil.isEmail(email)){
+      val token = GenCodeUtil.get64Token()
+      val curTimestamp = System.currentTimeMillis()
+      val expiredTime = curTimestamp + 24*60*60*1000L
+      emailFunc.SendConfirmEmailTask(token,email)
+      emailValidateDao.add(email,token,expiredTime,curTimestamp).map{
+        result=>
+        if(result>0 && emailFunc.sendConfirm){
+          Ok(success)
+        }else{
+          Ok(CustomerErrorCode.sendConfirmEmailFail)
+        }
+      }
+
+
+      }
+    else{
+      Future.successful(Ok(CustomerErrorCode.invalidEmailFormat))
+    }
+  }
+  def validateConfirmEmail(token:String) = Action.async{
+
+    val curTimestamp = System.currentTimeMillis()
+
+    emailValidateDao.updateStateByToken(token,1,curTimestamp).map{rows=>
+      if(rows>0){
+        Redirect(s"/customer/resetpwdtype?token=$token")//TODO
+      }else{
+        Ok(jsonResult(10000,"验证邮箱失败"))
+      }
+    }
+  }
+
+
+
+  def checkEmailExist(email:String) = loggingAction.async{
+    userDao.getUserByEmail(email).map{
+      user =>
+        if(user.isDefined){
+          Ok(successResult(Json.obj("is_exists" -> true)))
+        }else{
+          Ok(successResult(Json.obj("is_exists" -> false)))
+        }
     }
   }
 }

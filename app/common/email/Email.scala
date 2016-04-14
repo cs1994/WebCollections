@@ -18,6 +18,7 @@ class Email @Inject()(
                             appSettings: AppSettings
                             ){
   var sendSuccess = false
+  var sendConfirm = false
 
   def getProperties = {
     val p = new Properties
@@ -64,4 +65,38 @@ class Email @Inject()(
       }
     }
   }
+  def sendConfirmEmail(token:String,email:String) = {
+
+    val confirmUrl = s"${appSettings.deployHost}mail/validate_confirm?token=$token"
+
+    val session = getEbuptSession
+
+    val FROM = appSettings.WORLDMALL_EMAIL_ADDRESS
+
+    val message = new MimeMessage(session)
+    message.setFrom(new InternetAddress(FROM))
+
+    message.setRecipient(RecipientType.TO,new InternetAddress(email))
+    message.setSubject("重置密码信息")
+    message.setSentDate(new Date)
+    val mainPart = new MimeMultipart
+    val html = new MimeBodyPart
+    html.setContent(EmailUtil.getConfirmEmailHtml(appSettings.deployHost,confirmUrl,email), "text/html; charset=utf-8")
+    mainPart.addBodyPart(html)
+    message.setContent(mainPart)
+    Transport.send(message)
+  }
+  def SendConfirmEmailTask(token:String,email:String)={
+    Future{
+      sendConfirmEmail(token,email)
+    }.onComplete{
+      case Success(bool) => {
+        sendConfirm = true
+      }
+      case Failure(e) =>{
+        sendConfirm =  false
+      }
+    }
+  }
+
 }

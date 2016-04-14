@@ -22,21 +22,9 @@ class UserDao @Inject()(
   private[this] val uCustomer = SlickTables.tUser
 
   /**common*/
-//  def addUser(email:String,mobile:String,nickName:String,realName:String,headImg:String,state:Int,userType:Int,ip:String,secure:String,bonus:Int,currentTime:Long) = {
-//    db.run(uCustomer.map(t=>(t.email,t.mobile,t.nickName,t.realName,t.headImg,t.state,t.userType,t.ip,t.secure,t.bonus,t.insertTime,t.updateTime,t.lastLoginTime)).returning(
-//      uCustomer.map(_.id))+=(email,mobile,nickName,realName,headImg,state,userType,ip,secure,bonus,currentTime,currentTime,currentTime)).mapTo[Long].flatMap {uid =>
-//      db.run(customerInfo.insertOrUpdate(SlickTables.rCustomerInfo("m",Some(""),uid))).map {id =>
-//        if(uid > 0) {
-//          uid
-//        }else {
-//          0L
-//        }
-//      }
-//    }
-//  }
+
 
   def getUserByEmail(email:String) = {
-    log.debug("!!!!")
     db.run(uCustomer.filter(_.email === email).result.headOption)
   }
 

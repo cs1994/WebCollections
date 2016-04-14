@@ -40,15 +40,15 @@
                 }
             }.bind(this));
         },
-        onResetPassword:function(){
-            var url ="/register/sendEmail?email="+email;
-            var successFunc = function (result) {
-                console.log("发送成功");
-                this.state=1;
-                this.email=email;
-                this.updateStore();
-            }.bind(this);
-            ajaxGet(url,successFunc);
+        onResetPassword:function(email){
+            var checkEmailUrl = "/check/email?email="+email;
+            ajaxGet(checkEmailUrl,function(res){
+                if(res.is_exists){
+                    var
+                }
+                else
+                toastr.warning("账户不存在")
+            })
         }
     });
 }(window.React, window.ReactRouter, window.Reflux, window));
