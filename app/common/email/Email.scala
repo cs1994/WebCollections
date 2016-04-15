@@ -54,16 +54,12 @@ class Email @Inject()(
     Transport.send(message)
   }
   def SendRegisterEmailTask(token:String,email:String)={
-    Future{
-      sendRegisterEmail(token,email)
-    }.onComplete{
-      case Success(bool) => {
-        sendSuccess = true
-      }
-      case Failure(e) =>{
-        sendSuccess =  false
-      }
+    try{
+      Future(sendRegisterEmail(token,email)).map{r => 1}
+    }catch{
+      case e:Exception => Future.successful(0)
     }
+
   }
   def sendConfirmEmail(token:String,email:String) = {
 

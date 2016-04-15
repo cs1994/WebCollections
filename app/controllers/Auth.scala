@@ -59,23 +59,21 @@ class Auth @Inject()(  emailFunc:Email,
       val token = GenCodeUtil.get64Token()
       val curTimestamp = System.currentTimeMillis()
       val expiredTime = curTimestamp + 24*60*60*1000L
-      emailFunc.SendRegisterEmailTask(token,email)
-      var i = 0
-      while(!emailFunc.sendSuccess && i < 200){
-        Thread.sleep(10)
-        i = i + 1
-      }
-
-      emailValidateDao.add(email,token,expiredTime,curTimestamp).map{
-        result =>
-          println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + result)
-          println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + emailFunc.sendSuccess)
-          if(emailFunc.sendSuccess && result>0){
-            Ok(success)
+      emailFunc.SendRegisterEmailTask(token,email).flatMap{res =>
+        if(res > 0){
+          emailValidateDao.add(email,token,expiredTime,curTimestamp).map{
+            result =>
+              println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + result)
+              if(result>0){
+                Ok(success)
+              }
+              else {
+                Ok(CustomerErrorCode.failInsert)
+              }
           }
-          else {
-            Ok(CustomerErrorCode.sendConfirmEmailFail)
-          }
+        }else{
+          Future.successful(Ok(CustomerErrorCode.sendConfirmEmailFail))
+        }
       }
     }else{
       Future.successful(Ok(CustomerErrorCode.invalidEmailFormat))
