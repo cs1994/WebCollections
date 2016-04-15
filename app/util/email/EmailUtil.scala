@@ -72,8 +72,8 @@ object EmailUtil {
     sb.append("""<table width="100%" bgcolor="#f4f9fd" cellpadding="0" cellspacing="10"><tbody>""")
     sb.append(s"""<tr>	<td height="50" valign="top"><b><font size="4" color="#555555" face="Arial, Helvetica, sans-serif">你好， <span style="border-bottom-width: 1px; border-bottom-style: dashed; border-bottom-color: rgb(204, 204, 204); z-index: 1; position: static;" t="7" onclick="return false;"  isout="1">${email}</span></font></b><br><font size="3" color="#555555" face="Arial, Helvetica, sans-serif">请点击下面的链接重置密码：</font></td></tr>""")
     sb.append(s"""<tr>	<td height="50" valign="top"><a href="$confirmUrl" target="_blank"><font size="3" color="#339adf" face="Arial, Helvetica, sans-serif"></font>$confirmUrl</a><font></font><br><font size="3" color="#909090" face="Arial, Helvetica, sans-serif">(此链接1天内有效，超时需要重新获取邮件)</font></td></tr>""")
-    sb.append(s"""<tr>	<td height="40" valign="top">	<font size="3" color="#555555" face="Arial, Helvetica, sans-serif">祝使用愉快！<br>国贸 <span style="border-bottom-width: 1px; border-bottom-style: dashed; border-bottom-color: rgb(204, 204, 204); position: relative;" >${DateTime.now.toString("yyyyMMdd HH:mm:ss")}<br>	</font></td></tr>""")
-    sb.append(s"""<tr><td height="80" valign="top"><font size="2" color="#909090" face="Arial, Helvetica, sans-serif">如果你没有注册过国贸社区，请忽略此邮件。<br>		这是国贸社区的帐号服务邮件，请不要回复。<br>如需了解国贸社区或找回密码遇到问题，请访问我们的帮助中心 (连接至<a href="$deployHost" target="_blank"><font size="2" color="#339adf" face="Arial, Helvetica, sans-serif">$deployHost</font></a>)</font>	</td></tr>""")
+    sb.append(s"""<tr>	<td height="40" valign="top">	<font size="3" color="#555555" face="Arial, Helvetica, sans-serif">祝使用愉快！<br>网页收藏<span style="border-bottom-width: 1px; border-bottom-style: dashed; border-bottom-color: rgb(204, 204, 204); position: relative;" >${DateTime.now.toString("yyyyMMdd HH:mm:ss")}<br>	</font></td></tr>""")
+    sb.append(s"""<tr><td height="80" valign="top"><font size="2" color="#909090" face="Arial, Helvetica, sans-serif">如果你没有注册过此社区，请忽略此邮件。<br>		这是网页收藏社区的帐号服务邮件，请不要回复。</font>	</td></tr>""")
     sb.append("""</tbody></table>""")
 
     sb.append("</body></html>")
@@ -89,8 +89,8 @@ object EmailUtil {
     sb.append("""<table width="100%" bgcolor="#f4f9fd" cellpadding="0" cellspacing="10"><tbody>""")
     sb.append(s"""<tr>	<td height="50" valign="top"><b><font size="4" color="#555555" face="Arial, Helvetica, sans-serif">你好， <span style="border-bottom-width: 1px; border-bottom-style: dashed; border-bottom-color: rgb(204, 204, 204); z-index: 1; position: static;" t="7" onclick="return false;"  isout="1">${email}</span></font></b><br><font size="3" color="#555555" face="Arial, Helvetica, sans-serif">请点击下面的链接激活注册邮箱：</font></td></tr>""")
     sb.append(s"""<tr>	<td height="50" valign="top"><a href="$confirmUrl" target="_blank"><font size="3" color="#339adf" face="Arial, Helvetica, sans-serif"></font>$confirmUrl</a><font></font><br><font size="3" color="#909090" face="Arial, Helvetica, sans-serif">(此链接1天内有效，超时需要重新获取邮件)</font></td></tr>""")
-    sb.append(s"""<tr>	<td height="40" valign="top">	<font size="3" color="#555555" face="Arial, Helvetica, sans-serif">祝使用愉快！<br>国贸 <span style="border-bottom-width: 1px; border-bottom-style: dashed; border-bottom-color: rgb(204, 204, 204); position: relative;" >${DateTime.now.toString("yyyyMMdd HH:mm:ss")}<br>	</font></td></tr>""")
-    sb.append(s"""<tr><td height="80" valign="top"><font size="2" color="#909090" face="Arial, Helvetica, sans-serif">如果你没有注册过国贸社区，请忽略此邮件。<br>		这是国贸社区的帐号服务邮件，请不要回复。<br>如需了解国贸社区或找回密码遇到问题，请访问我们的帮助中心 (连接至<a href="$deployHost" target="_blank"><font size="2" color="#339adf" face="Arial, Helvetica, sans-serif">$deployHost</font></a>)</font>	</td></tr>""")
+    sb.append(s"""<tr>	<td height="40" valign="top">	<font size="3" color="#555555" face="Arial, Helvetica, sans-serif">祝使用愉快！<br>网页收藏 <span style="border-bottom-width: 1px; border-bottom-style: dashed; border-bottom-color: rgb(204, 204, 204); position: relative;" >${DateTime.now.toString("yyyyMMdd HH:mm:ss")}<br>	</font></td></tr>""")
+    sb.append(s"""<tr><td height="80" valign="top"><font size="2" color="#909090" face="Arial, Helvetica, sans-serif">如果你没有注册过此社区，请忽略此邮件。<br>		这是网页收藏社区的帐号服务邮件，请不要回复。</font>	</td></tr>""")
     sb.append("""</tbody></table>""")
 
     sb.append("</body></html>")
