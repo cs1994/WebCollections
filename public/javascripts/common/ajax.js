@@ -59,6 +59,7 @@ function ajaxGet(url,successFunc){
         type:'GET',
         async: false,
         success:function(res){
+            console.log("@@@@@@@@@ "+ JSON.stringify(res))
             if(res.errCode == 0) successFunc(res);
             else {
                 //toastr.error(res.errmsg);

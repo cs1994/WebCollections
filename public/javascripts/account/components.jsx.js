@@ -29,7 +29,7 @@
         submit:function(){
             var email = $("#emailInput").val()
             if(WebUtil.isEmail(email)){
-                //console.log("@@@@@@@@@@@@@ " + email)
+                console.log("@@@@@@@@@@@@@ " + email)
                 actions.registerAction.sendEmail(email)
             }
         },
@@ -58,6 +58,7 @@
             )
         }
     });
+
     components.SetPassWord = React.createClass({
         mixins:[
             Reflux.connect(stores.registerStore,"data"),

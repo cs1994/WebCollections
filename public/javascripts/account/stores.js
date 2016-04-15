@@ -33,8 +33,8 @@
                 console.log("发送成功");
                 this.state=1;
                 this.email=email;
-                //console.log("@@@@@@@@@@@@@@@@ " +this.state)
                 this.updateStore();
+                //console.log("@@@@@@@@@@@@@@@@ " +this.state)
             }.bind(this);
             ajaxGet(url,successFunc);
         },

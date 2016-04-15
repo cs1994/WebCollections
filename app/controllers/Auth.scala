@@ -60,8 +60,16 @@ class Auth @Inject()(  emailFunc:Email,
       val curTimestamp = System.currentTimeMillis()
       val expiredTime = curTimestamp + 24*60*60*1000L
       emailFunc.SendRegisterEmailTask(token,email)
+      var i = 0
+      while(!emailFunc.sendSuccess && i < 200){
+        Thread.sleep(10)
+        i = i + 1
+      }
+
       emailValidateDao.add(email,token,expiredTime,curTimestamp).map{
         result =>
+          println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + result)
+          println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + emailFunc.sendSuccess)
           if(emailFunc.sendSuccess && result>0){
             Ok(success)
           }
