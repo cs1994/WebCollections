@@ -41,4 +41,8 @@ class UserDao @Inject()(
       uCustomer.filter(_.email===user.email).map(_.secure).update(secure)
     }.mapTo[Int]
   }
+
+  def checkPassword(user: rUser, password: String) = {
+    user.secure.equals(SecureUtil.getSecurePassword(password, user.ip, user.insertTime))
+  }
 }

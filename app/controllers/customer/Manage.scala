@@ -27,7 +27,7 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
   private [this] val loggingAction = actionUtils.loggingAction
 
   def setPassword = loggingAction.async { implicit request =>
-    Future.successful(Ok(views.html.account.setPassword("设置密码")))
+    Future.successful(Ok(views.html.account.setPassword("设置密码",None)))
   }
 
   def tokenRegisterForm = Form(
@@ -78,7 +78,7 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
   }
 
   def resetPasswordType = loggingAction.async { implicit request =>
-    Future.successful(Ok(views.html.account.forgetPassword("找回密码",3)))
+    Future.successful(Ok(views.html.account.forgetPassword("找回密码",3,None)))
   }
 
   def tokenPwdForm = Form(

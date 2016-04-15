@@ -235,4 +235,51 @@
         }
     });
 
+    components.Login = React.createClass({
+        mixins:[
+            Reflux.connect(stores.registerStore,"data"),
+            ReactRouter.Navigation,
+            ReactRouter.State],
+        login:function(){
+            var email = $("#emailInput").val()
+            if(WebUtil.isEmail(email)){
+                //console.log("@@@@@@@@@@@@@ " + email)
+                actions.registerAction.sendEmail(email)
+            }
+        },
+        render:function(){
+            return(
+                <div id="login-app">
+                    <div className="loginPage">
+                        <div className="logo">
+                            <img style={{height: '100%',width: '100%'}} src="/assets/images/logo.png"/>
+                        </div>
+                        <div className="tongtu">
+                        </div>
+                        <div className="formArea">
+                            <div>
+                                <div style={{float: 'left',width: '30%'}}>
+                                    <p className="title">用户登录</p>
+                                </div>
+
+                            </div>
+
+                            <form id="login-form">
+                                <div className="form-group">
+                                    <input name="account" type="text" className="form-control" placeholder="手机号/邮箱" required autofocus />
+                                    <input name="password" type="password" className="form-control" placeholder="密码" required />
+                                    <a href="/forgetPassword">忘记密码？</a>
+                                    <button type="submit" className="loginBtn" onclick={this.login}>登录</button>
+
+                                </div>
+                            </form>
+                            <p>还没有账号？<a href="/register">免费注册</a></p>
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+            )
+        }
+    });
+
 }(window.React, window.ReactRouter, window.Reflux, window));

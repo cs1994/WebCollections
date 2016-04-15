@@ -15,6 +15,7 @@ import scala.concurrent.duration._
 import scala.concurrent.Future
 import common.email.Email
 import models.dao.{EmailValidateDao,UserDao}
+import controllers.{ActionUtils,SessionKey}
 
 
 @Singleton
@@ -46,14 +47,12 @@ class Auth @Inject()(  emailFunc:Email,
     )
   )
   def registerPage = Action {
-    Ok(views.html.account.index("注册"))
+    Ok(views.html.account.index("注册",None))
   }
   def forgetPassword = Action {
-    Ok(views.html.account.forgetPassword("找回密码",1))
+    Ok(views.html.account.forgetPassword("找回密码",1,None))
   }
-  def login = Action.async {implicit request =>
-    Future.successful(Ok(views.html.account.login("用户登录")))
-  }
+
 
  def sendRegisterEmail(email:String) = Action.async{
     if(ValidateUtil.isEmail(email)){
@@ -134,4 +133,31 @@ class Auth @Inject()(  emailFunc:Email,
         }
     }
   }
+
+  def loginSubmit = loggingAction.async{ implicit request =>
+    loginForm.bindFromRequest.value match{
+      case Some((account,pwd)) =>
+        val userFuture = userDao.getUserByEmail(account)
+        userFuture.map{userInfo =>
+//          logger.debug(userInfo.isDefined.toString)
+          if(userInfo.isDefined && userDao.checkPassword(userInfo.get,pwd)){
+            val timestamp = System.currentTimeMillis().toString
+            val userId = userInfo.get.id
+            Ok(success).withSession(
+              SessionKey.userId -> userId.toString,
+              SessionKey.email -> userInfo.get.email,
+              SessionKey.headImg -> userInfo.get.headImg,
+              SessionKey.sex -> userInfo.get.sex.toString,
+              SessionKey.phone -> userInfo.get.phone,
+              SessionKey.birthday -> userInfo.get.birthday,
+              SessionKey.nickName -> userInfo.get.nickName
+            )
+          }else{
+            Ok(jsonResult(10010, "user not exists or password error."))
+          }
+        }
+      case None => Future.successful(Ok(jsonResult(10010, "Input format error.")))
+    }
+  }
+
 }
