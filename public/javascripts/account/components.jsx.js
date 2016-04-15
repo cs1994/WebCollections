@@ -252,6 +252,7 @@
                     var url ="/login/submit";
                     ajaxPost(url,data, function (res) {
                         console.log("登录成功")
+                        location.href="/";
                     })
                 }
                 else toastr.warning("请输入密码")

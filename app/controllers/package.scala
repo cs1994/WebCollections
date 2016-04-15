@@ -65,7 +65,7 @@ package object controllers {
     }
 
     protected def onUnauthorized(request: RequestHeader) =
-      Results.Redirect("").withNewSession
+      Results.Redirect("/login").withNewSession
 
     override protected def refine[A](request: Request[A]): Future[Either[Result, CustomerRequest[A]]]  = {
       authAdmin(request).map {
@@ -104,7 +104,6 @@ package object controllers {
   @Singleton
   case class ActionUtils @Inject()(
                                     loggingAction: LoggingAction,
-//                                    adminAction: AdminAction,
                                     customerAction: CustomerAction
                                     ) {
   }

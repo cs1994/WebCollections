@@ -23,11 +23,15 @@ class Application @Inject()( userDao: UserDao,
   import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
   private val log = Logger(this.getClass)
-  private val customerAuth = loggingAction
+  private val customerAuth = loggingAction andThen customerAction
 
 
   def login = Action.async {implicit request =>
     Future.successful(Ok(views.html.account.login("用户登录",None)))
   }
 
+  def index = customerAuth.async{implicit request =>
+    val conf = getCustomerConfMap(request)
+    Future.successful(Ok(views.html.content.main("首页",Some(conf))))
+  }
 }
