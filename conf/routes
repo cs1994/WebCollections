@@ -1,22 +1,37 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-
+############home page
 GET          /                                         @controllers.Application.index
+#enter login page
 GET          /login                                    @controllers.Application.login
+#submit name and password
 POST         /login/submit                             @controllers.Auth.loginSubmit
-GET          /register                                 @controllers.Auth.registerPage
-GET          /forgetPassword                           @controllers.Auth.forgetPassword
 
-#email register
+############ email register
+#enter register page
+GET        /register                                   @controllers.Auth.registerPage
+#send register email
 GET        /register/sendEmail                         @controllers.Auth.sendRegisterEmail(email:String)
+#click activate link
 GET        /mail/validate_register                     @controllers.Auth.validateRegisterEmail(token:String)
+# register set password
 GET        /register/setpassword                       @controllers.customer.Manage.setPassword
+#the lastest step ensure register submit password
 POST       /customer/register/email                    @controllers.customer.Manage.registerWithEmail
-GET       /customer/findPassword                      @controllers.customer.Manage.resetPasswordType
+
+############ forget password
+#enter forgetpassword page
+GET        /forgetPassword                             @controllers.Auth.forgetPassword
+#check the email exists
 GET        /check/email                                @controllers.Auth.checkEmailExist(email:String)
+#send reset password email
 GET        /mail/confirm                               @controllers.Auth.sendConfirmEmail(email:String)
+#click activate link
 GET        /mail/validate_confirm                      @controllers.Auth.validateConfirmEmail(token:String)
+#enter set password page
+GET        /customer/findPassword                      @controllers.customer.Manage.resetPasswordType
+#ensure reset password submit password
 POST       /customer/reset/password/email              @controllers.customer.Manage.resetPwdByEmail
 
 # Map static resources from the /public folder to the /assets URL path
