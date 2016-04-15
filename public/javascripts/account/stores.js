@@ -33,6 +33,7 @@
                 console.log("发送成功");
                 this.state=1;
                 this.email=email;
+                //console.log("@@@@@@@@@@@@@@@@ " +this.state)
                 this.updateStore();
             }.bind(this);
             ajaxGet(url,successFunc);
@@ -57,6 +58,7 @@
                         this.findState=2;
                         this.email=email;
                         this.updateStore();
+                        //console.log("!!!!!!!!!!!!!!!@@@ "+this.findState)
                     }.bind(this);
                     ajaxGet(confirmUrl,successFunc);
                 }

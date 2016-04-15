@@ -13,5 +13,9 @@ object CustomerErrorCode extends BaseJsonProtocols{
   def registerFail = jsonResult(1006003,"register customer fail")
   def emailAlreadyExisted = jsonResult(1006004,"email has already existed")
   def invalidEmailToken = jsonResult(10060005,"invalid email token")
+  def userNotExist = jsonResult(1006006,"User not exist.")
+  def updatePwdFail = jsonResult(1006007,"update password fail.")
+  def invalidToken = jsonResult(1006009,"invalid token.")
+
 
 }

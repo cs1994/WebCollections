@@ -49,7 +49,7 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
               if(customerOpt.isEmpty){
                 val ip = request.remoteAddress
                 val secure = getSecurePassword(password, ip, cur)
-                userDao.addUser(email, "", 0, "", "",secure,name,cur).map{
+                userDao.addUser(email, "", 0, "", "",secure,name,cur,ip).map{
                   uid=>
                     if(uid > 0) {
 //                      val timestamp = System.currentTimeMillis().toString
@@ -81,4 +81,40 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
     Future.successful(Ok(views.html.account.forgetPassword("找回密码",3)))
   }
 
+  def tokenPwdForm = Form(
+    tuple(
+      "token" -> nonEmptyText,
+      "password" -> nonEmptyText
+    )
+  )
+  def resetPwdByEmail = loggingAction.async{implicit request=>
+    val cur = System.currentTimeMillis()
+    tokenPwdForm.bindFromRequest.value match {
+      case Some((token,password)) =>{
+        emailValidateDao.getByToken(token).flatMap{ validateOpt=>
+          if(validateOpt.isDefined && validateOpt.get.expiredTime>=cur && validateOpt.get.validate==1){
+            val email = validateOpt.get.email
+            userDao.getUserByEmail(email).flatMap{userOpt=>
+              if(userOpt.isEmpty){
+                Future.successful(Ok(CustomerErrorCode.userNotExist))
+              }else{
+                userDao.updatePwdByEmail(userOpt.get,password).map{rows=>
+                  if(rows>0){
+                    Ok(success)
+                  }else{
+                    Ok(CustomerErrorCode.updatePwdFail)
+                  }
+                }
+              }
+            }
+          }else{
+            Future.successful(Ok(CustomerErrorCode.invalidToken))
+          }
+        }
+      }
+      case None =>{
+        Future.successful(Ok(CustomerErrorCode.missingParameters))
+      }
+    }
+  }
 }

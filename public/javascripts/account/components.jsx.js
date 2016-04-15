@@ -29,6 +29,7 @@
         submit:function(){
             var email = $("#emailInput").val()
             if(WebUtil.isEmail(email)){
+                //console.log("@@@@@@@@@@@@@ " + email)
                 actions.registerAction.sendEmail(email)
             }
         },
@@ -133,6 +134,7 @@
         resetPassword:function(){
             var email = $("#emailInput").val()
             if(WebUtil.isEmail(email)){
+                //console.log("!!!!!!!!!!!!! " +email)
                 actions.registerAction.resetPassword(email)
             }
             else
@@ -160,11 +162,17 @@
             var token = tokenOpt? tokenOpt:"none";
             var passWord1=$("#passwordInput").val()
             var passWord2=$("#confirmInput").val()
-            if(passWord1.length<8 || passWord1.length>20 || passWord1!=passWord2){
-                toastr.warning("请根据提示填写")
+            if(passWord1.length<8 || passWord1.length>20){
+                toastr.warning("密码位数不正确")
             }
+            else if(passWord1!=passWord2){toastr.warning("密码输入不一致")}
             else{
-                var data={name:name,password:passWord1,token:token}
+                var data={password:passWord1,token:token}
+                var url = "/customer/reset/password/email"
+                ajaxPost(url,data,function(res){
+                    toastr.success("重置成功");
+                    location.href="/login"
+                })
                 //actions.registerAction.setPassWord(data)
             }
         },

@@ -14,6 +14,7 @@ GET       /customer/findPassword                      @controllers.customer.Mana
 GET        /check/email                                @controllers.Auth.checkEmailExist(email:String)
 GET        /mail/confirm                               @controllers.Auth.sendConfirmEmail(email:String)
 GET        /mail/validate_confirm                      @controllers.Auth.validateConfirmEmail(token:String)
+POST       /customer/reset/password/email              @controllers.customer.Manage.resetPwdByEmail
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                                               controllers.WebJarAssets.at(file)
