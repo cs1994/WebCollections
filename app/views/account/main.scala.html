@@ -17,7 +17,18 @@
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
             <![endif]-->
+        <script>
 
+                if(!$CONF$){
+                    console.log("conf is empty");
+                    var $CONF$ = {};
+                    }
+                @conf.getOrElse(Map()).map { case (key, value) =>
+                $CONF$['@key'] = '@value';
+                }
+                console.log($CONF$);
+
+        </script>
     </head>
     <body>
 

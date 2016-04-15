@@ -240,12 +240,23 @@
             Reflux.connect(stores.registerStore,"data"),
             ReactRouter.Navigation,
             ReactRouter.State],
-        login:function(){
-            var email = $("#emailInput").val()
+        emailLogin:function(){
+            console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            var loginForm = $(".form-group");
+            var email = loginForm.find("input[name=account]").val().trim();
+            var pwd = loginForm.find("input[name=password]").val();
+            console.log("@@@@@@@@@@@@@@@@@@@@@ " + pwd)
             if(WebUtil.isEmail(email)){
-                //console.log("@@@@@@@@@@@@@ " + email)
-                actions.registerAction.sendEmail(email)
+                if(pwd){
+                    var data = {account:email,password:pwd}
+                    var url ="/login/submit";
+                    ajaxPost(url,data, function (res) {
+                        console.log("登录成功")
+                    })
+                }
+                else toastr.warning("请输入密码")
             }
+            else toastr.warning("请输入正确的邮箱")
         },
         render:function(){
             return(
@@ -264,15 +275,13 @@
 
                             </div>
 
-                            <form id="login-form">
-                                <div className="form-group">
-                                    <input name="account" type="text" className="form-control" placeholder="手机号/邮箱" required autofocus />
-                                    <input name="password" type="password" className="form-control" placeholder="密码" required />
-                                    <a href="/forgetPassword">忘记密码？</a>
-                                    <button type="submit" className="loginBtn" onclick={this.login}>登录</button>
 
+                                <div className="form-group">
+                                    <input name="account" type="text" className="form-control" placeholder="邮箱" autofocus />
+                                    <input name="password" type="password" className="form-control" placeholder="密码" />
+                                    <a href="/forgetPassword">忘记密码？</a>
+                                    <button className="loginBtn" onClick={this.emailLogin}>登录账号</button>
                                 </div>
-                            </form>
                             <p>还没有账号？<a href="/register">免费注册</a></p>
                             <br/>
                         </div>

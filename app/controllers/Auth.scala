@@ -141,7 +141,7 @@ class Auth @Inject()(  emailFunc:Email,
         userFuture.map{userInfo =>
 //          logger.debug(userInfo.isDefined.toString)
           if(userInfo.isDefined && userDao.checkPassword(userInfo.get,pwd)){
-            val timestamp = System.currentTimeMillis().toString
+//            val timestamp = System.currentTimeMillis().toString
             val userId = userInfo.get.id
             Ok(success).withSession(
               SessionKey.userId -> userId.toString,
