@@ -83,15 +83,10 @@ class Email @Inject()(
     Transport.send(message)
   }
   def SendConfirmEmailTask(token:String,email:String)={
-    Future{
-      sendConfirmEmail(token,email)
-    }.onComplete{
-      case Success(bool) => {
-        sendConfirm = true
-      }
-      case Failure(e) =>{
-        sendConfirm =  false
-      }
+    try{
+      Future(sendConfirmEmail(token,email)).map{r => 1}
+    }catch{
+      case e:Exception => Future.successful(0)
     }
   }
 
