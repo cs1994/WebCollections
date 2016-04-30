@@ -98,14 +98,19 @@ class Auth @Inject()(  emailFunc:Email,
       val token = GenCodeUtil.get64Token()
       val curTimestamp = System.currentTimeMillis()
       val expiredTime = curTimestamp + 24*60*60*1000L
-      emailFunc.SendConfirmEmailTask(token,email)
-      emailValidateDao.add(email,token,expiredTime,curTimestamp).map{
-        result=>
-        if(result>0 && emailFunc.sendConfirm){
-          Ok(success)
-        }else{
-          Ok(CustomerErrorCode.sendConfirmEmailFail)
+      emailFunc.SendConfirmEmailTask(token,email).flatMap{res =>
+        if(res>0){
+          emailValidateDao.add(email,token,expiredTime,curTimestamp).map{
+            result=>
+              if(result>0 && emailFunc.sendConfirm){
+                Ok(success)
+              }else{
+                Ok(CustomerErrorCode.sendConfirmEmailFail)
+              }
+          }
         }
+        else
+          Future.successful(Ok(CustomerErrorCode.sendConfirmEmailFail))
       }
       }
     else{
