@@ -107,8 +107,6 @@ class Auth @Inject()(  emailFunc:Email,
           Ok(CustomerErrorCode.sendConfirmEmailFail)
         }
       }
-
-
       }
     else{
       Future.successful(Ok(CustomerErrorCode.invalidEmailFormat))
