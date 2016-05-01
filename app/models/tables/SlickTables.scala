@@ -197,18 +197,19 @@ trait SlickTables {
     *  @param nickName Database column nick_name SqlType(VARCHAR), Length(255,true), Default()
     *  @param secure Database column secure SqlType(VARCHAR), Length(255,true), Default()
     *  @param insertTime Database column insert_time SqlType(BIGINT), Default(0)
-    *  @param ip Database column ip SqlType(VARCHAR), Length(255,true), Default() */
-  case class rUser(id: Long, email: String = "", headImg: String = "", sex: Int = 0, phone: String = "", birthday: String = "", nickName: String = "", secure: String = "", insertTime: Long = 0L, ip: String = "")
+    *  @param ip Database column ip SqlType(VARCHAR), Length(255,true), Default()
+    *  @param commentNum Database column comment_num SqlType(INT), Default(0) */
+  case class rUser(id: Long, email: String = "", headImg: String = "", sex: Int = 0, phone: String = "", birthday: String = "", nickName: String = "", secure: String = "", insertTime: Long = 0L, ip: String = "", commentNum: Int = 0)
   /** GetResult implicit for fetching rUser objects using plain SQL queries */
   implicit def GetResultrUser(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rUser] = GR{
     prs => import prs._
-      rUser.tupled((<<[Long], <<[String], <<[String], <<[Int], <<[String], <<[String], <<[String], <<[String], <<[Long], <<[String]))
+      rUser.tupled((<<[Long], <<[String], <<[String], <<[Int], <<[String], <<[String], <<[String], <<[String], <<[Long], <<[String], <<[Int]))
   }
   /** Table description of table user. Objects of this class serve as prototypes for rows in queries. */
   class tUser(_tableTag: Tag) extends Table[rUser](_tableTag, "user") {
-    def * = (id, email, headImg, sex, phone, birthday, nickName, secure, insertTime, ip) <> (rUser.tupled, rUser.unapply)
+    def * = (id, email, headImg, sex, phone, birthday, nickName, secure, insertTime, ip, commentNum) <> (rUser.tupled, rUser.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(email), Rep.Some(headImg), Rep.Some(sex), Rep.Some(phone), Rep.Some(birthday), Rep.Some(nickName), Rep.Some(secure), Rep.Some(insertTime), Rep.Some(ip)).shaped.<>({r=>import r._; _1.map(_=> rUser.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get, _8.get, _9.get, _10.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(email), Rep.Some(headImg), Rep.Some(sex), Rep.Some(phone), Rep.Some(birthday), Rep.Some(nickName), Rep.Some(secure), Rep.Some(insertTime), Rep.Some(ip), Rep.Some(commentNum)).shaped.<>({r=>import r._; _1.map(_=> rUser.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get, _8.get, _9.get, _10.get, _11.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
     val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
@@ -230,6 +231,8 @@ trait SlickTables {
     val insertTime: Rep[Long] = column[Long]("insert_time", O.Default(0L))
     /** Database column ip SqlType(VARCHAR), Length(255,true), Default() */
     val ip: Rep[String] = column[String]("ip", O.Length(255,varying=true), O.Default(""))
+    /** Database column comment_num SqlType(INT), Default(0) */
+    val commentNum: Rep[Int] = column[Int]("comment_num", O.Default(0))
   }
   /** Collection-like TableQuery object for table tUser */
   lazy val tUser = new TableQuery(tag => new tUser(tag))

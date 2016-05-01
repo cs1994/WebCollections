@@ -2,3 +2,4 @@ a.activeHeader{
     color:#5bc0de!important;
     background: #e7e7e7!important;
 }
+.form-group span{margin-left: 8px;cursor:pointer;}

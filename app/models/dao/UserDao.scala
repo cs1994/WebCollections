@@ -31,8 +31,8 @@ class UserDao @Inject()(
   }
 
   def addUser(email:String,headImg:String,sex:Int,phone:String,birthday:String,nickName:String,secure:String,insertTime:Long,ip:String)={
-    db.run(uCustomer.map(t=>(t.email,t.headImg,t.sex,t.phone,t.birthday,t.secure,t.nickName,t.insertTime,t.ip)).returning(
-      uCustomer.map(_.id))+=(email,headImg,sex,phone,birthday,nickName,secure,insertTime,ip)).mapTo[Long]
+    db.run(uCustomer.map(t=>(t.email,t.headImg,t.sex,t.phone,t.birthday,t.secure,t.nickName,t.insertTime,t.ip,t.commentNum)).returning(
+      uCustomer.map(_.id))+=(email,headImg,sex,phone,birthday,nickName,secure,insertTime,ip,0)).mapTo[Long]
 }
 
   def updatePwdByEmail(user:rUser,pwd:String) = {

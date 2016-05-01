@@ -2,11 +2,8 @@
 (function(Reflux, global) {
 
     global.actions={};
-    global.actions.contentAction = Reflux.createActions([
-        'sendEmail',
-        'setPassWord',
-        'setFindState',
-        'resetPassword',
+    global.actions.personalAction = Reflux.createActions([
+        'choseLabel',
     ]);
 
 
