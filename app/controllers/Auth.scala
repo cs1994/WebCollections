@@ -25,6 +25,7 @@ class Auth @Inject()(  emailFunc:Email,
                       val actionUtils: ActionUtils) extends Controller with JsonProtocols{
 
   import actionUtils._
+  val customerAuth = loggingAction andThen customerAction
 
   val loginForm = Form(
     tuple(
@@ -167,6 +168,10 @@ class Auth @Inject()(  emailFunc:Email,
         }
       case None => Future.successful(Ok(jsonResult(10010, "Input format error.")))
     }
+  }
+
+  def logout = loggingAction {
+    Redirect(routes.Application.login()).withNewSession
   }
 
 }

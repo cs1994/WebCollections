@@ -19,8 +19,11 @@
 
     var routes = (
         <Route handler={App} path="/">
-            <DefaultRoute handler={Components.FirstPage}/>
-            <Route name="forgetPassword" path="/forgetPassword" handler={Components.FirstPage}/>
+            <DefaultRoute handler={Components.AllSave}/>
+            <Route name="allSave" path="/allSave" handler={Components.AllSave}/>
+            <Route name="personalSave" path="/personalSave" handler={Components.PersonalSave}/>
+            <Route name="task" path="/task" handler={Components.Tasks}/>
+            <Route name="comment" path="/relate" handler={Components.Comment}/>
         </Route>
     );
     Router.run(routes, function(Handler) {
