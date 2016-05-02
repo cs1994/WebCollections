@@ -31,7 +31,7 @@ a.activeHeader{
     width: 300px;
     right: 10px;
     top: 50px;
-    z-index:9999;
+    z-index:1000;
 }
 #personalMessage-header{
 
@@ -47,7 +47,7 @@ a.activeHeader{
     width: 50px;
     position: absolute;
     right: 0;
-    z-index: 9999;
+    z-index: 1000;
     opacity: 0;
     cursor: pointer;
     top: -15px;

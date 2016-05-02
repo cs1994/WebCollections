@@ -57,6 +57,10 @@ class UserDao @Inject()(
     )
   }
   def modifyUserImg(userId:Long,headImg:String) = {
-    db.run(uCustomer.filter(_.id === userId).map(m => (m.headImg)).update((headImg)))
+    db.run(uCustomer.filter(_.id === userId).map(m => (m.headImg)).update(headImg))
+  }
+  def modifyUserInfo(userId:Long,phone:String,birthday:String,gen:Int,nickName:String)={
+    db.run(uCustomer.filter(_.id === userId).map(m => (m.phone,m.birthday,m.sex,m.nickName)).
+      update(phone,birthday,gen,nickName))
   }
 }

@@ -9,6 +9,8 @@
         'deletePersonalSave',
         'checkOldPass',
         'changePass',
+        'changeUserInfo',
+        'getuserInfo',
     ]);
 
 

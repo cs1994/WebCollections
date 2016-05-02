@@ -40,6 +40,8 @@ POST        /customer/password/check              @controllers.customer.Manage.c
 POST        /customer/password/change             @controllers.customer.Manage.changePwd
 POST        /customer/pic/upload                  @controllers.customer.Manage.uploadUserPic
 GET         /customer/pic/change                  @controllers.customer.Manage.modifyUserImg(headImg:String)
+POST        /customer/userInfo/change             @controllers.customer.Manage.editUserInfo
+GET         /customer/userInfo/get                @controllers.customer.Manage.getUserInfoById
 
 ######## personal save
 POST        /customer/personal/web/add            @controllers.content.WebSave.addSave

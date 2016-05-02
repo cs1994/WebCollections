@@ -9,9 +9,14 @@
             Reflux.connect(stores.PersonalStore,"data"),
             ReactRouter.Navigation,
             ReactRouter.State],
-
+        componentWillMount:function(){
+            global.actions.personalAction.getuserInfo()
+        },
         openModal(){
             this.refs.changePassword.open();
+        },
+        openInfoModal(){
+            this.refs.changeInfo.open();
         },
         judgeOldPwd(){
             var oldpwd=$("#oldPassword").val();
@@ -111,11 +116,23 @@
             }
         },
 
+        submitInfo:function(){
+            var gen = $('input:radio:checked').val()
+            var phone = $("#myPhone").val();
+            var nickName = $("#nickName").val();
+            var bir = $("#myBir").val();
+            if(gen ==  undefined) gen = "";
+            var data={phone:phone,birthday:bir,gen:parseInt(gen),nickName:nickName}
+            global.actions.personalAction.changeUserInfo(data,this)
+        },
         render:function(){
             var activeHeaderClassSet = React.addons.classSet({
                 activeHeader: true
             });
             var self=this;
+            var sex=this.state.data.userInfo.sex==1?"男":"女";
+            var headImg=this.state.data.userInfo.headImg==""?"/assets/images/head.png":this.state.data.userInfo.headImg;
+
             return(
                 <header>
                     <nav className="navbar navbar-default">
@@ -157,32 +174,32 @@
                                                     <span className="symbol">头像</span>
                                                     <div className="form-group" style={{position:"relative",float:"right"}}>
                                                         <input type="file" id="userPic"  onChange={this.handleUserPicChange}/>
-                                                        <img id="userImage" src="/assets/images/head.png" style={{height:'50px',position:"absolute",top:-15,right:0}} alt=""/>
+                                                        <img id="userImage" src={headImg} style={{height:'50px',position:"absolute",top:-15,right:0}} alt=""/>
                                                     </div>
                                                     <hr style={{marginTop:"20px"}}/>
                                                 </li>
                                                 <li>
                                                     <span className="symbol">昵称</span>
-                                                    <span style={{marginLeft:'50px'}}></span>
+                                                    <span style={{marginLeft:'50px'}}>{this.state.data.userInfo.nickName}</span>
                                                     <hr/>
                                                 </li>
                                                 <li>
                                                     <span className="symbol">性别</span>
-                                                    <span style={{marginLeft:'50px'}}></span>
+                                                    <span style={{marginLeft:'50px'}}>{sex}</span>
                                                     <hr/>
                                                 </li>
                                                 <li>
                                                     <span className="symbol">电话</span>
-                                                    <span style={{marginLeft:'50px'}}></span>
+                                                    <span style={{marginLeft:'50px'}}>{this.state.data.userInfo.phone}</span>
                                                     <hr/>
                                                 </li>
                                                 <li>
                                                     <span className="symbol">生日</span>
-                                                    <span style={{marginLeft:'50px'}}></span>
+                                                    <span style={{marginLeft:'50px'}}>{this.state.data.userInfo.birthday}</span>
                                                     <hr/>
                                                 </li>
                                                 <li>
-                                                   <i className="fa fa-pencil-square-o"></i>
+                                                   <i className="fa fa-pencil-square-o" onClick={this.openInfoModal}></i>
                                                 </li>
                                             </div>
                                         </div>
@@ -218,29 +235,19 @@
                         </div>
                     </BootstrapModalPc>
                     <BootstrapModalPc ref="changeInfo" id="changeInfo" title="修改信息" onConfirm={this.submitInfo}>
-                        <div className="loginForm">
-                            <div className="input-group">
-                                <input type="password" className="form-control" id="oldPassword" placeholder="原密码（8-20位）"onBlur={this.judgeOldPwd} aria-describedby="basic-addon1"/>
-                                <div className="tips" id="oldPass" style={{display:"block"}}>
-                                    <p style={{color:"#818A91",marginBottom:"1",display:self.state.data.passFlag==1?"block":"none"}}>原密码正确</p>
-                                    <p style={{display:self.state.data.passFlag==2?"block":"none"}}>原密码错误（8-20位）</p>
+                        <span style={{color: 'darkolivegreen', fontWeight: 'bold', fontSize: '16px'}}>昵称: </span>
+                        <input ref="nickName" id="nickName" name="nickName" ></input>
+                        <hr/>
+                        <span style={{color: 'darkolivegreen', fontWeight: 'bold', fontSize: '16px'}}>性别:</span>
+                        <input  name="gender" type="radio" value={1}>男</input>
+                        <input  name="gender" type="radio" value={2}>女</input>
+                        <hr/>
+                        <span style={{color: 'darkolivegreen', fontWeight: 'bold', fontSize: '16px'}}>电话: </span>
+                        <input ref="myPhone" id="myPhone" name="phone" ></input>
+                        <hr/>
+                        <span style={{color: 'darkolivegreen', fontWeight: 'bold', fontSize: '16px'}}>生日: </span>
+                        <input ref="myBir" id="myBir" name="birthday" type="date" ></input>
 
-                                </div>
-                            </div>
-                            <div className="input-group">
-                                <input type="password" className="form-control" id="passwordInput" placeholder="新密码（8-20位）"onBlur={this.judgeStrong} aria-describedby="basic-addon1"/>
-                                <div className="tips" id="passP">
-                                    <p>密码格式有误（8-20位）</p>
-                                </div>
-                            </div>
-                            <div className="input-group">
-                                <input type="password" className="form-control" id="confirmInput" placeholder="确认新密码"onBlur={this.judgeSame} aria-describedby="basic-addon1"/>
-                                <div className="tips" id="confirmP">
-                                    <p>密码不一致</p>
-                                </div>
-                            </div>
-
-                        </div>
                     </BootstrapModalPc>
                 </header>
 

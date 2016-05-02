@@ -8,12 +8,14 @@
             this.labelNum = 0;
             this.passFlag = 0;
             this.saveList = [];
+            this.userInfo={};
         },
         getInitialState:function(){
             return{
                 labelNum:this.labelNum,
                 passFlag:this.passFlag,
                 saveList:this.saveList,
+                userInfo:this.userInfo,
             }
         },
         updateStore: function(){
@@ -21,6 +23,15 @@
                 labelNum:this.labelNum,
                 passFlag:this.passFlag,
                 saveList:this.saveList,
+                userInfo:this.userInfo,
+            })
+        },
+        onGetuserInfo:function(){
+            var self=this;
+            var url="/customer/userInfo/get";
+            ajaxGet(url,function(json){
+                self.userInfo=json.info;
+                self.updateStore();
             })
         },
         onCheckOldPass:function(data){
@@ -69,6 +80,18 @@
                 console.log("@@" + JSON.stringify(self.saveList))
                 self.updateStore();
             })
+        },
+        onChangeUserInfo:function(data,me){
+            var url ="/customer/userInfo/change";
+            var self =this;
+            var oldData=self.userInfo;
+            ajaxJsonPostTwo(url,data,function(json){
+                self.userInfo={id:oldData.id,email:oldData.email,headImg:oldData.headImg, sex:data.gen, phone:data.phone,
+                    birthday:data.birthday,nickName:data.nickName,insertTime:oldData.insertTime,commentNum:oldData.commentNum};
+                self.updateStore();
+               toastr.success("修改成功")
+            },function(json){toastr.warning("修改失败")});
+            me.refs.changeInfo.close();
         }
     });
 }(window.React, window.ReactRouter, window.Reflux, window));

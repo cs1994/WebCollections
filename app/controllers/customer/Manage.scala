@@ -211,4 +211,28 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
     }
   }
 
+  def editUserInfo = customerAuth.async {implicit request =>
+    val postData=request.body.asJson.get
+    val phone=(postData \ "phone").as[String]
+    val birthday=(postData \ "birthday").as[String]
+    val gen=(postData \ "gen").as[Int]
+    val nickName=(postData \ "nickName").as[String]
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    userDao.modifyUserInfo(userId,phone,birthday,gen,nickName).map { res =>
+      if(res > 0)
+        Ok(successResult(Json.obj("data" -> res)))
+      else
+        Ok(jsonResult(10000,"修改个人信息失败"))
+    }
+  }
+  def getUserInfoById = customerAuth.async {implicit request =>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    userDao.findById(userId).map { res =>
+      if(res.isDefined)
+        Ok(successResult(Json.obj("info" -> res.map(rUserWriter.writes))))
+      else
+        Ok(jsonResult(10000,"修改个人信息失败"))
+    }
+  }
+
 }
