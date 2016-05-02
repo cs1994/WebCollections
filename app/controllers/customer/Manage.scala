@@ -1,9 +1,11 @@
 package controllers.customer
 
 
+import java.io.File
 import javax.inject.Inject
-import util.ValidateUtil
-import util.GenCodeUtil
+import com.github.nscala_time.time.Imports._
+import org.apache.commons.codec.digest.DigestUtils
+import util.{SecureUtil, ValidateUtil, GenCodeUtil}
 import common.errorcode.CustomerErrorCode
 import com.google.inject.Singleton
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,16 +19,24 @@ import scala.concurrent.Future
 import controllers.{ActionUtils,SessionKey}
 import models.dao.{EmailValidateDao,UserDao}
 import util.SecureUtil._
+import common.AppSettings
+
 
 @Singleton
 class Manage @Inject() (emailValidateDao:EmailValidateDao,
                        userDao: UserDao,
+                        appSettings:AppSettings,
                          val actionUtils: ActionUtils
                           ) extends Controller with JsonProtocols {
   import actionUtils._
-
+  private final val IMAGE_SAVE_PREFIX  = appSettings.imageSavePrefix
+  private final val IMAGE_ACCESS_PREFIX  = appSettings.imageAccessPrefix
   private [this] val loggingAction = actionUtils.loggingAction
   private [this] val customerAuth = loggingAction andThen customerAction
+  private def genUniqueName(fileName:String) = {
+    SecureUtil.nonceStr(16)+DigestUtils.md5Hex(SecureUtil.nonceStr(32)+DateTime.now.getMillis.toString+fileName)
+  }
+
 
   def setPassword = loggingAction.async { implicit request =>
     Future.successful(Ok(views.html.account.setPassword("设置密码",None)))
@@ -154,4 +164,51 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
       case None => Future.successful(Ok(CustomerErrorCode.missingParameters))
     }
   }
+
+  def uploadUserPic = Action.async{ request=>
+    /**
+     * upload user's head images
+     * saveDir = /public/headPic
+     */
+    request.body.asMultipartFormData match {
+      case Some(mutilForm)=>{
+        if(mutilForm.file("imgFile").isDefined){
+          //todo
+          val dirPath = s"/"
+          val dir = new File(IMAGE_SAVE_PREFIX+dirPath)
+          if(!dir.exists()){
+            dir.mkdirs()
+          }
+          val temp = mutilForm.file("imgFile").head
+          val postFix = temp.filename.split("\\.",2).last
+          val fileName = (dirPath+genUniqueName(temp.filename)+ "."+postFix).replaceAll(" ","")
+          try {
+            temp.ref.moveTo(new File(IMAGE_SAVE_PREFIX+fileName))
+            val accessUrl = IMAGE_ACCESS_PREFIX+fileName
+            Future.successful(Ok(successResult(Json.obj("url"->accessUrl))))
+          }catch {
+            case e:Exception =>
+//              logger.info("upload pic failed:",e)
+              Future.successful(Ok(CustomerErrorCode.uploadImageFail))
+          }
+        }else{
+          Future.successful(Ok(CustomerErrorCode.invalidForm))
+        }
+      }
+      case None=>{
+        Future.successful(Ok(CustomerErrorCode.invalidForm))
+      }
+    }
+  }
+  def modifyUserImg(headImg:String) = customerAuth.async {implicit request =>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+
+    userDao.modifyUserImg(userId,headImg).map { res =>
+      if(res > 0)
+        Ok(successResult(Json.obj("data" -> res)))
+      else
+        Ok(jsonResult(10000,"修改个人信息失败"))
+    }
+  }
+
 }

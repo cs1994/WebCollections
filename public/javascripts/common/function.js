@@ -79,3 +79,8 @@ WebUtil.timeFormat =function(timeNum){
 
     return format(timeNum, 'yyyy-MM-dd HH:mm:ss');
 };
+
+WebUtil.isAllowedPic=function(type, size){
+    var picTypes = { "image/jpeg": "", "image/jpg" : "", "image/png": "", "image/bmp": "", "image/gif": ""};
+    return type.toLowerCase() in picTypes && size < 1024 * 1024; //pic size limited 1M
+}

@@ -16,3 +16,54 @@ a.activeHeader{
     border-right: 1px solid;
     padding-right: 5px;
 }
+.navbar-right li a{
+    cursor:pointer;
+}
+.loginForm .input-group{
+    width: 80%;
+    margin: 10px 5%;
+}
+.tips{
+    display:none;
+}
+#collapseInfo{
+    position: absolute;
+    width: 300px;
+    right: 10px;
+    top: 50px;
+    z-index:9999;
+}
+#personalMessage-header{
+
+}
+#personalMessage-header li {
+    cursor: pointer;
+    /* height: 50px; */
+    /*margin-top: 20px;*/
+    list-style-type: none;
+}
+#userPic {
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    right: 0;
+    z-index: 9999;
+    opacity: 0;
+    cursor: pointer;
+    top: -15px;
+}
+#personalMessage-header li img {
+    height: 50px;
+    position: absolute;
+    top: -15px;
+    right: 0;
+    border-radius: 50%;
+}
+#personalMessage-header li hr{
+    margin-bottom:10px;
+    margin-top:10px;
+}
+#personalMessage-header li i{
+    cursor: pointer;
+    font-size: 25px;
+}

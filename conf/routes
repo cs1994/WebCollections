@@ -38,6 +38,8 @@ POST        /customer/reset/password/email        @controllers.customer.Manage.r
 
 POST        /customer/password/check              @controllers.customer.Manage.checkPwd
 POST        /customer/password/change             @controllers.customer.Manage.changePwd
+POST        /customer/pic/upload                  @controllers.customer.Manage.uploadUserPic
+GET         /customer/pic/change                  @controllers.customer.Manage.modifyUserImg(headImg:String)
 
 ######## personal save
 POST        /customer/personal/web/add            @controllers.content.WebSave.addSave

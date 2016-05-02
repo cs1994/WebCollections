@@ -44,6 +44,73 @@
             if(passWord1 == passWord2) $("#confirmP").css("display","none");
             else $("#confirmP").css("display","block");
         },
+        infoToggle:function(){
+            $("#collapseInfo").toggle();
+        },
+        handleUserPicChange:function(e){
+            console.log(e);
+            e.preventDefault();
+            //var mobile = this.state.data.user.mobile;
+            var files = $('#userPic')[0].files;
+            var formData = new FormData();
+            formData.append('imgFile', files[0]);
+            if(files.length > 0){
+                if(WebUtil.isAllowedPic(files[0].type, files[0].size)){
+                    var url = "/customer/pic/upload";
+
+                    var success = function(res){
+                        console.log(res);
+                        if(res.errCode == 0){
+                            toastr.options = {
+                                "positionClass": "toast-top-center",
+                                "hideDuration": "10000",
+                            };
+                            var msg = '<div><button type="button" id="cancelBtn" class="btn btn-primary">取消</button>' +
+                                '<button type="button" id="sureBtn" class="btn" style="margin: 0 8px 0 8px">更换</button></div>';
+                            var $toast = toastr.warning(msg, "是否更换头像？");
+                            if ($toast.find('#cancelBtn').length) {
+                                $toast.delegate('#cancelBtn', 'click', function () {
+                                    $toast.remove();
+                                });
+                            }
+                            if ($toast.find('#sureBtn').length) {
+                                $toast.delegate('#sureBtn', 'click', function () {
+                                    var url = "/customer/pic/change?headImg="+res.url;
+                                    var successFunc = function(result){
+                                        toastr.success("修改成功！");
+                                        $('#userImage').attr("src", res.url);
+                                    }.bind(this);
+                                    ajaxGet(url,successFunc);
+                                });
+                            }
+
+                        } else{
+                            toastr.error(res.msg);
+                        }
+
+                    }.bind(this);
+
+                    $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,//用来回避jquery对formdata的默认序列化，XMLHttpRequest会对其进行正确处理
+                        contentType: false,//设为false才会获得正确的conten-Type
+                        async: true,
+                        success: success,
+                        error: function(xhr,status,err){
+                            console.log(xhr,status,err.toString());
+                            toastr.error(err);
+                        }
+
+                    });
+                }
+                else{
+                    toastr.warning("请选择大小在1M以内的图片文件!!");
+                }
+            }
+        },
+
         render:function(){
             var activeHeaderClassSet = React.addons.classSet({
                 activeHeader: true
@@ -77,10 +144,51 @@
                                 </ul>
 
                                 <ul className="nav navbar-nav navbar-right">
-                                    <li><a className="" href="javascript:;">{$CONF$.nickName || $CONF$.email}</a></li>
-                                    <li><a onClick={this.openModal}>修改密码</a></li>
-                                    <li><a className="" href="/logout">退出</a></li>
+                                    <li><a onClick={this.infoToggle}>{$CONF$.nickName || $CONF$.email}</a>
+                                    </li>
+                                    <li><a onClick={this.openModal}>修改密码</a>
+                                    </li>
+                                    <li><a className="" href="/logout">退出</a>
+                                    </li>
+                                    <div className="collapse" id="collapseInfo">
+                                        <div className="well">
+                                            <div id="personalMessage-header">
+                                                <li style={{paddingTop:'5px'}}>
+                                                    <span className="symbol">头像</span>
+                                                    <div className="form-group" style={{position:"relative",float:"right"}}>
+                                                        <input type="file" id="userPic"  onChange={this.handleUserPicChange}/>
+                                                        <img id="userImage" src="/assets/images/head.png" style={{height:'50px',position:"absolute",top:-15,right:0}} alt=""/>
+                                                    </div>
+                                                    <hr style={{marginTop:"20px"}}/>
+                                                </li>
+                                                <li>
+                                                    <span className="symbol">昵称</span>
+                                                    <span style={{marginLeft:'50px'}}></span>
+                                                    <hr/>
+                                                </li>
+                                                <li>
+                                                    <span className="symbol">性别</span>
+                                                    <span style={{marginLeft:'50px'}}></span>
+                                                    <hr/>
+                                                </li>
+                                                <li>
+                                                    <span className="symbol">电话</span>
+                                                    <span style={{marginLeft:'50px'}}></span>
+                                                    <hr/>
+                                                </li>
+                                                <li>
+                                                    <span className="symbol">生日</span>
+                                                    <span style={{marginLeft:'50px'}}></span>
+                                                    <hr/>
+                                                </li>
+                                                <li>
+                                                   <i className="fa fa-pencil-square-o"></i>
+                                                </li>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </ul>
+
                             </div>
                         </div>
                     </nav>
@@ -109,7 +217,31 @@
 
                         </div>
                     </BootstrapModalPc>
+                    <BootstrapModalPc ref="changeInfo" id="changeInfo" title="修改信息" onConfirm={this.submitInfo}>
+                        <div className="loginForm">
+                            <div className="input-group">
+                                <input type="password" className="form-control" id="oldPassword" placeholder="原密码（8-20位）"onBlur={this.judgeOldPwd} aria-describedby="basic-addon1"/>
+                                <div className="tips" id="oldPass" style={{display:"block"}}>
+                                    <p style={{color:"#818A91",marginBottom:"1",display:self.state.data.passFlag==1?"block":"none"}}>原密码正确</p>
+                                    <p style={{display:self.state.data.passFlag==2?"block":"none"}}>原密码错误（8-20位）</p>
 
+                                </div>
+                            </div>
+                            <div className="input-group">
+                                <input type="password" className="form-control" id="passwordInput" placeholder="新密码（8-20位）"onBlur={this.judgeStrong} aria-describedby="basic-addon1"/>
+                                <div className="tips" id="passP">
+                                    <p>密码格式有误（8-20位）</p>
+                                </div>
+                            </div>
+                            <div className="input-group">
+                                <input type="password" className="form-control" id="confirmInput" placeholder="确认新密码"onBlur={this.judgeSame} aria-describedby="basic-addon1"/>
+                                <div className="tips" id="confirmP">
+                                    <p>密码不一致</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </BootstrapModalPc>
                 </header>
 
             )

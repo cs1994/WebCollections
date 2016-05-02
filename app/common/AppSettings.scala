@@ -25,6 +25,10 @@ class AppSettings @Inject()(
 //  val deployHost = deployConfig.getString("host").getOrElse("http://localhost:9000/terra/")
   val deployHost = deployConfig.getString("host").getOrElse("http://localhost:9000/")
 
+  //image
+  private val imageConfig = allConfig.getConfig("image").get
+  val imageSavePrefix = imageConfig.getString("savePrefix").getOrElse("D:/project/WebCollections/public/headPic")
+  val imageAccessPrefix = imageConfig.getString("accessPrefix").getOrElse("/assets/headPic")
 
 
 }

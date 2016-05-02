@@ -27,9 +27,9 @@
             var url="/customer/password/check";
             var self = this;
             ajaxJsonPostTwo(url,data,function(json){
-                self.passFlag =1;
-            },function(json){self.passFlag =2;})
-            self.updateStore();
+                self.passFlag =1;self.updateStore();
+            },function(json){self.passFlag =2;self.updateStore();})
+
         },
         onChangePass:function(data,me){
             var url="/customer/password/change";

@@ -23,5 +23,7 @@ object CustomerErrorCode extends BaseJsonProtocols{
   def saveListEmpty = jsonResult(100613,"do not have collections")
   def deleteSaveFail = jsonResult(100614,"delete save fail")
   def passwordError = jsonResult(100615,"Password error.")
+  def invalidForm = jsonResult(100616,"invalid form.")
+  def uploadImageFail = jsonResult(100617,"upload image fail.")
 
 }
