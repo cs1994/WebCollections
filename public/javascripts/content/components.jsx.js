@@ -69,13 +69,27 @@
             ReactRouter.Navigation,
             ReactRouter.State],
         onConfirm:function(){
-
+            var url = $("#url").val();
+            var description = $("#description").val();
+            var secret = $('input:radio:checked').val()
+            var data={url:url,description:description,secret:parseInt(secret),label:this.state.data.labelNum}
+            if(url=="" || secret==undefined || this.state.data.labelNum==0){
+                toastr.warning("必填项有空");return;
+            }
+            global.actions.personalAction.addSave(data,this)
         },
         openModal:function(){
             this.refs.addSave.open();
         },
         choseLabel:function(num){
             global.actions.personalAction.choseLabel(num)
+        },
+        handleKeyDown:function(evt){
+            if(evt.which === 13){
+                //this.searchUser(evt);
+            } else if(evt.which === 27){
+                $("#searchInput").val("").focus();
+            }
         },
         render:function(){
 
@@ -99,9 +113,46 @@
                       <div className="col-md-6">
                           <div className="panel panel-default">
                               <div className="panel-heading">
-                                  <h3 className="panel-title">我的收藏</h3>
+                                  <h3 className="panel-title" style={{display:"inline"}}>我的收藏</h3>
+                                  <a href="" style={{float:"right"}}>×</a>
                               </div>
-                              <div className="panel-body">用户</div>
+                              <div className="panel-body">
+                                  <p>用户</p>
+                                  <div>
+
+                                  </div>
+                              </div>
+                              <div className="panel-footer">
+                                  <div>
+                                      <p>
+                                          <i className="fa fa-commenting" aria-hidden="true"></i>
+                                          <span>评论</span>
+                                      </p>
+                                      <p>
+                                          <i className="fa fa-thumbs-up" aria-hidden="true"></i>
+                                          <span>点赞</span>
+                                      </p>
+                                      <p>
+                                          <i className="fa fa-share" aria-hidden="true"></i>
+                                          <span>转发</span>
+                                      </p>
+                                      <p>
+                                          <i className="fa fa-trash" aria-hidden="true"></i>
+                                          <span>删除</span>
+                                      </p>
+                                  </div>
+                                  <form className="form-inline">
+                                      <div className="form-group">
+                                          <div className="input-group">
+                                              <input type="text" className="form-control" id="searchInput" placeholder="请输入评论内容"
+                                                     style={{width: '470px'}}
+                                                     onKeyDown={this.handleKeyDown}/>
+                                              <div  className="input-group-addon" >确认</div>
+                                          </div>
+
+                                      </div>
+                                  </form>
+                              </div>
                           </div>
                       </div>
                       <div className="col-md-3">
@@ -135,6 +186,10 @@
                               <span className={this.state.data.labelNum==3?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,3)}>资料</span>
                               <span className={this.state.data.labelNum==4?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,4)}>购物</span>
                               <span className={this.state.data.labelNum==5?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,5)}>其他</span>
+                          </div>
+                          <div className="form-group">
+                              <p><input type="radio" name="secretOption" value={1} />私密</p>
+                              <p><input type="radio" name="secretOption" value={2} />公开</p>
                           </div>
                       </div>
                   </BootstrapModalPc>

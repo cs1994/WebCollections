@@ -123,18 +123,19 @@ trait SlickTables {
     *  @param number Database column number SqlType(INT), Default(0)
     *  @param webcontent Database column webcontent SqlType(VARCHAR), Length(1000,true), Default()
     *  @param insertTime Database column insert_time SqlType(BIGINT), Default(0)
-    *  @param commentNum Database column comment_num SqlType(INT), Default(0) */
-  case class rSave(id: Long, url: String = "", userId: Long = 0L, description: String = "", secret: Int = 0, number: Int = 0, webcontent: String = "", insertTime: Long = 0L, commentNum: Int = 0)
+    *  @param commentNum Database column comment_num SqlType(INT), Default(0)
+    *  @param flag Database column flag SqlType(INT), Default(0) */
+  case class rSave(id: Long, url: String = "", userId: Long = 0L, description: String = "", secret: Int = 0, number: Int = 0, webcontent: String = "", insertTime: Long = 0L, commentNum: Int = 0, flag: Int = 0)
   /** GetResult implicit for fetching rSave objects using plain SQL queries */
   implicit def GetResultrSave(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rSave] = GR{
     prs => import prs._
-      rSave.tupled((<<[Long], <<[String], <<[Long], <<[String], <<[Int], <<[Int], <<[String], <<[Long], <<[Int]))
+      rSave.tupled((<<[Long], <<[String], <<[Long], <<[String], <<[Int], <<[Int], <<[String], <<[Long], <<[Int], <<[Int]))
   }
   /** Table description of table save. Objects of this class serve as prototypes for rows in queries. */
   class tSave(_tableTag: Tag) extends Table[rSave](_tableTag, "save") {
-    def * = (id, url, userId, description, secret, number, webcontent, insertTime, commentNum) <> (rSave.tupled, rSave.unapply)
+    def * = (id, url, userId, description, secret, number, webcontent, insertTime, commentNum, flag) <> (rSave.tupled, rSave.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(url), Rep.Some(userId), Rep.Some(description), Rep.Some(secret), Rep.Some(number), Rep.Some(webcontent), Rep.Some(insertTime), Rep.Some(commentNum)).shaped.<>({r=>import r._; _1.map(_=> rSave.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get, _8.get, _9.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(url), Rep.Some(userId), Rep.Some(description), Rep.Some(secret), Rep.Some(number), Rep.Some(webcontent), Rep.Some(insertTime), Rep.Some(commentNum), Rep.Some(flag)).shaped.<>({r=>import r._; _1.map(_=> rSave.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get, _8.get, _9.get, _10.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
     val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
@@ -154,6 +155,8 @@ trait SlickTables {
     val insertTime: Rep[Long] = column[Long]("insert_time", O.Default(0L))
     /** Database column comment_num SqlType(INT), Default(0) */
     val commentNum: Rep[Int] = column[Int]("comment_num", O.Default(0))
+    /** Database column flag SqlType(INT), Default(0) */
+    val flag: Rep[Int] = column[Int]("flag", O.Default(0))
   }
   /** Collection-like TableQuery object for table tSave */
   lazy val tSave = new TableQuery(tag => new tSave(tag))

@@ -36,6 +36,9 @@ GET         /customer/findPassword                @controllers.customer.Manage.r
 #ensure reset password submit password
 POST        /customer/reset/password/email        @controllers.customer.Manage.resetPwdByEmail
 
+######## personal save
+POST        /customer/personal/web/add            @controllers.content.WebSave.addSave
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                     controllers.WebJarAssets.at(file)
 GET         /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)

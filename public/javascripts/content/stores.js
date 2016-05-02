@@ -21,5 +21,12 @@
         this.labelNum=num;
             this.updateStore();
         },
+        onAddSave:function(data,self){
+            console.log("@@@@ " + JSON.stringify(data))
+            var url="/customer/personal/web/add"
+            ajaxJsonPost(url,data,function(){
+                self.refs.addSave.close();
+            })
+        },
     });
 }(window.React, window.ReactRouter, window.Reflux, window));

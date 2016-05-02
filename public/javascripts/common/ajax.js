@@ -39,7 +39,7 @@ function ajaxJsonPost(url, postData, successFunc) {
             var errcode = data.errCode;
             var errmsg = data.msg;
             if (errcode != 0) {
-                Debugger.log('errcode=' + errcode + ', errmsg=' + errmsg);
+               console.log('errcode=' + errcode + ', errmsg=' + errmsg);
                 //toastr.error(errmsg);
             } else {
                 successFunc(data);

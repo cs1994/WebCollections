@@ -18,4 +18,7 @@ object CustomerErrorCode extends BaseJsonProtocols{
   def invalidToken = jsonResult(1006009,"invalid token.")
   def failInsert   = jsonResult(100610,"fail to insert")
 
+  def urlExist = jsonResult(100611,"the url has exists")
+  def addSaveFail = jsonResult(100612,"add web url fail")
+
 }

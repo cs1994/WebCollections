@@ -3,3 +3,16 @@ a.activeHeader{
     background: #e7e7e7!important;
 }
 .form-group span{margin-left: 8px;cursor:pointer;}
+.col-md-6 .panel-footer i{
+    color:#5d7895;
+}
+.col-md-6 .panel-footer p{
+    width:12%;
+    display:inline-block;
+}
+.col-md-6 .panel-footer p span{
+    margin-left: 5px;
+    border-right: 1px solid;
+    padding-right: 5px;
+}
+.form-inline{margin-bottom: }

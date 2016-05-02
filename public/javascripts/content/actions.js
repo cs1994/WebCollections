@@ -4,6 +4,7 @@
     global.actions={};
     global.actions.personalAction = Reflux.createActions([
         'choseLabel',
+        'addSave',
     ]);
 
 
