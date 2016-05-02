@@ -26,6 +26,7 @@ class WebSaveDao @Inject()(
 
   private[this] val uSave = SlickTables.tSave
   private[this] val uLabel = SlickTables.tLabel
+  private[this] val uComment = SlickTables.tComment
 
 
   def getSaveByUrl(url:String,userId:Long) = {
@@ -85,14 +86,18 @@ class WebSaveDao @Inject()(
     }
   }
 
-//  def updatePwdByEmail(user:rUser,pwd:String) = {
-//    val secure = SecureUtil.getSecurePassword(pwd, user.ip, user.insertTime)
-//    db.run{
-//      uCustomer.filter(_.email===user.email).map(_.secure).update(secure)
-//    }.mapTo[Int]
-//  }
-//
-//  def checkPassword(user: rUser, password: String) = {
-//    user.secure.equals(SecureUtil.getSecurePassword(password, user.ip, user.insertTime))
-//  }
+  def getPersonalSave(userId:Long) = {
+    db.run{
+      uSave.filter(_.userId===userId).join(uLabel).on(_.id===_.taskId).result}
+  }
+
+  def getCommentById(id:Long)={
+    db.run{
+      uComment.filter(_.saveId===id).result}
+  }
+
+  def deletePersonalSave(id:Long,userId:Long)={
+    db.run{uSave.filter(s=>(s.id===id)&&(s.userId === userId)).delete}
+  }
+
 }

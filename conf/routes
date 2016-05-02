@@ -38,6 +38,8 @@ POST        /customer/reset/password/email        @controllers.customer.Manage.r
 
 ######## personal save
 POST        /customer/personal/web/add            @controllers.content.WebSave.addSave
+GET         /customer/personal/web/list           @controllers.content.WebSave.getPersonalSaveById
+GET         /customer/personal/web/delete         @controllers.content.WebSave.deletePersonalSave(id:Long)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                     controllers.WebJarAssets.at(file)

@@ -20,5 +20,7 @@ object CustomerErrorCode extends BaseJsonProtocols{
 
   def urlExist = jsonResult(100611,"the url has exists")
   def addSaveFail = jsonResult(100612,"add web url fail")
+  def saveListEmpty = jsonResult(100613,"do not have collections")
+  def deleteSaveFail = jsonResult(100614,"delete save fail")
 
 }

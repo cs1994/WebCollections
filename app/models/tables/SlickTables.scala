@@ -23,18 +23,19 @@ trait SlickTables {
     *  @param fromId Database column from_id SqlType(BIGINT), Default(0)
     *  @param toId Database column to_id SqlType(BIGINT), Default(0)
     *  @param content Database column content SqlType(VARCHAR), Length(255,true), Default()
-    *  @param state Database column state SqlType(INT), Default(0) */
-  case class rComment(id: Long, fromId: Long = 0L, toId: Long = 0L, content: String = "", state: Int = 0)
+    *  @param state Database column state SqlType(INT), Default(0)
+    *  @param saveId Database column save_id SqlType(BIGINT), Default(0) */
+  case class rComment(id: Long, fromId: Long = 0L, toId: Long = 0L, content: String = "", state: Int = 0, saveId: Long = 0L)
   /** GetResult implicit for fetching rComment objects using plain SQL queries */
   implicit def GetResultrComment(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rComment] = GR{
     prs => import prs._
-      rComment.tupled((<<[Long], <<[Long], <<[Long], <<[String], <<[Int]))
+      rComment.tupled((<<[Long], <<[Long], <<[Long], <<[String], <<[Int], <<[Long]))
   }
   /** Table description of table comment. Objects of this class serve as prototypes for rows in queries. */
   class tComment(_tableTag: Tag) extends Table[rComment](_tableTag, "comment") {
-    def * = (id, fromId, toId, content, state) <> (rComment.tupled, rComment.unapply)
+    def * = (id, fromId, toId, content, state, saveId) <> (rComment.tupled, rComment.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(fromId), Rep.Some(toId), Rep.Some(content), Rep.Some(state)).shaped.<>({r=>import r._; _1.map(_=> rComment.tupled((_1.get, _2.get, _3.get, _4.get, _5.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(fromId), Rep.Some(toId), Rep.Some(content), Rep.Some(state), Rep.Some(saveId)).shaped.<>({r=>import r._; _1.map(_=> rComment.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
     val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
@@ -46,6 +47,8 @@ trait SlickTables {
     val content: Rep[String] = column[String]("content", O.Length(255,varying=true), O.Default(""))
     /** Database column state SqlType(INT), Default(0) */
     val state: Rep[Int] = column[Int]("state", O.Default(0))
+    /** Database column save_id SqlType(BIGINT), Default(0) */
+    val saveId: Rep[Long] = column[Long]("save_id", O.Default(0L))
   }
   /** Collection-like TableQuery object for table tComment */
   lazy val tComment = new TableQuery(tag => new tComment(tag))

@@ -9,10 +9,10 @@ a.activeHeader{
 .col-md-6 .panel-footer p{
     width:12%;
     display:inline-block;
+    cursor:pointer;
 }
 .col-md-6 .panel-footer p span{
     margin-left: 5px;
     border-right: 1px solid;
     padding-right: 5px;
 }
-.form-inline{margin-bottom: }
