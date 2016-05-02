@@ -23,8 +23,10 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
                        userDao: UserDao,
                          val actionUtils: ActionUtils
                           ) extends Controller with JsonProtocols {
+  import actionUtils._
 
   private [this] val loggingAction = actionUtils.loggingAction
+  private [this] val customerAuth = loggingAction andThen customerAction
 
   def setPassword = loggingAction.async { implicit request =>
     Future.successful(Ok(views.html.account.setPassword("设置密码",None)))
@@ -115,6 +117,41 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
       case None =>{
         Future.successful(Ok(CustomerErrorCode.missingParameters))
       }
+    }
+  }
+
+  def checkPwdForm = Form(
+    "oldpwd" -> nonEmptyText
+  )
+
+  def changePwdForm = Form(
+    "newpwd" -> nonEmptyText
+  )
+  def checkPwd = customerAuth.async{implicit request =>
+    checkPwdForm.bindFromRequest.value match{
+      case Some(oldPwd) =>
+        val user = request.customer
+        if(userDao.checkPassword(user,oldPwd)){
+          Future.successful(Ok(success))
+        }else{
+          Future.successful(Ok(CustomerErrorCode.passwordError))
+        }
+      case None => Future.successful(Ok(CustomerErrorCode.missingParameters))
+    }
+  }
+
+  def changePwd = customerAuth.async{implicit request =>
+    changePwdForm.bindFromRequest.value match{
+      case Some(newPwd) =>
+        val user = request.customer
+        userDao.changePwd(user,newPwd).map{res =>
+          if(res > 0){
+            Ok(success)
+          }else{
+            Ok(CustomerErrorCode.updatePwdFail)
+          }
+        }
+      case None => Future.successful(Ok(CustomerErrorCode.missingParameters))
     }
   }
 }

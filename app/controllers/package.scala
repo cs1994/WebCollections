@@ -2,10 +2,11 @@ import javax.inject.{Inject, Singleton}
 
 import org.slf4j.LoggerFactory
 import play.api.mvc._
-
+import models.dao.UserDao
 import scala.concurrent.Future
 
 package object controllers {
+  import models.tables.SlickTables._
   import scala.concurrent.ExecutionContext.Implicits.global
 
   object SessionKey {
@@ -34,14 +35,14 @@ package object controllers {
                         nickName:String
                         )
 
-  class CustomerRequest[A](val customer: tempUser, request: Request[A]) extends WrappedRequest[A](request)
+  class CustomerRequest[A](val customer: rUser, request: Request[A]) extends WrappedRequest[A](request)
 
   @Singleton
-  class CustomerAction @Inject()() extends ActionRefiner[Request,CustomerRequest] {
+  class CustomerAction @Inject()(userDao:UserDao) extends ActionRefiner[Request,CustomerRequest] {
     val logger = LoggerFactory.getLogger(getClass)
     val SessionTimeOut = 6 * 60 * 60 * 1000 //ms    有效时间6个小时
 
-    protected def authAdmin(request: RequestHeader): Future[Option[tempUser]] = {
+    protected def authAdmin(request: RequestHeader): Future[Option[rUser]] = {
 
       println("****************** request:"+ request.headers+request.session.data)
       val session = request.session
@@ -55,7 +56,7 @@ package object controllers {
           logger.info("Login failed for timeout")
           Future.successful(None)
         } else{
-          Future(Some(tempUser(id,email,nickName)))
+          userDao.findById(id)
         }
       } catch {
         case ex: Throwable =>

@@ -36,6 +36,9 @@ GET         /customer/findPassword                @controllers.customer.Manage.r
 #ensure reset password submit password
 POST        /customer/reset/password/email        @controllers.customer.Manage.resetPwdByEmail
 
+POST        /customer/password/check              @controllers.customer.Manage.checkPwd
+POST        /customer/password/change             @controllers.customer.Manage.changePwd
+
 ######## personal save
 POST        /customer/personal/web/add            @controllers.content.WebSave.addSave
 GET         /customer/personal/web/list           @controllers.content.WebSave.getPersonalSaveById

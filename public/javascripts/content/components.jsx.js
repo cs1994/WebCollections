@@ -6,13 +6,49 @@
     var actions = global.actions;
     components.Header = React.createClass({
         mixins:[
-            //Reflux.connect(stores.contentStore,"data"),
+            Reflux.connect(stores.PersonalStore,"data"),
             ReactRouter.Navigation,
             ReactRouter.State],
+
+        openModal(){
+            this.refs.changePassword.open();
+        },
+        judgeOldPwd(){
+            var oldpwd=$("#oldPassword").val();
+            var data={oldpwd:oldpwd}
+            global.actions.personalAction.checkOldPass(data)
+        },
+        onConfirm(){
+            const self =this;
+            if(self.state.data.passFlag ==1){
+                var pwd=$("#passwordInput").val();
+                var passw=$("#confirmInput").val();
+                if(pwd.length<8 || pwd.length>20 || pwd!=passw){
+                    toastr.warning("请根据提示填写")
+                    return
+                }
+                var data={newpwd:pwd}
+                global.actions.personalAction.changePass(data,self)
+            }
+            else toastr.warning("请输入正确的原始密码！")
+
+        },
+        judgeStrong(){
+            var passWord=$("#passwordInput").val()
+            if(7<passWord.length && passWord.length<21) $("#passP").css("display","none");
+            else $("#passP").css("display","block");
+        },
+        judgeSame(){
+            var passWord1=$("#passwordInput").val()
+            var passWord2=$("#confirmInput").val()
+            if(passWord1 == passWord2) $("#confirmP").css("display","none");
+            else $("#confirmP").css("display","block");
+        },
         render:function(){
             var activeHeaderClassSet = React.addons.classSet({
                 activeHeader: true
             });
+            var self=this;
             return(
                 <header>
                     <nav className="navbar navbar-default">
@@ -42,11 +78,38 @@
 
                                 <ul className="nav navbar-nav navbar-right">
                                     <li><a className="" href="javascript:;">{$CONF$.nickName || $CONF$.email}</a></li>
+                                    <li><a onClick={this.openModal}>修改密码</a></li>
                                     <li><a className="" href="/logout">退出</a></li>
                                 </ul>
                             </div>
                         </div>
                     </nav>
+                    <BootstrapModalPc ref="changePassword" id="changePassword" title="修改密码" onConfirm={this.onConfirm}>
+                        <div className="loginForm">
+                            <div className="input-group">
+                                <input type="password" className="form-control" id="oldPassword" placeholder="原密码（8-20位）"onBlur={this.judgeOldPwd} aria-describedby="basic-addon1"/>
+                                <div className="tips" id="oldPass" style={{display:"block"}}>
+                                    <p style={{color:"#818A91",marginBottom:"1",display:self.state.data.passFlag==1?"block":"none"}}>原密码正确</p>
+                                    <p style={{display:self.state.data.passFlag==2?"block":"none"}}>原密码错误（8-20位）</p>
+
+                                </div>
+                            </div>
+                            <div className="input-group">
+                                <input type="password" className="form-control" id="passwordInput" placeholder="新密码（8-20位）"onBlur={this.judgeStrong} aria-describedby="basic-addon1"/>
+                                <div className="tips" id="passP">
+                                    <p>密码格式有误（8-20位）</p>
+                                </div>
+                            </div>
+                            <div className="input-group">
+                                <input type="password" className="form-control" id="confirmInput" placeholder="确认新密码"onBlur={this.judgeSame} aria-describedby="basic-addon1"/>
+                                <div className="tips" id="confirmP">
+                                    <p>密码不一致</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </BootstrapModalPc>
+
                 </header>
 
             )

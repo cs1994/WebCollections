@@ -52,6 +52,33 @@ function ajaxJsonPost(url, postData, successFunc) {
     });
 }
 
+function ajaxJsonPostTwo(url, postData, successFunc,failFunc) {
+    var sendData = JSON.stringify(postData);
+    //Debugger.log("ajaxJsonPost: sendData=" + sendData);
+    $.ajax({
+        url: url,
+        dataType: 'json',
+        contentType: 'application/json',
+        type: 'POST',
+        data: sendData,
+        success: function (data) {
+            var errcode = data.errCode;
+            var errmsg = data.msg;
+            if (errcode != 0) {
+                failFunc(data)
+                console.log('errcode=' + errcode + ', errmsg=' + errmsg);
+                //toastr.error(errmsg);
+            } else {
+                successFunc(data);
+            }
+        }.bind(this),
+        error: function (xhr, status, err) {
+            console.error(url, xhr, status, err.toString());
+            //toastr.error(err);
+        }.bind(this)
+    });
+}
+
 function ajaxGet(url,successFunc){
     $.ajax({
         url:url,

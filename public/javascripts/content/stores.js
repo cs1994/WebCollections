@@ -6,19 +6,39 @@
         listenables: [global.actions.personalAction],
         init: function(){
             this.labelNum = 0;
+            this.passFlag = 0;
             this.saveList = [];
         },
         getInitialState:function(){
             return{
                 labelNum:this.labelNum,
+                passFlag:this.passFlag,
                 saveList:this.saveList,
             }
         },
         updateStore: function(){
             this.trigger({
                 labelNum:this.labelNum,
+                passFlag:this.passFlag,
                 saveList:this.saveList,
             })
+        },
+        onCheckOldPass:function(data){
+            var url="/customer/password/check";
+            var self = this;
+            ajaxJsonPostTwo(url,data,function(json){
+                self.passFlag =1;
+            },function(json){self.passFlag =2;})
+            self.updateStore();
+        },
+        onChangePass:function(data,me){
+            var url="/customer/password/change";
+            var self = this;
+            ajaxJsonPostTwo(url,data,function(json){
+                toastr.success("修改成功！")
+                me.refs.changePassword.close();
+            },function(json){self.passFlag =2;})
+            self.updateStore();
         },
         onChoseLabel:function(num){
         this.labelNum=num;

@@ -7,6 +7,8 @@
         'addSave',
         'getPersonalSave',
         'deletePersonalSave',
+        'checkOldPass',
+        'changePass',
     ]);
 
 

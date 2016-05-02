@@ -29,6 +29,9 @@ class UserDao @Inject()(
   def getUserByEmail(email:String) = {
     db.run(uCustomer.filter(_.email === email).result.headOption)
   }
+  def findById(id:Long)={
+    db.run(uCustomer.filter(_.id===id).result.headOption)
+  }
   def getUserById(id:Long) = {
     db.run(uCustomer.filter(_.id===id).result.head)
   }
@@ -46,5 +49,11 @@ class UserDao @Inject()(
 
   def checkPassword(user: rUser, password: String) = {
     user.secure.equals(SecureUtil.getSecurePassword(password, user.ip, user.insertTime))
+  }
+  def changePwd(user:rUser,pwd:String) = {
+    val secure = SecureUtil.getSecurePassword(pwd,user.ip,user.insertTime)
+    db.run(
+      uCustomer.filter(_.id === user.id).map(_.secure).update(secure)
+    )
   }
 }
