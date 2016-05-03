@@ -664,12 +664,13 @@
                                     </ul>
                                 </div>
                                 <div className="col-md-3 col-sm-0 col-xs-0" style={{borderLeft: '1px solid #e7e7e7'}} id="teamProjectList">
-                                    <h1 style={{paddingLeft: '15px'}}>
+                                    <h1 style={{paddingLeft: '15px',borderBottom:"1px solid #999"}}>
                                         <small>提醒</small>
                                     </h1>
+                                    <h3>未开始</h3>
                                     <ul className="projects" id="projects" style={{paddingLeft: '20px'}}>
                                         {
-                                        //    this.state.taskList.projects.map(function(project){
+                                            //this.state.taskList.projects.map(function(project){
                                             //    return(
                                             //        <li>
                                             //            <div className="event-title thumbnail" id="thumbnail9" data-toggle="tooltip" data-placement="top" title={"简介：" + project.description + ", 创建于 " + RheaUtil.timeFormat(project.ctime)}>
@@ -685,6 +686,7 @@
                                             //})
                                         }
                                     </ul>
+                                    <h3>进行中</h3>
                                 </div>
                             </div>
                         </div>

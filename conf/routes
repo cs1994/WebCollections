@@ -54,6 +54,8 @@ GET         /customer/task/list                   @controllers.customer.Manage.g
 GET         /customer/task/state/change           @controllers.customer.Manage.changeTaskState(id:Long,state:Int)
 GET         /customer/task/delete                 @controllers.customer.Manage.deleteTask(id:Long)
 GET         /customer/task/getByState             @controllers.customer.Manage.getTaskBtState(state:Int)
+GET         /customer/task/unFinshed              @controllers.customer.Manage.getUnfinishedTask
+GET         /customer/task/unStart                @controllers.customer.Manage.getUnstartTask
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                     controllers.WebJarAssets.at(file)

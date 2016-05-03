@@ -24,8 +24,8 @@ libraryDependencies ++= {
   val scalaXmlV = "1.0.4"
   val playSlickV = "1.1.1"
   val slickV = "3.1.0"
-//  val httpclientVersion = "4.3.5"
-//  val httpcoreVersion = "4.3.2"
+  val httpclientVersion = "4.3.5"
+  val httpcoreVersion = "4.3.2"
 
   Seq(
     "com.typesafe.play" %% "play-slick" % playSlickV,
@@ -35,9 +35,12 @@ libraryDependencies ++= {
     "com.github.nscala-time" %% "nscala-time" % nscalaTimeV,
     "commons-codec" % "commons-codec" % codecV,
     "mysql" % "mysql-connector-java" % mysqlConnectorV,
-    "com.sun.mail" % "javax.mail" % javaMailVersion withSources()
+    "com.sun.mail" % "javax.mail" % javaMailVersion withSources(),
+    "org.apache.httpcomponents" % "httpclient" % httpclientVersion withSources(),
+    "org.apache.httpcomponents" % "httpcore" % httpcoreVersion withSources(),
+    "org.apache.httpcomponents" % "httpmime" % httpclientVersion withSources(),
+    "org.apache.commons" % "commons-collections4" % "4.0"
   )
-
 }
 
 
@@ -53,6 +56,7 @@ libraryDependencies ++= Seq(
   "org.webjars.bower" % "smalot-bootstrap-datetimepicker" % "2.3.1",
   "org.webjars" % "momentjs" % "2.10.6",
   "org.webjars.bower" % "bootstrap-daterangepicker" % "2.0.11"
+
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"

@@ -58,7 +58,7 @@ class UserDao @Inject()(
     )
   }
   def modifyUserImg(userId:Long,headImg:String) = {
-    db.run(uCustomer.filter(_.id === userId).map(m => (m.headImg)).update(headImg))
+    db.run(uCustomer.filter(_.id === userId).map(_.headImg).update(headImg))
   }
   def modifyUserInfo(userId:Long,phone:String,birthday:String,gen:Int,nickName:String)={
     db.run(uCustomer.filter(_.id === userId).map(m => (m.phone,m.birthday,m.sex,m.nickName)).
@@ -81,7 +81,11 @@ class UserDao @Inject()(
   def getTaskByState(userId:Long,state:Int)={
     if(state<=0)    db.run(uTask.filter(_.userId === userId).result)
     else     db.run(uTask.filter(t=>(t.userId === userId)&&(t.state===state)).result)
-
-
+  }
+  def getUnfinishedTask(userId:Long)={
+    db.run(uTask.filter(t=>(t.userId === userId)&&(t.state === 2)).take(6).result)
+  }
+  def getUnstartTask(userId:Long)={
+    db.run(uTask.filter(t=>(t.userId === userId)&&(t.state === 1)).take(6).result)
   }
 }

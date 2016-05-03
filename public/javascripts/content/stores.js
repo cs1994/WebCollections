@@ -98,15 +98,21 @@
         listenables: [global.actions.taskAction],
         init: function(){
             this.taskList = [];
+            this.unStartList = [];
+            this.unFinishList = [];
         },
         getInitialState:function(){
             return{
                 taskList:this.taskList,
+                unStartList:this.unStartList,
+                unFinishList:this.unFinishList,
             }
         },
         updateStore: function(){
             this.trigger({
                 taskList:this.taskList,
+                unStartList:this.unStartList,
+                unFinishList:this.unFinishList,
             })
         },
         onAddTask:function(data){
@@ -161,7 +167,18 @@
                 self.taskList=json.list;
                 self.updateStore();
             })
-        }
+        },
+        onGetUnstart:function(){
+            var url = "/customer/task/unFinshed";
+            var urlTwo = "/customer/task/unStart";
+            var self = this;
+            ajaxGet(url,function(json){
+                self.unFinishList=json.list;
+            })
+            ajaxGet(urlTwo,function(json){
+                self.unStartList=json.list;
+            })
+        },
 
     });
 }(window.React, window.ReactRouter, window.Reflux, window));

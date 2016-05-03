@@ -289,4 +289,16 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
 //        Ok(jsonResult(10000,"获取失败"))
     }
   }
+  def getUnfinishedTask =  customerAuth.async {implicit request =>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    userDao.getUnfinishedTask(userId).map { res =>
+      Ok(successResult(Json.obj("list"->res.map(rTaskWriter.writes))))
+    }
+  }
+  def getUnstartTask =  customerAuth.async {implicit request =>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    userDao.getUnstartTask(userId).map { res =>
+      Ok(successResult(Json.obj("list"->res.map(rTaskWriter.writes))))
+    }
+  }
 }
