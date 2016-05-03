@@ -72,4 +72,16 @@ class UserDao @Inject()(
   def getAllTask(userId:Long)={
     db.run(uTask.filter(_.userId===userId).result)
   }
+  def changeTaskState(userId:Long,id:Long,state:Int)={
+    db.run(uTask.filter(t=>(t.userId === userId)&&(t.id===id)).map(_.state).update(state))
+  }
+  def deleteTask(userId:Long,id:Long)={
+    db.run(uTask.filter(t=>(t.userId === userId)&&(t.id===id)).delete)
+  }
+  def getTaskByState(userId:Long,state:Int)={
+    if(state<=0)    db.run(uTask.filter(_.userId === userId).result)
+    else     db.run(uTask.filter(t=>(t.userId === userId)&&(t.state===state)).result)
+
+
+  }
 }

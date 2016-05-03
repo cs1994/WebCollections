@@ -258,4 +258,35 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
         Ok(jsonResult(10000,"添加失败"))
     }
   }
+  def changeTaskState(id:Long,state:Int) = customerAuth.async {implicit request =>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    userDao.changeTaskState(userId,id,state).map { res =>
+      if(res>0){
+        Ok(success)
+      }
+      else
+        Ok(jsonResult(10000,"更新失败"))
+    }
+  }
+  def deleteTask(id:Long) = customerAuth.async {implicit request =>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    userDao.deleteTask(userId,id).map { res =>
+      if(res>0){
+        Ok(success)
+      }
+      else
+        Ok(jsonResult(10000,"删除失败"))
+    }
+  }
+
+  def getTaskBtState(state:Int) = customerAuth.async {implicit request =>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    userDao.getTaskByState(userId,state).map { res =>
+//      if(res.nonEmpty){
+        Ok(successResult(Json.obj("list"->res.map(rTaskWriter.writes))))
+//      }
+//      else
+//        Ok(jsonResult(10000,"获取失败"))
+    }
+  }
 }

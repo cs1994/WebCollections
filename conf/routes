@@ -51,6 +51,9 @@ GET         /customer/personal/web/delete         @controllers.content.WebSave.d
 ##### task
 POST        /customer/task/add                    @controllers.customer.Manage.addNewTask
 GET         /customer/task/list                   @controllers.customer.Manage.getAllTask
+GET         /customer/task/state/change           @controllers.customer.Manage.changeTaskState(id:Long,state:Int)
+GET         /customer/task/delete                 @controllers.customer.Manage.deleteTask(id:Long)
+GET         /customer/task/getByState             @controllers.customer.Manage.getTaskBtState(state:Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                     controllers.WebJarAssets.at(file)

@@ -540,9 +540,32 @@
             this.refs.taskInput.getDOMNode().value = '';
             global.actions.taskAction.addTask(data);
         },
-        toggleEdit: function(evt){
-            console.log("#######################")
-            $(React.findDOMNode(this.refs.editTask)).toggle("slow");
+        toggleEdit: function(index) {
+            $("#edit"+index).toggle("slow");
+        },
+        changeStatus:function(id,index){
+            var state = parseInt($("#state"+index).val());
+            var oldState = this.state.data.taskList[index].state;
+            if(state ==oldState) toastr.info("Are u kidding? 任务状态没有发生改变");
+            else if(state<oldState) toastr.info("任务状态不能回退!");
+            else global.actions.taskAction.changeTaskState(id,state,index)
+        },
+        deleteTask:function(id,index){
+            swal({
+                title: "确定要删除吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确认",
+                cancelButtonText: "取消"
+            }, function () {
+                global.actions.taskAction.deleteTask(id,index)
+            });
+        },
+        handleClickState:function(){
+            var state = parseInt($("#state_name").val());
+            global.actions.taskAction.getListByState(state)
         },
         render:function(){
             return(
@@ -572,7 +595,8 @@
                                     <br/>
                                     <div className="page-header">
                                         <span className="personal-change"> 任务动态 </span>
-                                        <select className="form-control" name="classify_name" id="classify_name" style={{display: 'inline', maxWidth: '10em'}}>
+                                        <select className="form-control" name="state_name" id="state_name" onChange={this.handleClickState}
+                                                style={{display: 'inline', maxWidth: '10em'}}>
                                             <option value={0} data-toggle="tooltip" data-placement="top" title="">全部</option>
                                             <option value={1} data-toggle="tooltip" data-placement="top" title="">未开始</option>
                                             <option value={2} data-toggle="tooltip" data-placement="top" title="">进行中</option>
@@ -589,6 +613,7 @@
                                                     case 1:state="未开始";break;
                                                     case 2:state="进行中";break;
                                                     case 3:state="已完成";break;
+                                                    case 4:state="废弃";break;
                                                 }
                                             return (
                                                 <div className="task-content">
@@ -604,21 +629,21 @@
                                                         <span className="event_label pushed"> {task.content} </span>
                                                         <div style={{display: 'inline', marginLeft: '10px', fontSize: '15px'}}>
                                                             <div className="state-edit"  data-toggle="tooltip" data-placement="top" title="单击编辑按钮进行编辑"
-                                                                 onClick={this.toggleEdit}>
+                                                                 onClick={this.toggleEdit.bind(this,index)}>
                                                                 <span className="glyphicon glyphicon-edit"></span>
                                                             </div>
-                                                            <div ref="editTask" className="drop-down">
+                                                            <div ref="editTask" className="drop-down" id={"edit"+index}>
                                                                 <span className="edit-statetext"> 修改状态： </span>
-                                                                <select ref="taskState" className="edit-state" name="edit-statename" autoFocus>
-                                                                    <option value="1"> 未开始 </option>
-                                                                    <option value="2"> 进行中 </option>
-                                                                    <option value="3"> 已完成 </option>
-                                                                    <option value="4"> 废弃 </option>
+                                                                <select ref="taskState" className="edit-state"  id={"state"+index}name="edit-statename" autoFocus>
+                                                                    <option value={1}> 未开始 </option>
+                                                                    <option value={2}> 进行中 </option>
+                                                                    <option value={3}> 已完成 </option>
+                                                                    <option value={4}> 废弃 </option>
                                                                 </select>
                                                                 <div className="btn-group btn-edit-state" >
-                                                                    <button className="btn btn-info btn-sm close-state" onClick={this.toggleEdit}> 关闭 </button>
-                                                                    <button className="btn btn-info btn-sm summit-state" onClick={this.changeStatus}> 提交 </button>
-                                                                    <button className="btn btn-success btn-sm delete-state" onClick={this.deleteTask}> 删除当前task </button>
+                                                                    <button className="btn btn-info btn-sm close-state" onClick={this.toggleEdit.bind(this,index)}> 关闭 </button>
+                                                                    <button className="btn btn-info btn-sm summit-state" onClick={this.changeStatus.bind(this,task.id,index)}> 提交 </button>
+                                                                    <button className="btn btn-success btn-sm delete-state" onClick={this.deleteTask.bind(this,task.id,index)}> 删除当前task </button>
                                                                 </div>
                                                             </div>
                                                         </div>

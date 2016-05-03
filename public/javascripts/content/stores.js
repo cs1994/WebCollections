@@ -127,6 +127,40 @@
                 self.taskList=json.list;
                 self.updateStore();
             })
+        },
+        onChangeTaskState:function(id,state,index){
+            var url = "/customer/task/state/change?id="+id+"&state="+state;
+            var self = this;
+            ajaxGet(url,function(json){
+                var item = self.taskList[index];
+                item.state = state;
+                var oldList = self.taskList;
+                var list = oldList.slice(0,index)
+                    list.push(item)
+                self.taskList=list.concat(oldList.slice(index+1));
+                self.updateStore();
+                $("#edit"+index).toggle("slow");
+                toastr.success("修改成功")
+            })
+        },
+        onDeleteTask:function(id,index){
+            var url = "/customer/task/delete?id="+id;
+            var self = this;
+            ajaxGet(url,function(){
+                var oldList = self.taskList;
+                self.taskList=oldList.slice(0,index).concat(oldList.slice(index+1));
+                self.updateStore();
+                $("#edit"+index).toggle("slow");
+                toastr.success("删除成功")
+            })
+        },
+        onGetListByState:function(state){
+            var url = "/customer/task/getByState?state="+state;
+            var self = this;
+            ajaxGet(url,function(json){
+                self.taskList=json.list;
+                self.updateStore();
+            })
         }
 
     });
