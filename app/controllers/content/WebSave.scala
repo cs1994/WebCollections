@@ -38,11 +38,10 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
         Future.successful(Ok(CustomerErrorCode.urlExist))
       }else{
         val cur = System.currentTimeMillis()
-        webSaveDao.addSave(
-          url,description,label,secret,userId,cur
-        ).map{result=>
-          if(result>0){
-            Ok(successResult(Json.obj("id" ->result)))
+        val result= webSaveDao.addSaveFile(url,description,label,secret,userId,cur)
+          result._1.map{id=>
+          if(id>0){
+            Ok(successResult(Json.obj("id" ->id,"content" -> result._2,"time"->cur)))
           }else{
             Ok(CustomerErrorCode.addSaveFail)
           }

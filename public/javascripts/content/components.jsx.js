@@ -385,7 +385,80 @@
             });
         },
         render:function(){
+            var dom = null;
+            if(this.state.data.saveList.length==0){
+                dom=
+                    <div className="panel panel-default">
+                        <div className="panel-heading">
+                            <h3 className="panel-title" style={{display:"inline"}}>我的收藏</h3>
+                        </div>
+                        <div className="panel-body">
+                            <p>您暂无收藏</p>
+                        </div>
+                    </div>
+            }
+            else {
+                dom=this.state.data.saveList.map(function(e, index){
+                    var time = WebUtil.timeFormat(e.insertTime)
+                    var labelTitle = "";
+                    switch(e.label){
+                        case 1: labelTitle="学习";break;
+                        case 2: labelTitle="娱乐";break;
+                        case 3: labelTitle="资料";break;
+                        case 4: labelTitle="购物";break;
+                        case 5: labelTitle="其他";break;
+                    }
+                    return(
+                        <div className="panel panel-default" id={"save"+index}>
+                            <div className="panel-heading">
+                                <h3 className="panel-title" style={{display:"inline"}}>我的收藏</h3>
+                                <a onClick={this.closePanel.bind(this,index)} style={{float:"right",cursor:"pointer"}}>×</a>
+                            </div>
+                            <div className="panel-body">
+                                <p>{$CONF$.nickName}</p>
+                                <div style={{height:"25px"}}>
+                                    <span>{time}</span>
+                                    <span style={{marginLeft:"20px"}} className="label label-success">{labelTitle}</span>
+                                </div>
+                                <p>链接：<a href="">{e.url}</a></p>
+                                <p>内容：{e.content}</p>
+                            </div>
+                            <div className="panel-footer">
+                                <div>
+                                    <p>
+                                        <i className="fa fa-commenting" aria-hidden="true"></i>
+                                        <span>评论</span>
+                                    </p>
+                                    <p>
+                                        <i className="fa fa-thumbs-up" aria-hidden="true"></i>
+                                        <span>点赞</span>
+                                    </p>
+                                    <p>
+                                        <i className="fa fa-share" aria-hidden="true"></i>
+                                        <span>转发</span>
+                                    </p>
+                                    <p onClick={this.deleteSave.bind(this,e.id,index)}>
+                                        <i className="fa fa-trash" aria-hidden="true"></i>
+                                        <span>删除</span>
+                                    </p>
+                                </div>
+                                <form className="form-inline">
+                                    <div className="form-group">
+                                        <div className="input-group">
+                                            <input type="text" className="form-control" id="searchInput" placeholder="请输入评论内容"
+                                                   style={{width: '470px'}}
+                                                   onKeyDown={this.handleKeyDown}/>
+                                            <div  className="input-group-addon" >确认</div>
+                                        </div>
 
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                    )
+                }.bind(this))
+            }
             return(
               <div className="container">
                   <div className="row" style={{padding:"15px"}}>
@@ -404,66 +477,7 @@
                           </div>
                       </div>
                       <div className="col-md-6" >
-                          {this.state.data.saveList.map(function(e, index){
-                              var time = WebUtil.timeFormat(e.insertTime)
-                              var labelTitle = "";
-                              switch(e.label){
-                                  case 1: labelTitle="学习";break;
-                                  case 2: labelTitle="娱乐";break;
-                                  case 3: labelTitle="资料";break;
-                                  case 4: labelTitle="购物";break;
-                                  case 5: labelTitle="其他";break;
-                              }
-                              return(
-                                  <div className="panel panel-default" id={"save"+index}>
-                                      <div className="panel-heading">
-                                          <h3 className="panel-title" style={{display:"inline"}}>我的收藏</h3>
-                                          <a onClick={this.closePanel.bind(this,index)} style={{float:"right",cursor:"pointer"}}>×</a>
-                                      </div>
-                                      <div className="panel-body">
-                                          <p>{$CONF$.nickName}</p>
-                                          <div style={{height:"25px"}}>
-                                              <span>{time}</span>
-                                              <span style={{marginLeft:"20px"}} className="label label-success">{labelTitle}</span>
-                                          </div>
-                                          <p>链接：<a href="">{e.url}</a></p>
-                                          <p>内容：{e.content}</p>
-                                      </div>
-                                      <div className="panel-footer">
-                                          <div>
-                                              <p>
-                                                  <i className="fa fa-commenting" aria-hidden="true"></i>
-                                                  <span>评论</span>
-                                              </p>
-                                              <p>
-                                                  <i className="fa fa-thumbs-up" aria-hidden="true"></i>
-                                                  <span>点赞</span>
-                                              </p>
-                                              <p>
-                                                  <i className="fa fa-share" aria-hidden="true"></i>
-                                                  <span>转发</span>
-                                              </p>
-                                              <p onClick={this.deleteSave.bind(this,e.id,index)}>
-                                                  <i className="fa fa-trash" aria-hidden="true"></i>
-                                                  <span>删除</span>
-                                              </p>
-                                          </div>
-                                          <form className="form-inline">
-                                              <div className="form-group">
-                                                  <div className="input-group">
-                                                      <input type="text" className="form-control" id="searchInput" placeholder="请输入评论内容"
-                                                             style={{width: '470px'}}
-                                                             onKeyDown={this.handleKeyDown}/>
-                                                      <div  className="input-group-addon" >确认</div>
-                                                  </div>
-
-                                              </div>
-                                          </form>
-                                      </div>
-                                  </div>
-
-                              )
-                          }.bind(this))}
+                          {dom}
                       </div>
 
                       <div className="col-md-3">
