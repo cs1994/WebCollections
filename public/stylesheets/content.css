@@ -67,3 +67,56 @@ a.activeHeader{
     cursor: pointer;
     font-size: 25px;
 }
+.left-state {
+    width: 80%;
+    display: inline-block;
+}
+.task-content{
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+.author_name a {
+    color: dodgerblue;
+    font-weight: bold;
+    margin-right: 10px;
+}
+.task_state {
+    margin-left: 10px;
+    color: lightseagreen;
+    margin-right: 10px;
+}
+.task-content .right-info {
+    width: 20%;
+    display: inline;
+}
+.state-edit {
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+}
+.date {
+    float: right;
+    cursor: none;
+    font-size: 12px;
+    font-family: '微软雅黑';
+    font-style: italic;
+}
+.drop-down {
+    height: 50px;
+    display: none;
+}
+
+.edit-statetext {
+    color: #333333;
+    font-weight: bold;
+}
+.edit-state {
+    padding: 4px 10px 4px 20px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.btn-group.btn-edit-state {
+    display: inline-block;
+    position: relative;
+    padding: 0 20px;
+}

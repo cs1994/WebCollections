@@ -68,4 +68,8 @@ class UserDao @Inject()(
     db.run(uTask.map(t=>(t.content,t.state,t.userId,t.insertTime)).returning(
       uTask.map(_.id))+=(content,state,userId,insertTime)).mapTo[Long]
   }
+
+  def getAllTask(userId:Long)={
+    db.run(uTask.filter(_.userId===userId).result)
+  }
 }

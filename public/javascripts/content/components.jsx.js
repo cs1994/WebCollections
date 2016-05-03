@@ -515,14 +515,15 @@
             Reflux.connect(stores.TaskStore,"data"),
             ReactRouter.Navigation,
             ReactRouter.State],
+        componentWillMount(){
+            global.actions.taskAction.getAllTask();
+        },
         keyDown: function(evt){
             var text = this.refs.taskInput.getDOMNode().value;
-            // we pressed enter, if text isn't empty we save
             if(evt.which === 13 && text){
                 evt.preventDefault();
                 this.submitNewTask();
             }
-            // pressed escape. we won't save
             else if(evt.which === 27){
                 this.refs.taskInput.getDOMNode().value = '';
                 this.refs.taskInput.getDOMNode().blur();
@@ -538,6 +539,10 @@
             var data={content:taskText,state:state}
             this.refs.taskInput.getDOMNode().value = '';
             global.actions.taskAction.addTask(data);
+        },
+        toggleEdit: function(evt){
+            console.log("#######################")
+            $(React.findDOMNode(this.refs.editTask)).toggle("slow");
         },
         render:function(){
             return(
@@ -571,35 +576,60 @@
                                             <option value={0} data-toggle="tooltip" data-placement="top" title="">全部</option>
                                             <option value={1} data-toggle="tooltip" data-placement="top" title="">未开始</option>
                                             <option value={2} data-toggle="tooltip" data-placement="top" title="">进行中</option>
-                                            <option value={3} data-toggle="tooltip" data-placement="top" title="">完成</option>
+                                            <option value={3} data-toggle="tooltip" data-placement="top" title="">已完成</option>
                                         </select>
                                     </div>
 
 
                                     <ul className="tasks" id="tasks">
                                         {
-                                            this.state.data.taskList.map(function(task){
+                                            this.state.data.taskList.map(function(task,index){
+                                                var state = "";
+                                                switch(task.state){
+                                                    case 1:state="未开始";break;
+                                                    case 2:state="进行中";break;
+                                                    case 3:state="已完成";break;
+                                                }
                                             return (
                                                 <div className="task-content">
                                                     <div className="left-state">
-                                                        <img id="nowPic" src="" className="header" style={{ display: 'block',height: '30px',width:'30px',float:'left'}}/>;
+                                                        <img id="nowPic" src="/assets/images/head.png" className="header" style={{ display: 'block',height: '30px',width:'30px',float:'left'}}/>
                                                         <span style={{marginLeft:'15px'}} />
                                                         <span className="author_name" >
                                                             <Link to="/">
-                                                                {task.id}
+                                                                {$CONF$.nickName || $CONF$.email}
                                                             </Link>
                                                         </span>
-                                                        <span className="task_state"> {task.state} </span>
+                                                        <span className="task_state"> {state} </span>
                                                         <span className="event_label pushed"> {task.content} </span>
+                                                        <div style={{display: 'inline', marginLeft: '10px', fontSize: '15px'}}>
+                                                            <div className="state-edit"  data-toggle="tooltip" data-placement="top" title="单击编辑按钮进行编辑"
+                                                                 onClick={this.toggleEdit}>
+                                                                <span className="glyphicon glyphicon-edit"></span>
+                                                            </div>
+                                                            <div ref="editTask" className="drop-down">
+                                                                <span className="edit-statetext"> 修改状态： </span>
+                                                                <select ref="taskState" className="edit-state" name="edit-statename" autoFocus>
+                                                                    <option value="1"> 未开始 </option>
+                                                                    <option value="2"> 进行中 </option>
+                                                                    <option value="3"> 已完成 </option>
+                                                                    <option value="4"> 废弃 </option>
+                                                                </select>
+                                                                <div className="btn-group btn-edit-state" >
+                                                                    <button className="btn btn-info btn-sm close-state" onClick={this.toggleEdit}> 关闭 </button>
+                                                                    <button className="btn btn-info btn-sm summit-state" onClick={this.changeStatus}> 提交 </button>
+                                                                    <button className="btn btn-success btn-sm delete-state" onClick={this.deleteTask}> 删除当前task </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                     <div className="right-info">
                                                         <div className="date" data-toggle="tooltip" data-placement="top" >
-                                                            {task.insertTime}</div>
-
+                                                            {WebUtil.timeFormat(task.insertTime)}</div>
                                                     </div>
                                                 </div>
                                             )
-                                        })
+                                        }.bind(this))
                                         }
                                     </ul>
                                     <ul id="nomore">

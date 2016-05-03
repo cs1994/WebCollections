@@ -116,8 +116,17 @@
                 var item = {id:json.id,content:data.content,state:data.state,insertTime:json.insertTime};
                 self.taskList.unshift(item)
                 self.updateStore();
+                console.log("!!!!!!!!!!!!!!! " + JSON.stringify(self.taskList))
                 toastr.success("添加成功")
-            },function(json){toastr.warning("添加失败")})
+             },function(json){toastr.warning("添加失败")})
+        },
+        onGetAllTask:function(){
+            var url="/customer/task/list";
+            var self=this;
+            ajaxGet(url,function(json){
+                self.taskList=json.list;
+                self.updateStore();
+            })
         }
 
     });

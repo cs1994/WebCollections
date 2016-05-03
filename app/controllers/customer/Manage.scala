@@ -243,10 +243,19 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
     val cur = System.currentTimeMillis()
     userDao.addNewTask(userId,content,state,cur).map { res =>
       if(res>0)
-        Ok(successResult(Json.obj("id" -> res,"inserTime"->cur)))
+        Ok(successResult(Json.obj("id" -> res,"insertTime"->cur)))
       else
         Ok(jsonResult(10000,"添加失败"))
     }
   }
-
+  def getAllTask = customerAuth.async {implicit request =>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    userDao.getAllTask(userId).map { res =>
+      if(res.nonEmpty){
+        Ok(successResult(Json.obj("list"->res.map(rTaskWriter.writes))))
+      }
+      else
+        Ok(jsonResult(10000,"添加失败"))
+    }
+  }
 }

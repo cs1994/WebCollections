@@ -14,6 +14,7 @@
     ]);
     global.actions.taskAction = Reflux.createActions([
         'addTask',
+        'getAllTask',
     ]);
 
 
