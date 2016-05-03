@@ -20,7 +20,7 @@ object WebGet {
   }
 
   def saveToFile(fileName:String,content:String) = {
-    val writer = new PrintWriter(new File(fileName))
+    val writer = new PrintWriter(new File(fileName),"utf-8")
     writer.write(content)
     writer.close()
   }

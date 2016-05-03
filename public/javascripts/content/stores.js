@@ -55,11 +55,19 @@
         this.labelNum=num;
             this.updateStore();
         },
-        onAddSave:function(data,self){
-            console.log("@@@@ " + JSON.stringify(data))
+        onAddSave:function(data,me){
+            //console.log("@@@@ " + JSON.stringify(data))
             var url="/customer/personal/web/add"
-            ajaxJsonPost(url,data,function(){
-                self.refs.addSave.close();
+            var self =this;
+            ajaxJsonPost(url,data,function(json){
+                me.refs.addSave.close();
+                var item={id:json.id,url:data.url,des:data.description,secret:data.secret,number:0,
+                    content:json.content,insertTime:json.time,commentNum:0, flag:1,label:data.label,commentList:[]}
+                var list = self.saveList
+                list.unshift(item)
+                self.saveList = list;
+                self.updateStore();
+                toastr.success("收藏成功")
             })
         },
         onGetPersonalSave: function () {
@@ -67,7 +75,6 @@
             var self= this;
             ajaxGet(url,function(json){
                 self.saveList=json.result;
-                console.log("@@" + JSON.stringify(self.saveList))
                 self.updateStore();
             })
         },
@@ -75,9 +82,9 @@
             var self =this;
             var url = "/customer/personal/web/delete?id="+id
             ajaxGet(url,function(json){
-                self.saveList=json.result;
+                //self.saveList=json.result;
                 self.saveList.splice(index,1);
-                console.log("@@" + JSON.stringify(self.saveList))
+                //console.log("@@" + JSON.stringify(self.saveList))
                 self.updateStore();
             })
         },
@@ -122,7 +129,7 @@
                 var item = {id:json.id,content:data.content,state:data.state,insertTime:json.insertTime};
                 self.taskList.unshift(item)
                 self.updateStore();
-                console.log("!!!!!!!!!!!!!!! " + JSON.stringify(self.taskList))
+                //console.log("!!!!!!!!!!!!!!! " + JSON.stringify(self.taskList))
                 toastr.success("添加成功")
              },function(json){toastr.warning("添加失败")})
         },
@@ -177,7 +184,7 @@
             })
             ajaxGet(urlTwo,function(json){
                 self.unStartList=json.list;
-                console.log("@@@@@ " + JSON.stringify(self.unStartList))
+                //console.log("@@@@@ " + JSON.stringify(self.unStartList))
             })
             self.updateStore();
         },

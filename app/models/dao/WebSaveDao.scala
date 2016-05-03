@@ -37,59 +37,31 @@ class WebSaveDao @Inject()(
   }
   def addSaveFile(url:String,description:String,label:Int,secret:Int,userId:Long,insertTime:Long)={
 
-
-
-    val mama=List("UTF-8","GBK")
-
-    for (ma<-mama) {
-      try{
-        val webcontent = Source.fromURL(url,ma).getLines()
-
-        var ii = 0
-        println("%%%%%%%%%%%%%% " +ma)
-        if (webcontent.nonEmpty) {
-          for (line <- webcontent) {
-            ii += 1
-          }
-          println("#############################" + ii)
-          if (ii > 20) {
-            val flag = 1
-           val id= insertSave(url,description,secret,userId,insertTime,webcontent.toString(),flag)
-            val pattern = "[!-~]+".r
-            id.map{saveId=>
-              db.run(uLabel.map(t=>(t.taskId,t.labelNum,t.userId)).returning(
-                uLabel.map(_.id))+=(saveId,label,userId)).mapTo[Long]
-              val out = new PrintWriter(new File("D://project//WebCollections//public//web" + "//" + saveId  + ".html"), "utf-8")
-              val outed = new PrintWriter(new File("D://project//WebCollections//public//source" + "//" + saveId + ".txt"), "utf-8")
-              val webcontents = Source.fromURL(url,ma).getLines()
-              for (linel <- webcontents) {
-                out.println(linel)
-                val myline = pattern.replaceAllIn(linel, "").trim
-                outed.println(myline.replaceAll("  ", ""))
-              }
-              out.close()
-              outed.close()
-            }
-          }
-        }
-      }
-      catch{
-        case ex:Exception => println(ex)
-      }
-    }
+    val content = WebGet.getUrlContent(url)
+    val pattern = "[!-~]+".r
+    val newContent = pattern.replaceAllIn(content, "").trim.replaceAll("  ", "")
+    val flag = 1
+    val id= insertSave(url,description,secret,userId,insertTime,newContent.slice(0,30),flag)
+    id.map{saveId=>
+      db.run(uLabel.map(t=>(t.taskId,t.labelNum,t.userId)).returning(
+        uLabel.map(_.id))+=(saveId,label,userId)).mapTo[Long]
+      WebGet.saveToFile("public/web" + "/" + saveId  + ".html",content)
+      WebGet.saveToFile("public/source" + "/" + saveId  + ".txt",newContent)
+  }
+    (id,newContent.slice(0,30))
   }
 
-  def addSave(url:String,description:String,label:Int,secret:Int,userId:Long,insertTime:Long)={
-    try{
-      Future(addSaveFile(url,description,label,secret,userId,insertTime)).map{r => 1}
-    }catch{
-      case e:Exception => Future.successful(0)
-    }
-  }
+//  def addSave(url:String,description:String,label:Int,secret:Int,userId:Long,insertTime:Long)={
+//    try{
+//      addSaveFile(url,description,label,secret,userId,insertTime)._1.map{r => }
+//    }catch{
+//      case e:Exception => Future.successful(0)
+//    }
+//  }
 
   def getPersonalSave(userId:Long) = {
     db.run{
-      uSave.filter(_.userId===userId).join(uLabel).on(_.id===_.taskId).result}
+      uSave.filter(_.userId===userId).sortBy(_.insertTime).join(uLabel).on(_.id===_.taskId).result}
   }
 
   def getCommentById(id:Long)={
@@ -98,7 +70,56 @@ class WebSaveDao @Inject()(
   }
 
   def deletePersonalSave(id:Long,userId:Long)={
-    db.run{uSave.filter(s=>(s.id===id)&&(s.userId === userId)).delete}
+    val htmlFile = new File("public/web/"+id+".html")
+    val txtFile = new File("public/source/"+id+".txt")
+    if (!htmlFile.exists() || !txtFile.exists()) {
+      Future(0)
+    }
+    else{
+      htmlFile.delete()
+      txtFile.delete()
+      db.run{uSave.filter(s=>(s.id===id)&&(s.userId === userId)).delete}
+    }
   }
 
 }
+
+
+//val mama=List("UTF-8","GBK")
+//
+//for (ma<-mama) {
+//try{
+//val webcontent = Source.fromURL(url,ma).getLines()
+//
+//var ii = 0
+//println("%%%%%%%%%%%%%% " +ma)
+//if (webcontent.nonEmpty) {
+//for (line <- webcontent) {
+//ii += 1
+//}
+//println("#############################" + ii)
+//if (ii > 20) {
+//val flag = 1
+//val id= insertSave(url,description,secret,userId,insertTime,webcontent.toString(),flag)
+//val pattern = "[!-~]+".r
+//id.map{saveId=>
+//db.run(uLabel.map(t=>(t.taskId,t.labelNum,t.userId)).returning(
+//uLabel.map(_.id))+=(saveId,label,userId)).mapTo[Long]
+//val out = new PrintWriter(new File("D://project//WebCollections//public//web" + "//" + saveId  + ".html"), "utf-8")
+//val outed = new PrintWriter(new File("D://project//WebCollections//public//source" + "//" + saveId + ".txt"), "utf-8")
+//val webcontents = Source.fromURL(url,ma).getLines()
+//for (linel <- webcontents) {
+//out.println(linel)
+//val myline = pattern.replaceAllIn(linel, "").trim
+//outed.println(myline.replaceAll("  ", ""))
+//}
+//out.close()
+//outed.close()
+//}
+//}
+//}
+//}
+//catch{
+//case ex:Exception => println(ex)
+//}
+//}
