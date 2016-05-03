@@ -82,4 +82,8 @@ class WebSaveDao @Inject()(
     }
   }
 
+  def getAllSaveList={
+    db.run{uSave.filter(_.secret===2).join(uLabel).on(_.id===_.taskId).result}
+  }
+
 }

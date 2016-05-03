@@ -106,4 +106,55 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
       }
     }
   }
+
+
+  def getAllSave =  customerAuth.async{implicit request=>
+//    val userId=request.session.get(SessionKey.userId).get.toLong
+    webSaveDao.getAllSaveList.flatMap { saveList =>
+      if(saveList.isEmpty){
+        Future.successful(Ok(CustomerErrorCode.saveListEmpty))
+      }else{
+        val result = saveList.map{l=>
+          val commentList = webSaveDao.getCommentById(l._1.id).map{
+            comments=>
+              comments.map{comment=>
+                val userInfo = Await.result(userDao.getUserById(comment.fromId).map{info=>
+                  Json.obj(
+                    "id" -> info.id,
+                    "headImg" -> info.headImg,
+                    "nickName" -> info.nickName
+                  )
+                },Duration(3, concurrent.duration.SECONDS))
+                Json.obj(
+                  "userInfo" -> userInfo,
+                  "content" -> comment.content
+                )
+              }
+          }
+          commentList.map{com=>
+            val nickName =Await.result( userDao.findById(l._1.userId).map(u=>u.get.nickName),Duration(3, concurrent.duration.SECONDS))
+            Json.obj(
+              "id" -> l._1.id,
+              "userId" -> l._1.userId,
+              "nickName" -> nickName,
+              "url" -> l._1.url,
+              "des" -> l._1.description,
+              "secret" -> l._1.secret,
+              "number" -> l._1.number,
+              "content" -> l._1.webcontent,
+              "insertTime" -> l._1.insertTime,
+              "commentNum" -> l._1.commentNum,
+              "flag" -> l._1.flag,
+              "label" -> l._2.labelNum,
+              "commentList" ->com
+            )
+          }
+        }
+        Future.sequence(result).map { res =>
+          Ok(successResult(Json.obj("result" ->res)))
+        }
+      }
+    }
+  }
+
 }

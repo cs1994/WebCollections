@@ -2,6 +2,34 @@
 (function(React, Router, Reflux, global) {
     global.stores = {};
 
+    global.stores.AllStore = Reflux.createStore({
+        listenables: [global.actions.allAction],
+        init: function(){
+            this.webList = [];
+
+        },
+        getInitialState:function(){
+            return{
+                webList:this.webList,
+
+            }
+        },
+        updateStore: function(){
+            this.trigger({
+                webList:this.webList,
+
+            })
+        },
+        onGetAllSave: function () {
+            var url="/customer/web/list";
+            var self= this;
+            ajaxGet(url,function(json){
+                self.webList=json.result;
+                self.updateStore();
+            })
+        },
+    });
+
     global.stores.PersonalStore = Reflux.createStore({
         listenables: [global.actions.personalAction],
         init: function(){

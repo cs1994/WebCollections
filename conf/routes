@@ -48,6 +48,9 @@ POST        /customer/personal/web/add            @controllers.content.WebSave.a
 GET         /customer/personal/web/list           @controllers.content.WebSave.getPersonalSaveById
 GET         /customer/personal/web/delete         @controllers.content.WebSave.deletePersonalSave(id:Long)
 
+###### all save
+GET         /customer/web/list                    @controllers.content.WebSave.getAllSave
+
 ##### task
 POST        /customer/task/add                    @controllers.customer.Manage.addNewTask
 GET         /customer/task/list                   @controllers.customer.Manage.getAllTask

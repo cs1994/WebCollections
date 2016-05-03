@@ -2,6 +2,9 @@
 (function(Reflux, global) {
 
     global.actions={};
+    global.actions.allAction = Reflux.createActions([
+        'getAllSave',
+    ]);
     global.actions.personalAction = Reflux.createActions([
         'choseLabel',
         'addSave',
