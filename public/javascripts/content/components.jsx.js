@@ -512,15 +512,130 @@
 
     components.Tasks = React.createClass({
         mixins:[
-            Reflux.connect(stores.contentStore,"data"),
+            Reflux.connect(stores.TaskStore,"data"),
             ReactRouter.Navigation,
             ReactRouter.State],
+        keyDown: function(evt){
+            var text = this.refs.taskInput.getDOMNode().value;
+            // we pressed enter, if text isn't empty we save
+            if(evt.which === 13 && text){
+                evt.preventDefault();
+                this.submitNewTask();
+            }
+            // pressed escape. we won't save
+            else if(evt.which === 27){
+                this.refs.taskInput.getDOMNode().value = '';
+                this.refs.taskInput.getDOMNode().blur();
+            }
+        },
+        submitNewTask: function(){
+            var taskText = $.trim(React.findDOMNode(this.refs.taskInput).value);
+            var state = parseInt($("#stateId").val())
+            if(!taskText){
+                toastr.info("请输入内容");
+                return;
+            }
+            var data={content:taskText,state:state}
+            this.refs.taskInput.getDOMNode().value = '';
+            global.actions.taskAction.addTask(data);
+        },
         render:function(){
-
             return(
-                <div style={{with:"100px",height:"100px",background:"red"}}>
+                <div>
+                    <div className="container">
+                        <div className="container-fluid">
+                            <div className="row">
+                                <div className="col-md-9 col-sm-12 col-xs-12" style={{paddingRight: '20px'}}>
+                                    <div className="page-header">
+                                        <h1>
+                                            <small>新建task</small>
+                                        </h1>
+                                    </div>
+                                    <div id="task-state" style={{marginBottom:"10px"}}>
+                                        <h> 任务状态：</h>
+                                        <select ref="state" className="form-control" style={{display: 'inline-block', width: '100px'}} name="statename" id="stateId">
+                                            <option value={1}>未开始</option>
+                                            <option value={2}>进行中</option>
+                                            <option value={3}>完成</option>
+                                        </select>
+                                    </div>
 
+                                    <textarea ref="taskInput" className="form-control col-xs-12" onKeyDown={this.keyDown} rows="5" placeholder="你做了什么？" id="newtask" name="description"></textarea>
+                                    <button className="btn btn-inverse" id="submit-task" onClick={this.submitNewTask} style={{marginTop:"10px"}}>提交</button>
+                                    <br/>
+                                    <hr/>
+                                    <br/>
+                                    <div className="page-header">
+                                        <span className="personal-change"> 任务动态 </span>
+                                        <select className="form-control" name="classify_name" id="classify_name" style={{display: 'inline', maxWidth: '10em'}}>
+                                            <option value={0} data-toggle="tooltip" data-placement="top" title="">全部</option>
+                                            <option value={1} data-toggle="tooltip" data-placement="top" title="">未开始</option>
+                                            <option value={2} data-toggle="tooltip" data-placement="top" title="">进行中</option>
+                                            <option value={3} data-toggle="tooltip" data-placement="top" title="">完成</option>
+                                        </select>
+                                    </div>
+
+
+                                    <ul className="tasks" id="tasks">
+                                        {
+                                            this.state.data.taskList.map(function(task){
+                                            return (
+                                                <div className="task-content">
+                                                    <div className="left-state">
+                                                        <img id="nowPic" src="" className="header" style={{ display: 'block',height: '30px',width:'30px',float:'left'}}/>;
+                                                        <span style={{marginLeft:'15px'}} />
+                                                        <span className="author_name" >
+                                                            <Link to="/">
+                                                                {task.id}
+                                                            </Link>
+                                                        </span>
+                                                        <span className="task_state"> {task.state} </span>
+                                                        <span className="event_label pushed"> {task.content} </span>
+                                                    </div>
+                                                    <div className="right-info">
+                                                        <div className="date" data-toggle="tooltip" data-placement="top" >
+                                                            {task.insertTime}</div>
+
+                                                    </div>
+                                                </div>
+                                            )
+                                        })
+                                        }
+                                    </ul>
+                                    <ul id="nomore">
+                                        {
+                                            //noMore
+                                        }
+                                    </ul>
+                                </div>
+                                <div className="col-md-3 col-sm-0 col-xs-0" style={{borderLeft: '1px solid #e7e7e7'}} id="teamProjectList">
+                                    <h1 style={{paddingLeft: '15px'}}>
+                                        <small>提醒</small>
+                                    </h1>
+                                    <ul className="projects" id="projects" style={{paddingLeft: '20px'}}>
+                                        {
+                                        //    this.state.taskList.projects.map(function(project){
+                                            //    return(
+                                            //        <li>
+                                            //            <div className="event-title thumbnail" id="thumbnail9" data-toggle="tooltip" data-placement="top" title={"简介：" + project.description + ", 创建于 " + RheaUtil.timeFormat(project.ctime)}>
+                                            //                <span className="project_name" style={{display: 'inline-block', width: '90%'}}>
+                                            //                    <Link to="projectState" params={{projectId: project.id}} style={{display: 'block', width: '100%'}}>
+                                            //                        {project.name}
+                                            //                    </Link>
+                                            //                </span>
+                                            //                <span className="glyphicon glyphicon-menu-right" style={{display: 'inline-block', width: '10%', float: 'none', marginTop: '-1px'}}></span>
+                                            //            </div>
+                                            //        </li>
+                                            //    )
+                                            //})
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             )
         }
     });

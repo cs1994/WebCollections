@@ -94,4 +94,31 @@
             me.refs.changeInfo.close();
         }
     });
+    global.stores.TaskStore = Reflux.createStore({
+        listenables: [global.actions.taskAction],
+        init: function(){
+            this.taskList = [];
+        },
+        getInitialState:function(){
+            return{
+                taskList:this.taskList,
+            }
+        },
+        updateStore: function(){
+            this.trigger({
+                taskList:this.taskList,
+            })
+        },
+        onAddTask:function(data){
+            var url="/customer/task/add";
+            var self=this;
+            ajaxJsonPostTwo(url,data,function(json){
+                var item = {id:json.id,content:data.content,state:data.state,insertTime:json.insertTime};
+                self.taskList.unshift(item)
+                self.updateStore();
+                toastr.success("添加成功")
+            },function(json){toastr.warning("添加失败")})
+        }
+
+    });
 }(window.React, window.ReactRouter, window.Reflux, window));

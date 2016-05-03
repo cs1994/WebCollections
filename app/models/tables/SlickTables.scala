@@ -168,18 +168,19 @@ trait SlickTables {
     *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey
     *  @param content Database column content SqlType(VARCHAR), Length(255,true), Default()
     *  @param state Database column state SqlType(INT), Default(0)
-    *  @param insertTime Database column insert_time SqlType(BIGINT), Default(0) */
-  case class rTask(id: Long, content: String = "", state: Int = 0, insertTime: Long = 0L)
+    *  @param insertTime Database column insert_time SqlType(BIGINT), Default(0)
+    *  @param userId Database column user_id SqlType(BIGINT), Default(0) */
+  case class rTask(id: Long, content: String = "", state: Int = 0, insertTime: Long = 0L, userId: Long = 0L)
   /** GetResult implicit for fetching rTask objects using plain SQL queries */
   implicit def GetResultrTask(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rTask] = GR{
     prs => import prs._
-      rTask.tupled((<<[Long], <<[String], <<[Int], <<[Long]))
+      rTask.tupled((<<[Long], <<[String], <<[Int], <<[Long], <<[Long]))
   }
   /** Table description of table task. Objects of this class serve as prototypes for rows in queries. */
   class tTask(_tableTag: Tag) extends Table[rTask](_tableTag, "task") {
-    def * = (id, content, state, insertTime) <> (rTask.tupled, rTask.unapply)
+    def * = (id, content, state, insertTime, userId) <> (rTask.tupled, rTask.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(content), Rep.Some(state), Rep.Some(insertTime)).shaped.<>({r=>import r._; _1.map(_=> rTask.tupled((_1.get, _2.get, _3.get, _4.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(content), Rep.Some(state), Rep.Some(insertTime), Rep.Some(userId)).shaped.<>({r=>import r._; _1.map(_=> rTask.tupled((_1.get, _2.get, _3.get, _4.get, _5.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
     val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
@@ -189,6 +190,8 @@ trait SlickTables {
     val state: Rep[Int] = column[Int]("state", O.Default(0))
     /** Database column insert_time SqlType(BIGINT), Default(0) */
     val insertTime: Rep[Long] = column[Long]("insert_time", O.Default(0L))
+    /** Database column user_id SqlType(BIGINT), Default(0) */
+    val userId: Rep[Long] = column[Long]("user_id", O.Default(0L))
   }
   /** Collection-like TableQuery object for table tTask */
   lazy val tTask = new TableQuery(tag => new tTask(tag))

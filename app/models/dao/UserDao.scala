@@ -22,6 +22,7 @@ class UserDao @Inject()(
   private val log = Logger(this.getClass)
 
   private[this] val uCustomer = SlickTables.tUser
+  private[this] val uTask = SlickTables.tTask
 
   /**common*/
 
@@ -62,5 +63,9 @@ class UserDao @Inject()(
   def modifyUserInfo(userId:Long,phone:String,birthday:String,gen:Int,nickName:String)={
     db.run(uCustomer.filter(_.id === userId).map(m => (m.phone,m.birthday,m.sex,m.nickName)).
       update(phone,birthday,gen,nickName))
+  }
+  def addNewTask(userId:Long,content:String,state:Int,insertTime:Long)={
+    db.run(uTask.map(t=>(t.content,t.state,t.userId,t.insertTime)).returning(
+      uTask.map(_.id))+=(content,state,userId,insertTime)).mapTo[Long]
   }
 }

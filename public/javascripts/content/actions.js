@@ -12,6 +12,9 @@
         'changeUserInfo',
         'getuserInfo',
     ]);
+    global.actions.taskAction = Reflux.createActions([
+        'addTask',
+    ]);
 
 
 }(window.Reflux, window));

@@ -48,6 +48,9 @@ POST        /customer/personal/web/add            @controllers.content.WebSave.a
 GET         /customer/personal/web/list           @controllers.content.WebSave.getPersonalSaveById
 GET         /customer/personal/web/delete         @controllers.content.WebSave.deletePersonalSave(id:Long)
 
+##### task
+POST        /customer/task/add                    @controllers.customer.Manage.addNewTask
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                     controllers.WebJarAssets.at(file)
 GET         /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)
