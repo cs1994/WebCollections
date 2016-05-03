@@ -5,14 +5,12 @@ import javax.inject.Inject
 import com.google.inject.Singleton
 import models.tables.SlickTables
 import play.api.Logger
-import play.api.db.DB
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.driver.JdbcProfile
 import slick.driver.MySQLDriver.api._
 import scala.io.Source
 import java.io._
-
-import util.SecureUtil
+import controllers.WebGet
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -38,6 +36,9 @@ class WebSaveDao @Inject()(
       uSave.map(_.id))+=(url,description,secret,userId,insertTime,webContent,0,0,flag)).mapTo[Long]
   }
   def addSaveFile(url:String,description:String,label:Int,secret:Int,userId:Long,insertTime:Long)={
+
+
+
     val mama=List("UTF-8","GBK")
 
     for (ma<-mama) {

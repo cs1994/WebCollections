@@ -7,7 +7,7 @@ import util.webSave.HttpClientUtil
 import org.apache.http.client.protocol.HttpClientContext
 
 
-object Test {
+object WebGet {
   private final val httpTool = new HttpClientUtil()
   private final val httpContext = HttpClientContext.create()
 
