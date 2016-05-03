@@ -18,6 +18,7 @@
         'changeTaskState',
         'deleteTask',
         'getListByState',
+        'getUnstart',
     ]);
 
 

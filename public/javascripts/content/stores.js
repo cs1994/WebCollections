@@ -177,7 +177,9 @@
             })
             ajaxGet(urlTwo,function(json){
                 self.unStartList=json.list;
+                console.log("@@@@@ " + JSON.stringify(self.unStartList))
             })
+            self.updateStore();
         },
 
     });

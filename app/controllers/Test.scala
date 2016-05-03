@@ -6,9 +6,7 @@ import com.github.nscala_time.time.Imports._
 import util.webSave.HttpClientUtil
 import org.apache.http.client.protocol.HttpClientContext
 
-/**
- * Created by apple on 2016/5/3.
- */
+
 object Test {
   private final val httpTool = new HttpClientUtil()
   private final val httpContext = HttpClientContext.create()

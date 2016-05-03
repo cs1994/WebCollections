@@ -83,9 +83,9 @@ class UserDao @Inject()(
     else     db.run(uTask.filter(t=>(t.userId === userId)&&(t.state===state)).result)
   }
   def getUnfinishedTask(userId:Long)={
-    db.run(uTask.filter(t=>(t.userId === userId)&&(t.state === 2)).take(6).result)
+    db.run(uTask.filter(t=>(t.userId === userId)&&(t.state === 2)).sortBy(_.insertTime).take(6).result)
   }
   def getUnstartTask(userId:Long)={
-    db.run(uTask.filter(t=>(t.userId === userId)&&(t.state === 1)).take(6).result)
+    db.run(uTask.filter(t=>(t.userId === userId)&&(t.state === 1)).sortBy(_.insertTime).take(6).result)
   }
 }

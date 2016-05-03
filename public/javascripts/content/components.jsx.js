@@ -517,6 +517,7 @@
             ReactRouter.State],
         componentWillMount(){
             global.actions.taskAction.getAllTask();
+            global.actions.taskAction.getUnstart();
         },
         keyDown: function(evt){
             var text = this.refs.taskInput.getDOMNode().value;
@@ -618,7 +619,7 @@
                                             return (
                                                 <div className="task-content">
                                                     <div className="left-state">
-                                                        <img id="nowPic" src="/assets/images/head.png" className="header" style={{ display: 'block',height: '30px',width:'30px',float:'left'}}/>
+                                                        <img id="nowPic" src={$CONF$.headImg || "/assets/images/head.png"} className="header" style={{ display: 'block',height: '30px',width:'30px',float:'left'}}/>
                                                         <span style={{marginLeft:'15px'}} />
                                                         <span className="author_name" >
                                                             <Link to="/">
@@ -667,26 +668,42 @@
                                     <h1 style={{paddingLeft: '15px',borderBottom:"1px solid #999"}}>
                                         <small>提醒</small>
                                     </h1>
-                                    <h3>未开始</h3>
-                                    <ul className="projects" id="projects" style={{paddingLeft: '20px'}}>
+                                    <h4>未开始</h4>
+                                    <ul className="projects" id="projects" style={{paddingLeft:"0"}}>
                                         {
-                                            //this.state.taskList.projects.map(function(project){
-                                            //    return(
-                                            //        <li>
-                                            //            <div className="event-title thumbnail" id="thumbnail9" data-toggle="tooltip" data-placement="top" title={"简介：" + project.description + ", 创建于 " + RheaUtil.timeFormat(project.ctime)}>
-                                            //                <span className="project_name" style={{display: 'inline-block', width: '90%'}}>
-                                            //                    <Link to="projectState" params={{projectId: project.id}} style={{display: 'block', width: '100%'}}>
-                                            //                        {project.name}
-                                            //                    </Link>
-                                            //                </span>
-                                            //                <span className="glyphicon glyphicon-menu-right" style={{display: 'inline-block', width: '10%', float: 'none', marginTop: '-1px'}}></span>
-                                            //            </div>
-                                            //        </li>
-                                            //    )
-                                            //})
+                                            this.state.data.unStartList.map(function(task,index){
+                                                return(
+                                                    <li style={{listStyleType:"none"}}>
+                                                        <div className="event-title thumbnail" id="thumbnail9" data-toggle="tooltip" data-placement="top" title={"创建于 "+WebUtil.timeFormat(task.insertTime)}>
+                                                            <span className="project_name" style={{display: 'inline-block', width: '90%'}}>
+                                                                <span   style={{display: 'block', width: '100%'}}>
+                                                                    {task.content}
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                )
+                                            })
                                         }
                                     </ul>
-                                    <h3>进行中</h3>
+                                    <h4>进行中</h4>
+                                    <ul className="projects" id="projects" style={{paddingLeft:"0"}}>
+                                        {
+                                            this.state.data.unFinishList.map(function(task,index){
+                                                return(
+                                                    <li style={{listStyleType:"none"}}>
+                                                        <div className="event-title thumbnail" id="thumbnail9" data-toggle="tooltip" data-placement="top" title={"创建于 "+WebUtil.timeFormat(task.insertTime)}>
+                                                            <span className="project_name" style={{display: 'inline-block', width: '90%'}}>
+                                                                <span   style={{display: 'block', width: '100%'}}>
+                                                                    {task.content}
+                                                                </span>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                )
+                                            })
+                                        }
+                                    </ul>
                                 </div>
                             </div>
                         </div>
