@@ -770,14 +770,35 @@
     });
     components.Comment = React.createClass({
         mixins:[
-            Reflux.connect(stores.contentStore,"data"),
+            Reflux.connect(stores.CommentStore,"data"),
             ReactRouter.Navigation,
             ReactRouter.State],
+        componentWillMount:function(){
+            global.actions.commentAction.getAllComments();
+        },
         render:function(){
 
             return(
-                <div style={{with:"100px",height:"100px",background:"red"}}>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-md-9 col-sm-12 col-xs-12" style={{paddingRight: '20px'}}>
+                            <div className="panel panel-default">
+                                <div className="panel-heading">
+                                    <h3 className="panel-title">相关评论</h3>
+                                </div>
+                                <div className="panel-body">
+                                    <table className="table">
+                                        <thread>
+                                            <tr>
+                                                <td></td>
+                                            </tr>
+                                        </thread>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
 
+                    </div>
                 </div>
 
             )
