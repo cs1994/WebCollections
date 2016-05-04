@@ -483,6 +483,19 @@
                                         <span>删除</span>
                                     </p>
                                 </div>
+                                <ul className="list-group">
+                                {e.commentList.map(function(c, i){
+                                    var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
+                                    return(
+                                        <li className="list-group-item">
+                                            <img src={headImg} alt=""/>
+                                            <span>{c.userInfo.nickName}:</span>
+                                            <span>{c.content}</span>
+                                        </li>
+                                    )
+                                })
+                                }
+                                </ul>
                                 <form className="form-inline">
                                     <div className="form-group">
                                         <div className="input-group">
@@ -776,12 +789,25 @@
         componentWillMount:function(){
             global.actions.commentAction.getAllComments();
         },
+        deleteComment:function(id,index){
+            swal({
+                title: "确定要删除吗?",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "确认",
+                cancelButtonText: "取消"
+            }, function () {
+                global.actions.commentAction.deleteComment(id,index)
+            });
+        },
         render:function(){
-
+            var self =this;
             return(
                 <div className="container">
                     <div className="row">
-                        <div className="col-md-9 col-sm-12 col-xs-12" style={{paddingRight: '20px'}}>
+                        <div className="col-md-10 col-md-offset-1 col-sm-12 col-xs-12" style={{paddingRight: '20px'}}>
                             <div className="panel panel-default">
                                 <div className="panel-heading">
                                     <h3 className="panel-title">相关评论</h3>
@@ -790,9 +816,27 @@
                                     <table className="table">
                                         <thread>
                                             <tr>
-                                                <td></td>
+                                                <th>Id</th>
+                                                <th>评论人</th>
+                                                <th>内容</th>
+                                                <th>操作</th>
                                             </tr>
                                         </thread>
+                                       <tbody>
+                                           {
+                                               $.map(this.state.data.commentList, (e,i)=>{
+                                                   return (
+                                                       <tr key={`attribute-${i}`}>
+                                                           <td>{e.id}</td>
+                                                           <td>{e.nickName}</td>
+                                                           <td>{e.content}</td>
+                                                           <td>
+                                                               <div className="btn btn-success" >回复</div>&nbsp;&nbsp;
+                                                               <div className="btn btn-danger" onClick={self.deleteComment.bind(self,e.id,i)}>删除</div>
+                                                           </td>
+                                                       </tr>)
+                                               })}
+                                       </tbody>
                                     </table>
                                 </div>
                             </div>
