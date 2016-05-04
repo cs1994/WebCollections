@@ -25,6 +25,8 @@ class WebSaveDao @Inject()(
   private[this] val uSave = SlickTables.tSave
   private[this] val uLabel = SlickTables.tLabel
   private[this] val uComment = SlickTables.tComment
+  private[this] val uCustomer = SlickTables.tUser
+
 
 
   def getSaveByUrl(url:String,userId:Long) = {
@@ -86,4 +88,24 @@ class WebSaveDao @Inject()(
     db.run{uSave.filter(_.secret===2).join(uLabel).on(_.id===_.taskId).result}
   }
 
+  def addComment(fromId:Long,saveId:Long,toId:Long,content:String) = {
+    db.run{uComment.map(c=>(c.fromId,c.saveId,c.toId,c.content,c.state)).returning(
+      uComment.map(_.id))+=(fromId,saveId,toId,content,0)}.mapTo[Long]
+  }
+
+  def addSaveCommentNumber(saveId:Long)={
+    db.run(uSave.filter(_.id===saveId).map(_.commentNum).update(+1))
+  }
+
+  def personalComment(userId:Long)={
+    db.run{uComment.filter(_.toId === userId).join(uCustomer).on(_.fromId ===_.id).result}
+  }
+//  def getPersonalCommentUnsee(userId:Long)={
+//    db.run{uComment.filter(c=>(c.toId === userId)&&(c.state==0)).join(uCustomer).on(_.fromId ===_.id).result}
+//  }
+
+  def deleteCommentById(userId:Long,id:Long)={
+    db.run{uComment.filter(c=>(c.id === id)&&(c.toId==userId)).delete}
+
+  }
 }

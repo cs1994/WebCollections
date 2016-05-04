@@ -157,4 +157,55 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
     }
   }
 
+  def addComment = customerAuth.async{implicit request=>
+
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    val postData=request.body.asJson.get
+    val saveId=(postData \ "saveId").as[Long]
+    val toId=(postData \ "toId").as[Long]
+    val content=(postData \ "content").as[String]
+    webSaveDao.addComment(userId,saveId,toId,content).map { res =>
+      if(res>0){
+        userDao.addUserCommentNumber(userId)
+        webSaveDao.addSaveCommentNumber(saveId)
+        Ok(successResult(Json.obj("id" ->res)))
+      }else{
+        Ok(CustomerErrorCode.addCommentFail)
+      }
+    }
+  }
+  def personalComment = customerAuth.async{implicit request=>
+
+    val userId=request.session.get(SessionKey.userId).get.toLong
+
+    webSaveDao.personalComment(userId).map { res =>
+//      if(res.nonEmpty){
+        val result = res.map{r=>
+        Json.obj(
+        "id" -> r._1.id,
+        "content" -> r._1.content,
+        "state" -> r._1.state,
+        "fromId" -> r._1.fromId,
+        "nickName" -> r._2.nickName
+        )
+        }
+        Ok(successResult(Json.obj("result" ->result)))
+//      }else{
+//        Ok(CustomerErrorCode.deleteSaveFail)
+//      }
+    }
+  }
+
+  def deleteCommentById(id:Long)=customerAuth.async{implicit request=>
+
+    val userId=request.session.get(SessionKey.userId).get.toLong
+
+    webSaveDao.deleteCommentById(userId,id).map { res =>
+            if(res>0){
+              Ok(successResult(Json.obj("id" ->res)))
+            }else{
+              Ok(CustomerErrorCode.deleteSaveFail)
+            }
+    }
+  }
 }

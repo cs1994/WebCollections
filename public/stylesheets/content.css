@@ -120,3 +120,8 @@ a.activeHeader{
     position: relative;
     padding: 0 20px;
 }
+ul .list-group-item img{
+    height:30px;
+    width:30px;
+}
+ul .list-group-item span{margin-left: 10px;}

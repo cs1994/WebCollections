@@ -28,6 +28,13 @@
                 self.updateStore();
             })
         },
+        onSubmitComment:function(data,index){
+            var url ="/customer/comment/add";
+            ajaxJsonPost(url,data,function(json){
+                toastr.success("评论成功")
+                var content = $("#input"+index).val("");
+            })
+        }
     });
 
     global.stores.PersonalStore = Reflux.createStore({
@@ -218,4 +225,46 @@
         },
 
     });
+
+    global.stores.CommentStore = Reflux.createStore({
+        listenables: [global.actions.commentAction],
+        init: function(){
+            this.commentList = [];
+        },
+        getInitialState:function(){
+            return{
+                commentList:this.commentList,
+
+            }
+        },
+        updateStore: function(){
+            this.trigger({
+                commentList:this.commentList,
+
+            })
+        },
+        onGetAllComments: function () {
+            var url="/customer/comment/list";
+            var self= this;
+            ajaxGet(url,function(json){
+                self.commentList=json.result;
+                self.updateStore();
+            })
+        },
+        onSubmitComment:function(data,index){
+            var url ="/customer/comment/add";
+            ajaxJsonPost(url,data,function(json){
+                toastr.success("评论成功")
+                var content = $("#input"+index).val("");
+            })
+        },
+        onDeleteComment:function(id,index){
+            var url ="/customer/comment/delete?id="+id
+            ajaxGet(url, function () {
+                toastr.success("删除成功")
+            })
+        }
+
+    });
+
 }(window.React, window.ReactRouter, window.Reflux, window));

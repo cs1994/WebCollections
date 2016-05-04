@@ -88,4 +88,7 @@ class UserDao @Inject()(
   def getUnstartTask(userId:Long)={
     db.run(uTask.filter(t=>(t.userId === userId)&&(t.state === 1)).sortBy(_.insertTime).take(6).result)
   }
+  def addUserCommentNumber(userId:Long)={
+    db.run(uCustomer.filter(_.id===userId).map(_.commentNum).update(+1))
+  }
 }

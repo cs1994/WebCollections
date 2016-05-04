@@ -4,6 +4,7 @@
     global.actions={};
     global.actions.allAction = Reflux.createActions([
         'getAllSave',
+        'submitComment',
     ]);
     global.actions.personalAction = Reflux.createActions([
         'choseLabel',
@@ -22,6 +23,10 @@
         'deleteTask',
         'getListByState',
         'getUnstart',
+    ]);
+    global.actions.commentAction = Reflux.createActions([
+        'getAllComments',
+        'deleteComment',
     ]);
 
 
