@@ -265,6 +265,15 @@
             var id="#save"+index;
             $(id).css({display:"none"})
         },
+        submitComment:function(saveId,toId,index){
+            var content = $("#input"+index).val();
+            if(content==""){
+                toastr.warning("请输入评论")
+                return;
+            }
+            var data={saveId:saveId,toId:toId,content:content}
+            global.actions.allAction.submitComment(data,index);
+        },
         render:function(){
             var dom = null;
             if(this.state.data.webList.length==0){
@@ -322,10 +331,10 @@
                                 <form className="form-inline">
                                     <div className="form-group">
                                         <div className="input-group">
-                                            <input type="text" className="form-control" id="searchInput" placeholder="请输入评论内容"
+                                            <input type="text" className="form-control" id={"input"+index} placeholder="请输入评论内容"
                                                    style={{width: '470px'}}
                                                    onKeyDown={this.handleKeyDown}/>
-                                            <div  className="input-group-addon" >确认</div>
+                                            <div  className="input-group-addon" onClick={this.submitComment.bind(this,e.id,e.userId,index)}>确认</div>
                                         </div>
 
                                     </div>
