@@ -802,6 +802,19 @@
                 global.actions.commentAction.deleteComment(id,index)
             });
         },
+        openModal:function(id,fromId){
+            this.refs.replyComment.open();
+            var data = {replyId:id,fromId:fromId}
+            global.actions.commentAction.setReplayInfo(data)
+        },
+        onConfirm:function(){
+            const content = $("#commentReply").val();
+            if(content==""){
+                toastr.warning("请输入回复内容");
+                return;}
+            const data = {content:content,replyId:this.state.data.replyInfo.replyId,toId:this.state.data.replyInfo.fromId}
+            global.actions.commentAction.replyComment(data,this);
+        },
         render:function(){
             var self =this;
             return(
@@ -831,7 +844,7 @@
                                                            <td>{e.nickName}</td>
                                                            <td>{e.content}</td>
                                                            <td>
-                                                               <div className="btn btn-success" >回复</div>&nbsp;&nbsp;
+                                                               <div className="btn btn-success" onClick={this.openModal.bind(this,e.id,e.fromId)}>回复</div>&nbsp;&nbsp;
                                                                <div className="btn btn-danger" onClick={self.deleteComment.bind(self,e.id,i)}>删除</div>
                                                            </td>
                                                        </tr>)
@@ -843,6 +856,17 @@
                         </div>
 
                     </div>
+
+                    <BootstrapModalPc ref="replyComment" id="replyComment" title="回复评论" onConfirm={this.onConfirm}>
+                        <div className="input-group">
+                            <div className="form-group">
+                                <label for="nameCh"> 回复内容</label>
+                                <input type="text" className="form-control" id="commentReply"
+                                       name="commentReply" maxLength="200" placeholder=""/>
+                            </div>
+                        </div>
+                    </BootstrapModalPc>
+
                 </div>
 
             )

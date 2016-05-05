@@ -14,7 +14,7 @@ trait SlickTables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = Array(tComment.schema, tEmail.schema, tLabel.schema, tSave.schema, tTask.schema, tUser.schema).reduceLeft(_ ++ _)
+  lazy val schema: profile.SchemaDescription = Array(tComment.schema, tEmail.schema, tLabel.schema, tReplyComment.schema, tSave.schema, tTask.schema, tUser.schema).reduceLeft(_ ++ _)
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -116,6 +116,41 @@ trait SlickTables {
   }
   /** Collection-like TableQuery object for table tLabel */
   lazy val tLabel = new TableQuery(tag => new tLabel(tag))
+
+  /** Entity class storing rows of table tReplyComment
+    *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey
+    *  @param content Database column content SqlType(VARCHAR), Length(255,true), Default()
+    *  @param replyId Database column reply_id SqlType(BIGINT), Default(0)
+    *  @param state Database column state SqlType(INT), Default(0)
+    *  @param fromId Database column from_id SqlType(BIGINT), Default(0)
+    *  @param toId Database column to_id SqlType(BIGINT), Default(0) */
+  case class rReplyComment(id: Long, content: String = "", replyId: Long = 0L, state: Int = 0, fromId: Long = 0L, toId: Long = 0L)
+  /** GetResult implicit for fetching rReplyComment objects using plain SQL queries */
+  implicit def GetResultrReplyComment(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rReplyComment] = GR{
+    prs => import prs._
+      rReplyComment.tupled((<<[Long], <<[String], <<[Long], <<[Int], <<[Long], <<[Long]))
+  }
+  /** Table description of table reply_comment. Objects of this class serve as prototypes for rows in queries. */
+  class tReplyComment(_tableTag: Tag) extends Table[rReplyComment](_tableTag, "reply_comment") {
+    def * = (id, content, replyId, state, fromId, toId) <> (rReplyComment.tupled, rReplyComment.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = (Rep.Some(id), Rep.Some(content), Rep.Some(replyId), Rep.Some(state), Rep.Some(fromId), Rep.Some(toId)).shaped.<>({r=>import r._; _1.map(_=> rReplyComment.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
+    val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
+    /** Database column content SqlType(VARCHAR), Length(255,true), Default() */
+    val content: Rep[String] = column[String]("content", O.Length(255,varying=true), O.Default(""))
+    /** Database column reply_id SqlType(BIGINT), Default(0) */
+    val replyId: Rep[Long] = column[Long]("reply_id", O.Default(0L))
+    /** Database column state SqlType(INT), Default(0) */
+    val state: Rep[Int] = column[Int]("state", O.Default(0))
+    /** Database column from_id SqlType(BIGINT), Default(0) */
+    val fromId: Rep[Long] = column[Long]("from_id", O.Default(0L))
+    /** Database column to_id SqlType(BIGINT), Default(0) */
+    val toId: Rep[Long] = column[Long]("to_id", O.Default(0L))
+  }
+  /** Collection-like TableQuery object for table tReplyComment */
+  lazy val tReplyComment = new TableQuery(tag => new tReplyComment(tag))
 
   /** Entity class storing rows of table tSave
     *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey

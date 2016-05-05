@@ -26,6 +26,7 @@ class WebSaveDao @Inject()(
   private[this] val uLabel = SlickTables.tLabel
   private[this] val uComment = SlickTables.tComment
   private[this] val uCustomer = SlickTables.tUser
+  private[this] val uReplyComment = SlickTables.tReplyComment
 
 
 
@@ -106,6 +107,14 @@ class WebSaveDao @Inject()(
 
   def deleteCommentById(userId:Long,id:Long)={
     db.run{uComment.filter(c=>(c.id === id)&&(c.toId==userId)).delete}
-
   }
+  def findReplyComment(replyId:Long)={
+    db.run(uReplyComment.filter(_.replyId===replyId).result.headOption)
+  }
+
+  def replyComment(fromId:Long,toId:Long,content:String,replyId:Long)={
+    db.run(uReplyComment.map(r=>(r.fromId,r.toId,r.replyId,r.content,r.state)).returning(
+      uReplyComment.map(_.id))+=(fromId,toId,replyId,content,0)).mapTo[Long]
+  }
+
 }

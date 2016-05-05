@@ -26,4 +26,5 @@ object CustomerErrorCode extends BaseJsonProtocols{
   def invalidForm = jsonResult(100616,"invalid form.")
   def uploadImageFail = jsonResult(100617,"upload image fail.")
   def addCommentFail = jsonResult(100618,"add comment fail")
+  def allreadyExits = jsonResult(100619,"allready exits")
 }

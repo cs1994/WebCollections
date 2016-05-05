@@ -53,6 +53,7 @@ GET         /customer/web/list                    @controllers.content.WebSave.g
 POST        /customer/comment/add                 @controllers.content.WebSave.addComment
 GET         /customer/comment/list                @controllers.content.WebSave.personalComment
 GET         /customer/comment/delete              @controllers.content.WebSave.deleteCommentById(id:Long)
+POST        /customer/comment/reply               @controllers.content.WebSave.replyComment
 
 ##### task
 POST        /customer/task/add                    @controllers.customer.Manage.addNewTask

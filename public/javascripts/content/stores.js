@@ -230,16 +230,19 @@
         listenables: [global.actions.commentAction],
         init: function(){
             this.commentList = [];
+            this.replyInfo={};
         },
         getInitialState:function(){
             return{
                 commentList:this.commentList,
+                replyInfo:this.replyInfo,
 
             }
         },
         updateStore: function(){
             this.trigger({
                 commentList:this.commentList,
+                replyInfo:this.replyInfo,
 
             })
         },
@@ -263,7 +266,19 @@
             ajaxGet(url, function () {
                 toastr.success("删除成功")
             })
-        }
+        },
+        onSetReplayInfo:function(data){
+            this.replyInfo=data;
+            this.updateStore();
+        },
+        onReplyComment:function(data,self){
+            var url="/customer/comment/reply";
+            ajaxJsonPost(url,data,function(json){
+                toastr.success("回复成功");
+                self.refs.replyComment.close();
+                $("#commentReply").val("");
+            })
+        },
 
     });
 

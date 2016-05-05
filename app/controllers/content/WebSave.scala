@@ -208,4 +208,27 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
             }
     }
   }
+  def replyComment=customerAuth.async{implicit request=>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    val postData=request.body.asJson.get
+    val replyId=(postData \ "replyId").as[Long]
+    val toId=(postData \ "toId").as[Long]
+    val content=(postData \ "content").as[String]
+
+    val result = Await.result(webSaveDao.findReplyComment(replyId).map{result=>
+      if(result.isDefined)  false
+      else true
+    },Duration(3, concurrent.duration.SECONDS))
+    if(result){
+      webSaveDao.replyComment(userId,toId,content,replyId).map { res =>
+        if(res>0){
+          Ok(successResult(Json.obj("id" ->res)))
+        }else{
+          Ok(CustomerErrorCode.deleteSaveFail)
+        }
+      }
+    }
+    else
+      Future.successful(Ok(CustomerErrorCode.allreadyExits))
+  }
 }

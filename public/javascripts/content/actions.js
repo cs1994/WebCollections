@@ -27,6 +27,8 @@
     global.actions.commentAction = Reflux.createActions([
         'getAllComments',
         'deleteComment',
+        'setReplayInfo',
+        'replyComment',
     ]);
 
 
