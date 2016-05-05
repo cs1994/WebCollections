@@ -802,9 +802,9 @@
                 global.actions.commentAction.deleteComment(id,index)
             });
         },
-        openModal:function(id,fromId){
+        openModal:function(id,saveId,fromId){
             this.refs.replyComment.open();
-            var data = {replyId:id,fromId:fromId}
+            var data = {replyId:id,saveId:saveId,fromId:fromId}
             global.actions.commentAction.setReplayInfo(data)
         },
         onConfirm:function(){
@@ -812,7 +812,8 @@
             if(content==""){
                 toastr.warning("请输入回复内容");
                 return;}
-            const data = {content:content,replyId:this.state.data.replyInfo.replyId,toId:this.state.data.replyInfo.fromId}
+            const data = {content:content,replyId:this.state.data.replyInfo.replyId,
+                saveId:this.state.data.replyInfo.saveId,toId:this.state.data.replyInfo.fromId}
             global.actions.commentAction.replyComment(data,this);
         },
         render:function(){
@@ -838,13 +839,14 @@
                                        <tbody>
                                            {
                                                $.map(this.state.data.commentList, (e,i)=>{
+                                                   var display = e.flagState ==0?"none":"block";
                                                    return (
                                                        <tr key={`attribute-${i}`}>
                                                            <td>{e.id}</td>
                                                            <td>{e.nickName}</td>
                                                            <td>{e.content}</td>
                                                            <td>
-                                                               <div className="btn btn-success" onClick={this.openModal.bind(this,e.id,e.fromId)}>回复</div>&nbsp;&nbsp;
+                                                               <div className="btn btn-success" style={{display:display}} onClick={this.openModal.bind(this,e.id,e.saveId,e.fromId)}>回复</div>&nbsp;&nbsp;
                                                                <div className="btn btn-danger" onClick={self.deleteComment.bind(self,e.id,i)}>删除</div>
                                                            </td>
                                                        </tr>)

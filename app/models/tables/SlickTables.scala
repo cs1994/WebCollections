@@ -14,7 +14,7 @@ trait SlickTables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = Array(tComment.schema, tEmail.schema, tLabel.schema, tReplyComment.schema, tSave.schema, tTask.schema, tUser.schema).reduceLeft(_ ++ _)
+  lazy val schema: profile.SchemaDescription = Array(tComment.schema, tCommentLink.schema, tEmail.schema, tLabel.schema, tSave.schema, tTask.schema, tUser.schema).reduceLeft(_ ++ _)
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
@@ -24,18 +24,19 @@ trait SlickTables {
     *  @param toId Database column to_id SqlType(BIGINT), Default(0)
     *  @param content Database column content SqlType(VARCHAR), Length(255,true), Default()
     *  @param state Database column state SqlType(INT), Default(0)
-    *  @param saveId Database column save_id SqlType(BIGINT), Default(0) */
-  case class rComment(id: Long, fromId: Long = 0L, toId: Long = 0L, content: String = "", state: Int = 0, saveId: Long = 0L)
+    *  @param saveId Database column save_id SqlType(BIGINT), Default(0)
+    *  @param flag Database column flag SqlType(INT), Default(0) */
+  case class rComment(id: Long, fromId: Long = 0L, toId: Long = 0L, content: String = "", state: Int = 0, saveId: Long = 0L, flag: Int = 0)
   /** GetResult implicit for fetching rComment objects using plain SQL queries */
   implicit def GetResultrComment(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rComment] = GR{
     prs => import prs._
-      rComment.tupled((<<[Long], <<[Long], <<[Long], <<[String], <<[Int], <<[Long]))
+      rComment.tupled((<<[Long], <<[Long], <<[Long], <<[String], <<[Int], <<[Long], <<[Int]))
   }
   /** Table description of table comment. Objects of this class serve as prototypes for rows in queries. */
   class tComment(_tableTag: Tag) extends Table[rComment](_tableTag, "comment") {
-    def * = (id, fromId, toId, content, state, saveId) <> (rComment.tupled, rComment.unapply)
+    def * = (id, fromId, toId, content, state, saveId, flag) <> (rComment.tupled, rComment.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(fromId), Rep.Some(toId), Rep.Some(content), Rep.Some(state), Rep.Some(saveId)).shaped.<>({r=>import r._; _1.map(_=> rComment.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(fromId), Rep.Some(toId), Rep.Some(content), Rep.Some(state), Rep.Some(saveId), Rep.Some(flag)).shaped.<>({r=>import r._; _1.map(_=> rComment.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
     val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
@@ -49,9 +50,37 @@ trait SlickTables {
     val state: Rep[Int] = column[Int]("state", O.Default(0))
     /** Database column save_id SqlType(BIGINT), Default(0) */
     val saveId: Rep[Long] = column[Long]("save_id", O.Default(0L))
+    /** Database column flag SqlType(INT), Default(0) */
+    val flag: Rep[Int] = column[Int]("flag", O.Default(0))
   }
   /** Collection-like TableQuery object for table tComment */
   lazy val tComment = new TableQuery(tag => new tComment(tag))
+
+  /** Entity class storing rows of table tCommentLink
+    *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey
+    *  @param fromId Database column from_id SqlType(BIGINT), Default(0)
+    *  @param toId Database column to_id SqlType(BIGINT), Default(0) */
+  case class rCommentLink(id: Long, fromId: Long = 0L, toId: Long = 0L)
+  /** GetResult implicit for fetching rCommentLink objects using plain SQL queries */
+  implicit def GetResultrCommentLink(implicit e0: GR[Long]): GR[rCommentLink] = GR{
+    prs => import prs._
+      rCommentLink.tupled((<<[Long], <<[Long], <<[Long]))
+  }
+  /** Table description of table comment_link. Objects of this class serve as prototypes for rows in queries. */
+  class tCommentLink(_tableTag: Tag) extends Table[rCommentLink](_tableTag, "comment_link") {
+    def * = (id, fromId, toId) <> (rCommentLink.tupled, rCommentLink.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = (Rep.Some(id), Rep.Some(fromId), Rep.Some(toId)).shaped.<>({r=>import r._; _1.map(_=> rCommentLink.tupled((_1.get, _2.get, _3.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
+    val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
+    /** Database column from_id SqlType(BIGINT), Default(0) */
+    val fromId: Rep[Long] = column[Long]("from_id", O.Default(0L))
+    /** Database column to_id SqlType(BIGINT), Default(0) */
+    val toId: Rep[Long] = column[Long]("to_id", O.Default(0L))
+  }
+  /** Collection-like TableQuery object for table tCommentLink */
+  lazy val tCommentLink = new TableQuery(tag => new tCommentLink(tag))
 
   /** Entity class storing rows of table tEmail
     *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey
@@ -116,41 +145,6 @@ trait SlickTables {
   }
   /** Collection-like TableQuery object for table tLabel */
   lazy val tLabel = new TableQuery(tag => new tLabel(tag))
-
-  /** Entity class storing rows of table tReplyComment
-    *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey
-    *  @param content Database column content SqlType(VARCHAR), Length(255,true), Default()
-    *  @param replyId Database column reply_id SqlType(BIGINT), Default(0)
-    *  @param state Database column state SqlType(INT), Default(0)
-    *  @param fromId Database column from_id SqlType(BIGINT), Default(0)
-    *  @param toId Database column to_id SqlType(BIGINT), Default(0) */
-  case class rReplyComment(id: Long, content: String = "", replyId: Long = 0L, state: Int = 0, fromId: Long = 0L, toId: Long = 0L)
-  /** GetResult implicit for fetching rReplyComment objects using plain SQL queries */
-  implicit def GetResultrReplyComment(implicit e0: GR[Long], e1: GR[String], e2: GR[Int]): GR[rReplyComment] = GR{
-    prs => import prs._
-      rReplyComment.tupled((<<[Long], <<[String], <<[Long], <<[Int], <<[Long], <<[Long]))
-  }
-  /** Table description of table reply_comment. Objects of this class serve as prototypes for rows in queries. */
-  class tReplyComment(_tableTag: Tag) extends Table[rReplyComment](_tableTag, "reply_comment") {
-    def * = (id, content, replyId, state, fromId, toId) <> (rReplyComment.tupled, rReplyComment.unapply)
-    /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(id), Rep.Some(content), Rep.Some(replyId), Rep.Some(state), Rep.Some(fromId), Rep.Some(toId)).shaped.<>({r=>import r._; _1.map(_=> rReplyComment.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
-
-    /** Database column Id SqlType(BIGINT), AutoInc, PrimaryKey */
-    val id: Rep[Long] = column[Long]("Id", O.AutoInc, O.PrimaryKey)
-    /** Database column content SqlType(VARCHAR), Length(255,true), Default() */
-    val content: Rep[String] = column[String]("content", O.Length(255,varying=true), O.Default(""))
-    /** Database column reply_id SqlType(BIGINT), Default(0) */
-    val replyId: Rep[Long] = column[Long]("reply_id", O.Default(0L))
-    /** Database column state SqlType(INT), Default(0) */
-    val state: Rep[Int] = column[Int]("state", O.Default(0))
-    /** Database column from_id SqlType(BIGINT), Default(0) */
-    val fromId: Rep[Long] = column[Long]("from_id", O.Default(0L))
-    /** Database column to_id SqlType(BIGINT), Default(0) */
-    val toId: Rep[Long] = column[Long]("to_id", O.Default(0L))
-  }
-  /** Collection-like TableQuery object for table tReplyComment */
-  lazy val tReplyComment = new TableQuery(tag => new tReplyComment(tag))
 
   /** Entity class storing rows of table tSave
     *  @param id Database column Id SqlType(BIGINT), AutoInc, PrimaryKey

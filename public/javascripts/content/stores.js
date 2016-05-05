@@ -254,13 +254,7 @@
                 self.updateStore();
             })
         },
-        onSubmitComment:function(data,index){
-            var url ="/customer/comment/add";
-            ajaxJsonPost(url,data,function(json){
-                toastr.success("评论成功")
-                var content = $("#input"+index).val("");
-            })
-        },
+
         onDeleteComment:function(id,index){
             var url ="/customer/comment/delete?id="+id
             ajaxGet(url, function () {

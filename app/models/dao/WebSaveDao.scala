@@ -26,7 +26,7 @@ class WebSaveDao @Inject()(
   private[this] val uLabel = SlickTables.tLabel
   private[this] val uComment = SlickTables.tComment
   private[this] val uCustomer = SlickTables.tUser
-  private[this] val uReplyComment = SlickTables.tReplyComment
+  private[this] val uCommentLink = SlickTables.tCommentLink
 
 
 
@@ -90,8 +90,8 @@ class WebSaveDao @Inject()(
   }
 
   def addComment(fromId:Long,saveId:Long,toId:Long,content:String) = {
-    db.run{uComment.map(c=>(c.fromId,c.saveId,c.toId,c.content,c.state)).returning(
-      uComment.map(_.id))+=(fromId,saveId,toId,content,0)}.mapTo[Long]
+    db.run{uComment.map(c=>(c.fromId,c.saveId,c.toId,c.content,c.state,c.flag)).returning(
+      uComment.map(_.id))+=(fromId,saveId,toId,content,0,0)}.mapTo[Long]
   }
 
   def addSaveCommentNumber(saveId:Long)={
@@ -108,13 +108,17 @@ class WebSaveDao @Inject()(
   def deleteCommentById(userId:Long,id:Long)={
     db.run{uComment.filter(c=>(c.id === id)&&(c.toId==userId)).delete}
   }
-  def findReplyComment(replyId:Long)={
-    db.run(uReplyComment.filter(_.replyId===replyId).result.headOption)
+  def findCommentLink(toId:Long) ={
+    db.run{uCommentLink.filter(_.toId===toId).result.headOption}
   }
 
-  def replyComment(fromId:Long,toId:Long,content:String,replyId:Long)={
-    db.run(uReplyComment.map(r=>(r.fromId,r.toId,r.replyId,r.content,r.state)).returning(
-      uReplyComment.map(_.id))+=(fromId,toId,replyId,content,0)).mapTo[Long]
+  def replyComment(userId:Long,toId:Long,content:String,saveId:Long)={
+     db.run{uComment.map(c=>(c.fromId,c.saveId,c.toId,c.content,c.state,c.flag)).returning(
+      uComment.map(_.id))+=(userId,saveId,toId,content,0,1)}.mapTo[Long]
+  }
+  def addCommentLink(fromId:Long,toId:Long)={
+    db.run{uCommentLink.map(uc=>(uc.fromId,uc.toId)).returning(uCommentLink.map(_.id))+=
+      (fromId,toId)}.mapTo[Long]
   }
 
 }

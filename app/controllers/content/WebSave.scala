@@ -164,9 +164,10 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
     val saveId=(postData \ "saveId").as[Long]
     val toId=(postData \ "toId").as[Long]
     val content=(postData \ "content").as[String]
+
     webSaveDao.addComment(userId,saveId,toId,content).map { res =>
       if(res>0){
-        userDao.addUserCommentNumber(userId)
+        userDao.addUserCommentNumber(toId)
         webSaveDao.addSaveCommentNumber(saveId)
         Ok(successResult(Json.obj("id" ->res)))
       }else{
@@ -180,12 +181,20 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
 
     webSaveDao.personalComment(userId).map { res =>
 //      if(res.nonEmpty){
+
         val result = res.map{r=>
+          val res = Await.result(webSaveDao.findCommentLink(r._1.id).map{result=>
+            if(result.isDefined)  0
+            else 1
+          },Duration(3, concurrent.duration.SECONDS))
         Json.obj(
         "id" -> r._1.id,
         "content" -> r._1.content,
         "state" -> r._1.state,
         "fromId" -> r._1.fromId,
+        "saveId" -> r._1.saveId,
+        "flag" -> r._1.flag,
+        "flagState" -> res,
         "nickName" -> r._2.nickName
         )
         }
@@ -208,21 +217,30 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
             }
     }
   }
+
   def replyComment=customerAuth.async{implicit request=>
     val userId=request.session.get(SessionKey.userId).get.toLong
     val postData=request.body.asJson.get
     val replyId=(postData \ "replyId").as[Long]
     val toId=(postData \ "toId").as[Long]
+    val saveId=(postData \ "saveId").as[Long]
     val content=(postData \ "content").as[String]
 
-    val result = Await.result(webSaveDao.findReplyComment(replyId).map{result=>
+    val result = Await.result(webSaveDao.findCommentLink(replyId).map{result=>
       if(result.isDefined)  false
       else true
     },Duration(3, concurrent.duration.SECONDS))
     if(result){
-      webSaveDao.replyComment(userId,toId,content,replyId).map { res =>
+      webSaveDao.replyComment(userId,toId,content,saveId).map { res =>
         if(res>0){
+
+          val bool =Await.result( webSaveDao.addCommentLink(res,replyId).map{result=>
+            if(result>0) true
+            else false
+          },Duration(3, concurrent.duration.SECONDS))
+          if(bool)
           Ok(successResult(Json.obj("id" ->res)))
+          else Ok(CustomerErrorCode.deleteSaveFail)
         }else{
           Ok(CustomerErrorCode.deleteSaveFail)
         }
@@ -231,4 +249,5 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
     else
       Future.successful(Ok(CustomerErrorCode.allreadyExits))
   }
+
 }
