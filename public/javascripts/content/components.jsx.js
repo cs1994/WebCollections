@@ -328,6 +328,19 @@
                                         <span>转发</span>
                                     </p>
                                 </div>
+                                <ul className="list-group">
+                                    {e.commentList.map(function(c, i){
+                                        var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
+                                        return(
+                                            <li className="list-group-item">
+                                                <img src={headImg} alt=""/>
+                                                <span>{c.userInfo.nickName}:</span>
+                                                <span>{c.content}</span>
+                                            </li>
+                                        )
+                                    })
+                                    }
+                                </ul>
                                 <form className="form-inline">
                                     <div className="form-group">
                                         <div className="input-group">
@@ -788,6 +801,7 @@
             ReactRouter.State],
         componentWillMount:function(){
             global.actions.commentAction.getAllComments();
+            global.actions.commentAction.getAllReply();
         },
         deleteComment:function(id,index){
             swal({
@@ -824,13 +838,14 @@
                         <div className="col-md-10 col-md-offset-1 col-sm-12 col-xs-12" style={{paddingRight: '20px'}}>
                             <div className="panel panel-default">
                                 <div className="panel-heading">
-                                    <h3 className="panel-title">相关评论</h3>
+                                    <h3 className="panel-title">收到的评论</h3>
                                 </div>
                                 <div className="panel-body">
                                     <table className="table">
                                         <thread>
                                             <tr>
                                                 <th>Id</th>
+                                                <th>对象</th>
                                                 <th>评论人</th>
                                                 <th>内容</th>
                                                 <th>操作</th>
@@ -843,6 +858,7 @@
                                                    return (
                                                        <tr key={`attribute-${i}`}>
                                                            <td>{e.id}</td>
+                                                           <td>{e.saveInfo.url}</td>
                                                            <td>{e.nickName}</td>
                                                            <td>{e.content}</td>
                                                            <td>
@@ -855,6 +871,38 @@
                                     </table>
                                 </div>
                             </div>
+
+                            <div className="panel panel-default">
+                                <div className="panel-heading">
+                                    <h3 className="panel-title">收到的回复</h3>
+                                </div>
+                                <div className="panel-body">
+                                    <table className="table">
+                                        <thread>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>对象</th>
+                                                <th>收藏人</th>
+                                                <th>内容</th>
+
+                                            </tr>
+                                        </thread>
+                                        <tbody>
+                                        {
+                                            $.map(this.state.data.replyList, (e,i)=>{
+                                                return (
+                                                    <tr key={`attribute-${i}`}>
+                                                        <td>{e.id}</td>
+                                                        <td>{e.saveInfo.url}</td>
+                                                        <td>{e.nickName}</td>
+                                                        <td>{e.content}</td>
+                                                    </tr>)
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>

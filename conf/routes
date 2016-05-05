@@ -52,6 +52,7 @@ GET         /customer/personal/web/delete         @controllers.content.WebSave.d
 GET         /customer/web/list                    @controllers.content.WebSave.getAllSave
 POST        /customer/comment/add                 @controllers.content.WebSave.addComment
 GET         /customer/comment/list                @controllers.content.WebSave.personalComment
+GET         /customer/comment/replay/list         @controllers.content.WebSave.personalReplyComment
 GET         /customer/comment/delete              @controllers.content.WebSave.deleteCommentById(id:Long)
 POST        /customer/comment/reply               @controllers.content.WebSave.replyComment
 

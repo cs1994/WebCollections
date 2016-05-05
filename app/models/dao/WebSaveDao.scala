@@ -33,6 +33,9 @@ class WebSaveDao @Inject()(
   def getSaveByUrl(url:String,userId:Long) = {
     db.run(uSave.filter(s=>(s.url === url)&&(s.userId===userId)).result.headOption)
   }
+  def getSaveById(id:Long) = {
+    db.run(uSave.filter(_.id===id).result.head)
+  }
 
   def insertSave(url:String,description:String,secret:Int,userId:Long,insertTime:Long,webContent:String,flag:Int)={
     db.run(uSave.map(t=>(t.url,t.description,t.secret,t.userId,t.insertTime,t.webcontent,t.number,t.commentNum,t.flag)).returning(
@@ -99,7 +102,10 @@ class WebSaveDao @Inject()(
   }
 
   def personalComment(userId:Long)={
-    db.run{uComment.filter(_.toId === userId).join(uCustomer).on(_.fromId ===_.id).result}
+    db.run{uComment.filter(c=>(c.toId === userId)&&(c.flag===0)).join(uCustomer).on(_.fromId ===_.id).result}
+  }
+  def personalReplyComment(userId:Long)={
+    db.run{uComment.filter(c=>(c.toId === userId)&&(c.flag===1)).join(uCustomer).on(_.fromId ===_.id).result}
   }
 //  def getPersonalCommentUnsee(userId:Long)={
 //    db.run{uComment.filter(c=>(c.toId === userId)&&(c.state==0)).join(uCustomer).on(_.fromId ===_.id).result}

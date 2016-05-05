@@ -187,12 +187,18 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
             if(result.isDefined)  0
             else 1
           },Duration(3, concurrent.duration.SECONDS))
+          val saveInfo = Await.result(webSaveDao.getSaveById(r._1.saveId).map{result=>
+            Json.obj(
+              "url" -> result.url
+            )
+          },Duration(3, concurrent.duration.SECONDS))
         Json.obj(
         "id" -> r._1.id,
         "content" -> r._1.content,
         "state" -> r._1.state,
         "fromId" -> r._1.fromId,
         "saveId" -> r._1.saveId,
+        "saveInfo" -> saveInfo,
         "flag" -> r._1.flag,
         "flagState" -> res,
         "nickName" -> r._2.nickName
@@ -248,6 +254,37 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
     }
     else
       Future.successful(Ok(CustomerErrorCode.allreadyExits))
+  }
+
+
+  def personalReplyComment = customerAuth.async{implicit request=>
+
+    val userId=request.session.get(SessionKey.userId).get.toLong
+
+    webSaveDao.personalReplyComment(userId).map { res =>
+      //      if(res.nonEmpty){
+
+      val result = res.map{r=>
+
+        val saveInfo = Await.result(webSaveDao.getSaveById(r._1.saveId).map{result=>
+          Json.obj(
+            "url" -> result.url
+          )
+        },Duration(3, concurrent.duration.SECONDS))
+        Json.obj(
+          "id" -> r._1.id,
+          "content" -> r._1.content,
+          "state" -> r._1.state,
+          "fromId" -> r._1.fromId,
+          "saveId" -> r._1.saveId,
+          "saveInfo" -> saveInfo,
+          "flag" -> r._1.flag,
+          "nickName" -> r._2.nickName
+        )
+      }
+      Ok(successResult(Json.obj("result" ->result)))
+
+    }
   }
 
 }

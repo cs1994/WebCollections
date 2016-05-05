@@ -29,6 +29,7 @@
         'deleteComment',
         'setReplayInfo',
         'replyComment',
+        'getAllReply',
     ]);
 
 

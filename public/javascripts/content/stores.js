@@ -230,11 +230,13 @@
         listenables: [global.actions.commentAction],
         init: function(){
             this.commentList = [];
+            this.replyList = [];
             this.replyInfo={};
         },
         getInitialState:function(){
             return{
                 commentList:this.commentList,
+                replyList:this.replyList,
                 replyInfo:this.replyInfo,
 
             }
@@ -242,6 +244,7 @@
         updateStore: function(){
             this.trigger({
                 commentList:this.commentList,
+                replyList:this.replyList,
                 replyInfo:this.replyInfo,
 
             })
@@ -254,7 +257,15 @@
                 self.updateStore();
             })
         },
-
+        onGetAllReply:function(){
+            var url="/customer/comment/replay/list"
+            var self= this;
+            ajaxGet(url,function(json){
+                self.replyList=json.result;
+                console.log("!!!!!!!!!!!!!!@@@@ " +JSON.stringify(self.replyList))
+                self.updateStore();
+            })
+        },
         onDeleteComment:function(id,index){
             var url ="/customer/comment/delete?id="+id
             ajaxGet(url, function () {
