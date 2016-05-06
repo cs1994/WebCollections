@@ -268,13 +268,16 @@
             var self= this;
             ajaxGet(url,function(json){
                 self.replyList=json.result;
-                console.log("!!!!!!!!!!!!!!@@@@ " +JSON.stringify(self.replyList))
+
                 self.updateStore();
             })
         },
         onDeleteComment:function(id,index){
-            var url ="/customer/comment/delete?id="+id
+            var url ="/customer/comment/delete?id="+id;
+            var self=this;
             ajaxGet(url, function () {
+                self.commentList.splice(index,1);
+                self.updateStore();
                 toastr.success("删除成功")
             })
         },
