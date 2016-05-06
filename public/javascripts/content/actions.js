@@ -5,6 +5,7 @@
     global.actions.allAction = Reflux.createActions([
         'getAllSave',
         'submitComment',
+        'replyComment',
     ]);
     global.actions.personalAction = Reflux.createActions([
         'choseLabel',

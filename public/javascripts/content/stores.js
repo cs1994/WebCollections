@@ -34,7 +34,13 @@
                 toastr.success("评论成功")
                 var content = $("#input"+index).val("");
             })
-        }
+        },
+        onReplyComment:function(data){
+            var url="/customer/comment/reply";
+            ajaxJsonPost(url,data,function(json){
+                toastr.success("回复成功");
+            })
+        },
     });
 
     global.stores.PersonalStore = Reflux.createStore({

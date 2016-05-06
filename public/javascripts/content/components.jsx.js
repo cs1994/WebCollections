@@ -274,6 +274,15 @@
             var data={saveId:saveId,toId:toId,content:content}
             global.actions.allAction.submitComment(data,index);
         },
+        replyComment:function(replyId,saveId,toId,index){
+            const content = $("#replyInput"+index).val();
+            if(content==""){
+                toastr.warning("请输入回复内容");
+                return;}
+            const data = {content:content,replyId:replyId,
+                saveId:saveId,toId:toId}
+            global.actions.allAction.replyComment(data);
+        },
         render:function(){
             var dom = null;
             if(this.state.data.webList.length==0){
@@ -320,9 +329,9 @@
                                     <form className="form-inline">
                                         <div className="form-group">
                                             <div className="input-group">
-                                                <input type="text" className="form-control" id={"input"+index} placeholder="请输入回复内容"
+                                                <input type="text" className="form-control" id={"replyInput"+index} placeholder="请输入回复内容"
                                                        style={{width: '470px'}}/>
-                                                <div  className="input-group-addon" onClick={this.submitComment.bind(this,e.id,e.userId,index)}>回复</div>
+                                                <div  className="input-group-addon" onClick={this.replyComment.bind(this,e.commentList[0].id,e.id,e.commentList[0].userInfo.id,index)}>回复</div>
                                             </div>
 
                                         </div>

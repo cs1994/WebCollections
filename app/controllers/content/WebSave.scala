@@ -69,7 +69,8 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
                },Duration(3, concurrent.duration.SECONDS))
                  Json.obj(
                    "userInfo" -> userInfo,
-                   "content" -> comment.content
+                   "content" -> comment.content,
+                   "id" -> comment.id
                  )
              }
          }
@@ -127,7 +128,8 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
                 },Duration(3, concurrent.duration.SECONDS))
                 Json.obj(
                   "userInfo" -> userInfo,
-                  "content" -> comment.content
+                  "content" -> comment.content,
+                  "id" -> comment.id
                 )
               }
           }
