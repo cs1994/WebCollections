@@ -67,10 +67,28 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
                    "nickName" -> info.nickName
                  )
                },Duration(3, concurrent.duration.SECONDS))
+              val replyComment = Await.result(webSaveDao.getCommentReply(comment.id).map{info=>
+                if(info.isDefined){
+
+                  Json.obj(
+                    "id" -> info.get._2.id,
+                    "toId" -> info.get._2.toId,
+                    "content" -> info.get._2.content,
+                    "saveId" -> info.get._2.saveId
+                  )
+                }
+                else {
+                  Json.obj(
+
+                  )
+                }
+
+              },Duration(3, concurrent.duration.SECONDS))
                  Json.obj(
                    "userInfo" -> userInfo,
                    "content" -> comment.content,
-                   "id" -> comment.id
+                   "id" -> comment.id,
+                   "replyComment" -> replyComment
                  )
              }
          }
@@ -126,10 +144,35 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
                     "nickName" -> info.nickName
                   )
                 },Duration(3, concurrent.duration.SECONDS))
+                val replyComment = Await.result(webSaveDao.getCommentReply(comment.id).map{info=>
+                  if(info.isDefined){
+                    val replyUserInfo = Await.result(userDao.getUserById(info.get._2.fromId).map{info=>
+                      Json.obj(
+                        "id" -> info.id,
+                        "headImg" -> info.headImg,
+                        "nickName" -> info.nickName
+                      )
+                    },Duration(3, concurrent.duration.SECONDS))
+                    Json.obj(
+                      "id" -> info.get._2.id,
+                      "replyUserInfo" -> replyUserInfo,
+                      "toId" -> info.get._2.toId,
+                      "content" -> info.get._2.content,
+                      "saveId" -> info.get._2.saveId
+                    )
+                  }
+                  else {
+                    Json.obj(
+
+                    )
+                  }
+
+                },Duration(3, concurrent.duration.SECONDS))
                 Json.obj(
                   "userInfo" -> userInfo,
                   "content" -> comment.content,
-                  "id" -> comment.id
+                  "id" -> comment.id,
+                  "replyComment" -> replyComment
                 )
               }
           }
@@ -218,6 +261,9 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
     val userId=request.session.get(SessionKey.userId).get.toLong
 
     webSaveDao.deleteCommentById(userId,id).map { res =>
+      println("@@@@@@@@@@@@@@ " + res)
+      println("@@@@@@@@@@@@@@ " + userId)
+      println("@@@@@@@@@@@@@@ " + id)
             if(res>0){
               Ok(successResult(Json.obj("id" ->res)))
             }else{

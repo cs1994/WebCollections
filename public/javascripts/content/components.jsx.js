@@ -281,7 +281,7 @@
                 return;}
             const data = {content:content,replyId:replyId,
                 saveId:saveId,toId:toId}
-            global.actions.allAction.replyComment(data);
+            global.actions.allAction.replyComment(data );
         },
         render:function(){
             var dom = null;
@@ -309,55 +309,50 @@
                     }
                     var panelFooter = null;
                     if($CONF$.id == e.userId){
-                        if(e.commentList.length==1){
-                            panelFooter =
-                                <div className="panel-footer">
-
+                        panelFooter =
+                            <div className="panel-footer">
                                     <ul className="list-group">
                                         {e.commentList.map(function(c, i){
                                             var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
+                                            var replyDom=null;
+                                            if(c.replyComment.id == undefined) {
+                                                replyDom=
+                                                    <form className="form-inline">
+                                                        <div className="form-group">
+                                                            <div className="input-group">
+                                                                <input type="text" className="form-control" id={"replyInput"+i} placeholder="请输入回复内容"
+                                                                       style={{width: '470px'}}/>
+                                                                <div  className="input-group-addon" onClick={this.replyComment.bind(this,c.id,e.id,c.userInfo.id,i)}>回复</div>
+                                                            </div>
+
+                                                        </div>
+                                                    </form>
+                                            }
+                                            else {
+                                                replyDom=
+                                                    <li className="list-group-item">
+                                                        <img src={c.replyComment.replyUserInfo.headImg} alt=""/>
+                                                        <span>{c.replyComment.replyUserInfo.nickName}:</span>
+                                                        <span>{c.replyComment.content}</span>
+                                                    </li>
+                                            }
                                             return(
-                                                <li className="list-group-item">
-                                                    <img src={headImg} alt=""/>
-                                                    <span>{c.userInfo.nickName}:</span>
-                                                    <span>{c.content}</span>
-                                                </li>
+                                                <div>
+                                                    <li className="list-group-item">
+                                                        <img src={headImg} alt=""/>
+                                                        <span>{c.userInfo.nickName}:</span>
+                                                        <span>{c.content}</span>
+                                                    </li>
+                                                    {replyDom}
+                                                </div>
                                             )
-                                        })
+                                        }.bind(this))
                                         }
                                     </ul>
-                                    <form className="form-inline">
-                                        <div className="form-group">
-                                            <div className="input-group">
-                                                <input type="text" className="form-control" id={"replyInput"+index} placeholder="请输入回复内容"
-                                                       style={{width: '470px'}}/>
-                                                <div  className="input-group-addon" onClick={this.replyComment.bind(this,e.commentList[0].id,e.id,e.commentList[0].userInfo.id,index)}>回复</div>
-                                            </div>
 
-                                        </div>
-                                    </form>
                                 </div>
-                        }
-                        else
-                        {
-                            panelFooter =
-                                <div className="panel-footer">
 
-                                    <ul className="list-group">
-                                        {e.commentList.map(function(c, i){
-                                            var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
-                                            return(
-                                                <li className="list-group-item">
-                                                    <img src={headImg} alt=""/>
-                                                    <span>{c.userInfo.nickName}:</span>
-                                                    <span>{c.content}</span>
-                                                </li>
-                                            )
-                                        })
-                                        }
-                                    </ul>
-                                </div>
-                        }
+
                     }
                     else {
 
@@ -549,35 +544,50 @@
                             </div>
                             <div className="panel-footer">
                                 <div>
-                                    <p>
-                                        <i className="fa fa-commenting" aria-hidden="true"></i>
-                                        <span>评论</span>
-                                    </p>
-                                    <p>
-                                        <i className="fa fa-thumbs-up" aria-hidden="true"></i>
-                                        <span>点赞</span>
-                                    </p>
-                                    <p>
-                                        <i className="fa fa-share" aria-hidden="true"></i>
-                                        <span>转发</span>
-                                    </p>
+
                                     <p onClick={this.deleteSave.bind(this,e.id,index)}>
                                         <i className="fa fa-trash" aria-hidden="true"></i>
                                         <span>删除</span>
                                     </p>
                                 </div>
                                 <ul className="list-group">
-                                {e.commentList.map(function(c, i){
-                                    var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
-                                    return(
-                                        <li className="list-group-item">
-                                            <img src={headImg} alt=""/>
-                                            <span>{c.userInfo.nickName}:</span>
-                                            <span>{c.content}</span>
-                                        </li>
-                                    )
-                                })
-                                }
+                                    {e.commentList.map(function(c, i){
+                                        var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
+                                        var replyDom=null;
+                                        if(c.replyComment.id == undefined) {
+                                            replyDom=
+                                                <form className="form-inline">
+                                                    <div className="form-group">
+                                                        <div className="input-group">
+                                                            <input type="text" className="form-control" id={"replyInput"+i} placeholder="请输入回复内容"
+                                                                   style={{width: '470px'}}/>
+                                                            <div  className="input-group-addon" onClick={this.replyComment.bind(this,c.id,e.id,c.userInfo.id,i)}>回复</div>
+                                                        </div>
+
+                                                    </div>
+                                                </form>
+                                        }
+                                        else {
+                                            replyDom=
+                                                <li className="list-group-item">
+                                                    <img src={$CONF$.headImg} alt=""/>
+                                                    <span>{$CONF$.nickName}:</span>
+                                                    <span>{c.replyComment.content}</span>
+                                                </li>
+                                        }
+                                        return(
+                                            <div>
+                                                <li className="list-group-item">
+                                                    <img src={headImg} alt=""/>
+                                                    <span>{c.userInfo.nickName}:</span>
+                                                    <span>{c.content}</span>
+                                                </li>
+                                                {replyDom}
+                                            </div>
+                                        )
+                                    }.bind(this))
+                                    }
+
                                 </ul>
                                 {
                                     //<form className="form-inline">

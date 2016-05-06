@@ -72,7 +72,7 @@ class WebSaveDao @Inject()(
 
   def getCommentById(id:Long)={
     db.run{
-      uComment.filter(_.saveId===id).result}
+      uComment.filter(c=>(c.saveId===id)&&(c.flag===0)).result}
   }
 
   def deletePersonalSave(id:Long,userId:Long)={
@@ -111,8 +111,11 @@ class WebSaveDao @Inject()(
 //    db.run{uComment.filter(c=>(c.toId === userId)&&(c.state==0)).join(uCustomer).on(_.fromId ===_.id).result}
 //  }
 
+  def getCommentReply(id:Long)={
+    db.run{uCommentLink.filter(_.toId===id).join(uComment).on(_.fromId===_.id).result.headOption}
+  }
   def deleteCommentById(userId:Long,id:Long)={
-    db.run{uComment.filter(c=>(c.id === id)&&(c.toId==userId)).delete}
+    db.run{uComment.filter(c=>(c.id === id)&&(c.toId===userId)).delete}
   }
   def findCommentLink(toId:Long) ={
     db.run{uCommentLink.filter(_.toId===toId).result.headOption}
