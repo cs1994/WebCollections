@@ -226,17 +226,21 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
 
     webSaveDao.personalComment(userId).map { res =>
 //      if(res.nonEmpty){
-
+println("!!!!!!!!!!!! " +res)
         val result = res.map{r=>
-          val res = Await.result(webSaveDao.findCommentLink(r._1.id).map{result=>
+
+
+          val rest = Await.result(webSaveDao.findCommentLink(r._1.id).map{result=>
             if(result.isDefined)  0
             else 1
-          },Duration(3, concurrent.duration.SECONDS))
+          },Duration(10, concurrent.duration.SECONDS))
           val saveInfo = Await.result(webSaveDao.getSaveById(r._1.saveId).map{result=>
             Json.obj(
               "url" -> result.url
             )
-          },Duration(3, concurrent.duration.SECONDS))
+          },Duration(10, concurrent.duration.SECONDS))
+          println("########## " +rest)
+          println("$$$$$$$$" +saveInfo)
         Json.obj(
         "id" -> r._1.id,
         "content" -> r._1.content,
@@ -245,7 +249,7 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
         "saveId" -> r._1.saveId,
         "saveInfo" -> saveInfo,
         "flag" -> r._1.flag,
-        "flagState" -> res,
+        "flagState" -> rest,
         "nickName" -> r._2.nickName
         )
         }
