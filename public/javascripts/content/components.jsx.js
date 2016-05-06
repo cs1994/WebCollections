@@ -298,36 +298,80 @@
                         case 4: labelTitle="购物";break;
                         case 5: labelTitle="其他";break;
                     }
-                    return(
-                        <div className="panel panel-default" id={"save"+index}>
-                            <div className="panel-heading">
-                                <h3 className="panel-title" style={{display:"inline"}}>所有收藏</h3>
-                                <a onClick={this.closePanel.bind(this,index)} style={{float:"right",cursor:"pointer"}}>×</a>
-                            </div>
-                            <div className="panel-body">
-                                <p>{e.nickName}</p>
-                                <div style={{height:"25px"}}>
-                                    <span>{time}</span>
-                                    <span style={{marginLeft:"20px"}} className="label label-success">{labelTitle}</span>
+                    var panelFooter = null;
+                    if($CONF$.id == e.userId){
+                        if(e.commentList.length==1){
+                            panelFooter =
+                                <div className="panel-footer">
+
+                                    <ul className="list-group">
+                                        {e.commentList.map(function(c, i){
+                                            var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
+                                            return(
+                                                <li className="list-group-item">
+                                                    <img src={headImg} alt=""/>
+                                                    <span>{c.userInfo.nickName}:</span>
+                                                    <span>{c.content}</span>
+                                                </li>
+                                            )
+                                        })
+                                        }
+                                    </ul>
+                                    <form className="form-inline">
+                                        <div className="form-group">
+                                            <div className="input-group">
+                                                <input type="text" className="form-control" id={"input"+index} placeholder="请输入回复内容"
+                                                       style={{width: '470px'}}/>
+                                                <div  className="input-group-addon" onClick={this.submitComment.bind(this,e.id,e.userId,index)}>回复</div>
+                                            </div>
+
+                                        </div>
+                                    </form>
                                 </div>
-                                <p>链接：<a href="">{e.url}</a></p>
-                                <p>内容：{e.content}</p>
-                            </div>
+                        }
+                        else
+                        {
+                            panelFooter =
+                                <div className="panel-footer">
+
+                                    <ul className="list-group">
+                                        {e.commentList.map(function(c, i){
+                                            var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
+                                            return(
+                                                <li className="list-group-item">
+                                                    <img src={headImg} alt=""/>
+                                                    <span>{c.userInfo.nickName}:</span>
+                                                    <span>{c.content}</span>
+                                                </li>
+                                            )
+                                        })
+                                        }
+                                    </ul>
+                                </div>
+                        }
+                    }
+                    else {
+
+                        panelFooter =
                             <div className="panel-footer">
-                                <div>
-                                    <p>
-                                        <i className="fa fa-commenting" aria-hidden="true"></i>
-                                        <span>评论</span>
-                                    </p>
-                                    <p>
-                                        <i className="fa fa-thumbs-up" aria-hidden="true"></i>
-                                        <span>点赞</span>
-                                    </p>
-                                    <p>
-                                        <i className="fa fa-share" aria-hidden="true"></i>
-                                        <span>转发</span>
-                                    </p>
-                                </div>
+
+                                    {
+                                        //<div>
+                                        //<p>
+                                        //    <i className="fa fa-commenting" aria-hidden="true"></i>
+                                        //    <span>评论</span>
+                                        //</p>
+                                        //<p>
+                                        //<i className="fa fa-thumbs-up" aria-hidden="true"></i>
+                                        //<span>点赞</span>
+                                        //</p>
+                                        //    <p>
+                                        //        <i className="fa fa-share" aria-hidden="true"></i>
+                                        //        <span>转发</span>
+                                        //    </p>
+                                        //</div>
+                                    }
+
                                 <ul className="list-group">
                                     {e.commentList.map(function(c, i){
                                         var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
@@ -353,6 +397,23 @@
                                     </div>
                                 </form>
                             </div>
+                    }
+                    return(
+                        <div className="panel panel-default" id={"save"+index}>
+                            <div className="panel-heading">
+                                <h3 className="panel-title" style={{display:"inline"}}>所有收藏</h3>
+                                <a onClick={this.closePanel.bind(this,index)} style={{float:"right",cursor:"pointer"}}>×</a>
+                            </div>
+                            <div className="panel-body">
+                                <p>{e.nickName}</p>
+                                <div style={{height:"25px"}}>
+                                    <span>{time}</span>
+                                    <span style={{marginLeft:"20px"}} className="label label-success">{labelTitle}</span>
+                                </div>
+                                <p>链接：<a href="">{e.url}</a></p>
+                                <p>内容：{e.content}</p>
+                            </div>
+                            {panelFooter}
                         </div>
 
                     )
@@ -509,17 +570,21 @@
                                 })
                                 }
                                 </ul>
-                                <form className="form-inline">
-                                    <div className="form-group">
-                                        <div className="input-group">
-                                            <input type="text" className="form-control" id="searchInput" placeholder="请输入评论内容"
-                                                   style={{width: '470px'}}
-                                                   onKeyDown={this.handleKeyDown}/>
-                                            <div  className="input-group-addon" >确认</div>
-                                        </div>
+                                {
+                                    //<form className="form-inline">
+                                    //    <div className="form-group">
+                                    //        <div className="input-group">
+                                    //            <input type="text" className="form-control" id="searchInput" placeholder="请输入评论内容"
+                                    //                   style={{width: '470px'}}
+                                    //                   onKeyDown={this.handleKeyDown}/>
+                                    //            <div  className="input-group-addon" >确认</div>
+                                    //        </div>
+                                    //
+                                    //    </div>
+                                    //</form>
+                                }
 
-                                    </div>
-                                </form>
+
                             </div>
                         </div>
 
