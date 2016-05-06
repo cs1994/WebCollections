@@ -275,7 +275,7 @@
             global.actions.allAction.submitComment(data,index);
         },
         replyComment:function(replyId,saveId,toId,index){
-            const content = $("#replyInput"+index).val();
+            var content = $("#replyInput"+index).val();
             if(content==""){
                 toastr.warning("请输入回复内容");
                 return;}
@@ -294,7 +294,7 @@
                 confirmButtonText: "确认",
                 cancelButtonText: "取消"
             }, function () {
-                global.actions.personalAction.deletePersonalSave(id,index)
+                global.actions.personalAction.deleteSave(id,index)
             });
         },
         render:function(){
@@ -521,7 +521,17 @@
                 global.actions.personalAction.deletePersonalSave(id,index)
             });
         },
+        replyComment:function(replyId,saveId,toId,index,i){
+            var content = $("#replyInput"+index).val();
+            if(content==""){
+                toastr.warning("请输入回复内容");
+                return;}
+            const data = {content:content,replyId:replyId,
+                saveId:saveId,toId:toId}
+            global.actions.personalAction.replyComment(data,index,i);
+        },
         render:function(){
+            var self =this;
             var dom = null;
             if(this.state.data.saveList.length==0){
                 dom=
@@ -578,7 +588,7 @@
                                                         <div className="input-group">
                                                             <input type="text" className="form-control" id={"replyInput"+i} placeholder="请输入回复内容"
                                                                    style={{width: '470px'}}/>
-                                                            <div  className="input-group-addon" onClick={this.replyComment.bind(this,c.id,e.id,c.userInfo.id,i)}>回复</div>
+                                                            <div  className="input-group-addon" onClick={self.replyComment.bind(self,c.id,e.id,c.userInfo.id,index,i)}>回复</div>
                                                         </div>
 
                                                     </div>

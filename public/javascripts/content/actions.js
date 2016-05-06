@@ -6,6 +6,7 @@
         'getAllSave',
         'submitComment',
         'replyComment',
+        'deleteSave',
     ]);
     global.actions.personalAction = Reflux.createActions([
         'choseLabel',
@@ -16,6 +17,7 @@
         'changePass',
         'changeUserInfo',
         'getuserInfo',
+        'replyComment',
     ]);
     global.actions.taskAction = Reflux.createActions([
         'addTask',

@@ -28,11 +28,27 @@
                 self.updateStore();
             })
         },
+        onDeleteSave:function(id,index){
+            var self =this;
+            var url = "/customer/personal/web/delete?id="+id
+            ajaxGet(url,function(json){
+                //self.saveList=json.result;
+                self.webList.splice(index,1);
+                //console.log("@@" + JSON.stringify(self.saveList))
+                self.updateStore();
+            })
+        },
         onSubmitComment:function(data,index){
             var url ="/customer/comment/add";
+            var self=this;
             ajaxJsonPost(url,data,function(json){
-                toastr.success("评论成功")
-                var content = $("#input"+index).val("");
+                toastr.success("评论成功");
+                var item = {"userInfo":{"id":$CONF$.id,"headImg":$CONF$.headImg,"nickName":$CONF$.nickName},"content":data.content,
+                    "id":json.id,"replyComment":{}}
+
+                self.webList[index].commentList.push(item);
+                self.updateStore();
+                //var content = $("#input"+index).val("");
             })
         },
         onReplyComment:function(data){
@@ -140,7 +156,19 @@
                toastr.success("修改成功")
             },function(json){toastr.warning("修改失败")});
             me.refs.changeInfo.close();
-        }
+        },
+        onReplyComment:function(data,index,i){
+            var url="/customer/comment/reply";
+            var self =this;
+            ajaxJsonPost(url,data,function(json){
+                var commentList = self.saveList[index].commentList;
+                var comment = commentList[i];
+                var item ={id:json.id,toId:data.toId,content:data.content,saveId:data.saveId};
+                self.saveList[index].commentList[i].replyComment=item
+                self.updateStore();
+                toastr.success("回复成功");
+            })
+        },
     });
     global.stores.TaskStore = Reflux.createStore({
         listenables: [global.actions.taskAction],
