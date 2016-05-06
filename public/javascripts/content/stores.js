@@ -51,9 +51,15 @@
                 //var content = $("#input"+index).val("");
             })
         },
-        onReplyComment:function(data){
+        onReplyComment:function(data,index,i){
             var url="/customer/comment/reply";
+            var self =this;
             ajaxJsonPost(url,data,function(json){
+                //var commentList = self.saveList[index].commentList;
+                //var comment = commentList[i];
+                var item ={id:json.id,toId:data.toId,content:data.content,saveId:data.saveId};
+                self.webList[index].commentList[i].replyComment=item
+                self.updateStore();
                 toastr.success("回复成功");
             })
         },
@@ -161,8 +167,8 @@
             var url="/customer/comment/reply";
             var self =this;
             ajaxJsonPost(url,data,function(json){
-                var commentList = self.saveList[index].commentList;
-                var comment = commentList[i];
+                //var commentList = self.saveList[index].commentList;
+                //var comment = commentList[i];
                 var item ={id:json.id,toId:data.toId,content:data.content,saveId:data.saveId};
                 self.saveList[index].commentList[i].replyComment=item
                 self.updateStore();

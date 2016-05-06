@@ -274,14 +274,14 @@
             var data={saveId:saveId,toId:toId,content:content}
             global.actions.allAction.submitComment(data,index);
         },
-        replyComment:function(replyId,saveId,toId,index){
-            var content = $("#replyInput"+index).val();
+        replyComment:function(replyId,saveId,toId,index,i){
+            var content = $("#replyInput"+i).val();
             if(content==""){
                 toastr.warning("请输入回复内容");
                 return;}
             const data = {content:content,replyId:replyId,
                 saveId:saveId,toId:toId}
-            global.actions.allAction.replyComment(data );
+            global.actions.allAction.replyComment(data,index,i);
         },
         deleteSave:function(id,index){
             var self =this;
@@ -294,7 +294,7 @@
                 confirmButtonText: "确认",
                 cancelButtonText: "取消"
             }, function () {
-                global.actions.personalAction.deleteSave(id,index)
+                global.actions.allAction.deleteSave(id,index)
             });
         },
         render:function(){
@@ -342,7 +342,7 @@
                                                         <div className="input-group">
                                                             <input type="text" className="form-control" id={"replyInput"+i} placeholder="请输入回复内容"
                                                                    style={{width: '470px'}}/>
-                                                            <div  className="input-group-addon" onClick={this.replyComment.bind(this,c.id,e.id,c.userInfo.id,i)}>回复</div>
+                                                            <div  className="input-group-addon" onClick={this.replyComment.bind(this,c.id,e.id,c.userInfo.id,index,i)}>回复</div>
                                                         </div>
 
                                                     </div>
@@ -522,7 +522,7 @@
             });
         },
         replyComment:function(replyId,saveId,toId,index,i){
-            var content = $("#replyInput"+index).val();
+            var content = $("#replyInput"+i).val();
             if(content==""){
                 toastr.warning("请输入回复内容");
                 return;}
