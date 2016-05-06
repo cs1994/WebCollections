@@ -261,9 +261,6 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
     val userId=request.session.get(SessionKey.userId).get.toLong
 
     webSaveDao.deleteCommentById(userId,id).map { res =>
-      println("@@@@@@@@@@@@@@ " + res)
-      println("@@@@@@@@@@@@@@ " + userId)
-      println("@@@@@@@@@@@@@@ " + id)
             if(res>0){
               Ok(successResult(Json.obj("id" ->res)))
             }else{
