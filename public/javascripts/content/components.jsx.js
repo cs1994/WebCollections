@@ -357,7 +357,7 @@
                                                 </li>
                                         }
                                         return(
-                                            <div>
+                                            <div tyle={{marginBottom:"4px"}}>
                                                 <li className="list-group-item">
                                                     <img src={headImg} alt=""/>
                                                     <span>{c.userInfo.nickName}:</span>
@@ -396,13 +396,40 @@
 
                                 <ul className="list-group">
                                     {e.commentList.map(function(c, i){
+
+                                        var replyDom=null;
+                                        if(c.replyComment.id == undefined) {
+                                            replyDom=
+                                                <form className="form-inline">
+                                                    <div className="form-group">
+                                                        <div className="input-group">
+                                                            <input type="text" className="form-control" id={"replyInput"+i} placeholder="请输入回复内容"
+                                                                   style={{width: '470px'}}/>
+                                                            <div  className="input-group-addon" onClick={this.replyComment.bind(this,c.id,e.id,c.userInfo.id,index,i)}>回复</div>
+                                                        </div>
+
+                                                    </div>
+                                                </form>
+                                        }
+                                        else {
+                                            replyDom=
+                                                <li className="list-group-item">
+                                                    <img src={c.replyComment.replyUserInfo.headImg} alt=""/>
+                                                    <span>{c.replyComment.replyUserInfo.nickName}:</span>
+                                                    <span>{c.replyComment.content}</span>
+                                                </li>
+                                        }
+
                                         var headImg=c.userInfo.headImg ==""?"/assets/images/head.png":c.userInfo.headImg;
                                         return(
-                                            <li className="list-group-item">
-                                                <img src={headImg} alt=""/>
-                                                <span>{c.userInfo.nickName}:</span>
-                                                <span>{c.content}</span>
-                                            </li>
+                                            <div style={{marginBottom:"4px"}}>
+                                                <li className="list-group-item">
+                                                    <img src={headImg} alt=""/>
+                                                    <span>{c.userInfo.nickName}:</span>
+                                                    <span>{c.content}</span>
+                                                </li>
+                                                {replyDom}
+                                            </div>
                                         )
                                     })
                                     }
@@ -603,7 +630,7 @@
                                                 </li>
                                         }
                                         return(
-                                            <div>
+                                            <div tyle={{marginBottom:"4px"}}>
                                                 <li className="list-group-item">
                                                     <img src={headImg} alt=""/>
                                                     <span>{c.userInfo.nickName}:</span>

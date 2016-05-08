@@ -45,10 +45,9 @@
                 toastr.success("评论成功");
                 var item = {"userInfo":{"id":$CONF$.id,"headImg":$CONF$.headImg,"nickName":$CONF$.nickName},"content":data.content,
                     "id":json.id,"replyComment":{}}
-
                 self.webList[index].commentList.push(item);
                 self.updateStore();
-                //var content = $("#input"+index).val("");
+                $("#input"+index).val("");
             })
         },
         onReplyComment:function(data,index,i){
@@ -57,8 +56,11 @@
             ajaxJsonPost(url,data,function(json){
                 //var commentList = self.saveList[index].commentList;
                 //var comment = commentList[i];
-                var item ={id:json.id,toId:data.toId,content:data.content,saveId:data.saveId};
+                var item ={id:json.id,toId:data.toId,content:data.content,saveId:data.saveId,replyUserInfo:{
+                    id:$CONF$.id,headImg:$CONF$.headImg,nickName:$CONF$.nickName
+                }};
                 self.webList[index].commentList[i].replyComment=item
+                console.log("!!!!!!!!!! " +JSON.stringify(self.webList[index].commentList[i]))
                 self.updateStore();
                 toastr.success("回复成功");
             })
