@@ -55,7 +55,10 @@ libraryDependencies ++= Seq(
   "org.webjars" % "font-awesome" % "4.4.0",
   "org.webjars.bower" % "smalot-bootstrap-datetimepicker" % "2.3.1",
   "org.webjars" % "momentjs" % "2.10.6",
-  "org.webjars.bower" % "bootstrap-daterangepicker" % "2.0.11"
+  "org.webjars.bower" % "bootstrap-daterangepicker" % "2.0.11",
+  "org.apache.lucene" % "lucene-analyzers-common" % "5.3.0",
+  "org.apache.lucene" % "lucene-core" % "5.3.0",
+  "org.apache.lucene" % "lucene-queryparser" % "5.3.0"
 
 )
 

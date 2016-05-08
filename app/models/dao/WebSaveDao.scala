@@ -51,7 +51,7 @@ class WebSaveDao @Inject()(
     id.map{saveId=>
       db.run(uLabel.map(t=>(t.taskId,t.labelNum,t.userId)).returning(
         uLabel.map(_.id))+=(saveId,label,userId)).mapTo[Long]
-      WebGet.saveToFile("public/web" + "/" + saveId  + ".html",content)
+      WebGet.saveToFile("public/web" + "/"+userId+"/" + saveId  + ".html",content)
       WebGet.saveToFile("public/source" + "/" + saveId  + ".txt",newContent)
   }
     (id,newContent.slice(0,30))

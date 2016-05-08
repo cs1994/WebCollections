@@ -34,6 +34,10 @@
         'replyComment',
         'getAllReply',
     ]);
+    global.actions.searchAction = Reflux.createActions([
+        'getAllComments',
+
+    ]);
 
 
 }(window.Reflux, window));

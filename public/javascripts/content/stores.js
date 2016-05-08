@@ -332,4 +332,22 @@
 
     });
 
+    global.stores.SearchStore = Reflux.createStore({
+        listenables: [global.actions.commentAction],
+        init: function(){
+            this.commentList = [];
+        },
+        getInitialState:function(){
+            return{
+                commentList:this.commentList,
+            }
+        },
+        updateStore: function(){
+            this.trigger({
+                commentList:this.commentList,
+            })
+        },
+
+    });
+
 }(window.React, window.ReactRouter, window.Reflux, window));

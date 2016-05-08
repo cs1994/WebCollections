@@ -459,7 +459,7 @@
                                     <span>{time}</span>
                                     <span style={{marginLeft:"20px"}} className="label label-success">{labelTitle}</span>
                                 </div>
-                                <p>链接：<a href="">{e.url}</a></p>
+                                <p>链接：<a href="/assets/">{e.url}</a></p>
                                 <p>内容：{e.content}</p>
                             </div>
                             {panelFooter}
@@ -932,6 +932,89 @@
             )
         }
     });
+    components.Search = React.createClass({
+        mixins:[
+            Reflux.connect(stores.SearchStore,"data"),
+            ReactRouter.Navigation,
+            ReactRouter.State],
+        componentWillMount:function(){
+        },
+        searchContent:function(){},
+        render:function(){
+            var self =this;
+            return(
+                <div className="container">
+                    <form className="form-inline">
+                        <div className="form-group">
+                            <div className="input-group">
+                                <input type="text" className="form-control" id="searchInput" placeholder="输入关键字进行搜索。"
+                                       style={{width: '360px'}}/>
+                                <div  className="input-group-addon" onClick={this.searchContent}>搜索</div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                    <hr/>
+                    <div className="row">
+                        <div className="col-sm-12">
+                            <table className="table table-striped table-condensed">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>头像</th>
+                                    <th>昵称</th>
+                                    <th>手机号</th>
+                                    <th>邮箱</th>
+                                    <th>状态</th>
+                                    <th>上次登录时间</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                //    userList.map(function(e, index){
+                                //    var stateBtnDom = null;
+                                //    if(e.state == 0){
+                                //        stateBtnDom = <button className="btn btn-success btn-sm" onClick={this.handleChangeState.bind(this,index,e.id, 1)}>启用</button>;
+                                //    }else if(e.state == 1){
+                                //        stateBtnDom = <button className="btn btn-warning btn-sm" onClick={this.handleChangeState.bind(this,index,e.id, 0)}>禁用</button>;
+                                //    }
+                                //    return(
+                                //        <tr key={e.id}>
+                                //            <td>{e.id}</td>
+                                //            <td>
+                                //                <img src={e.headImg} width="40" height="40" alt=""/>
+                                //            </td>
+                                //            <td>{e.nickName}</td>
+                                //            <td>{e.mobile}</td>
+                                //            <td>{e.email}</td>
+                                //            <td>{e.state == 1 ? "已启用" : "已禁用"}</td>
+                                //            <td>{timeFormat(e.lastlogininTime)}</td>
+                                //            <td>{timeFormat(e.insertTime)}</td>
+                                //            <td>
+                                //                {stateBtnDom}
+                                //            </td>
+                                //        </tr>
+                                //    )
+                                //}.bind(this))
+                                }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            )
+        }
+    });
+
     components.Comment = React.createClass({
         mixins:[
             Reflux.connect(stores.CommentStore,"data"),
@@ -989,23 +1072,23 @@
                                                 <th>操作</th>
                                             </tr>
                                         </thread>
-                                       <tbody>
-                                           {
-                                               $.map(this.state.data.commentList, (e,i)=>{
-                                                   var display = e.flagState ==0?"none":"block";
-                                                   return (
-                                                       <tr key={`attribute-${i}`}>
-                                                           <td>{e.id}</td>
-                                                           <td>{e.saveInfo.url}</td>
-                                                           <td>{e.nickName}</td>
-                                                           <td>{e.content}</td>
-                                                           <td>
-                                                               <div className="btn btn-success" style={{display:display}} onClick={this.openModal.bind(this,e.id,e.saveId,e.fromId)}>回复</div>&nbsp;&nbsp;
-                                                               <div className="btn btn-danger" onClick={self.deleteComment.bind(self,e.id,i)}>删除</div>
-                                                           </td>
-                                                       </tr>)
-                                               })}
-                                       </tbody>
+                                        <tbody>
+                                        {
+                                            $.map(this.state.data.commentList, (e,i)=>{
+                                                var display = e.flagState ==0?"none":"block";
+                                                return (
+                                                    <tr key={`attribute-${i}`}>
+                                                        <td>{e.id}</td>
+                                                        <td>{e.saveInfo.url}</td>
+                                                        <td>{e.nickName}</td>
+                                                        <td>{e.content}</td>
+                                                        <td>
+                                                            <div className="btn btn-success" style={{display:display}} onClick={this.openModal.bind(this,e.id,e.saveId,e.fromId)}>回复</div>&nbsp;&nbsp;
+                                                            <div className="btn btn-danger" onClick={self.deleteComment.bind(self,e.id,i)}>删除</div>
+                                                        </td>
+                                                    </tr>)
+                                            })}
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>
