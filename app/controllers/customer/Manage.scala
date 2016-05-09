@@ -64,6 +64,7 @@ class Manage @Inject() (emailValidateDao:EmailValidateDao,
                 userDao.addUser(email, "", 0, "", "",secure,name,cur,ip).map{
                   uid=>
                     if(uid > 0) {
+                      userDao.addDir(uid)
 //                      val timestamp = System.currentTimeMillis().toString
                       Ok(success).withSession(
                         SessionKey.userId -> uid.toString,

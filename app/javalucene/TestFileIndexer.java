@@ -18,13 +18,13 @@ import java.nio.file.Paths;
 import java.util.Date;
 
 public class TestFileIndexer {
-    public static void foundIndex(String name) throws Exception {
+    public static void foundIndex(Long id) throws Exception {
             /* 指明要索引文件夹的位置,这里是C盘的source文件夹下 */
-        File fileDir = new File("C:\\Users\\caoshuai\\wangyetest\\public\\source\\"+name);
+        File fileDir = new File("public\\source\\"+id);
 
             /* 这里放索引文件的位置 */
         //File indexDir = new File("c://index");
-        String indexPath = "C:\\Users\\caoshuai\\wangyetest\\public\\index\\mm"+name;
+        String indexPath = "public\\index\\mm"+id;
 
         // Directory dir = FSDirectory.open(indexDir);    //v3.6.0
         Directory dir = FSDirectory.open(Paths.get(indexPath));

@@ -1,6 +1,7 @@
 package controllers.content
 
 
+import java.io.File
 import javax.inject.Inject
 import common.errorcode.CustomerErrorCode
 import com.google.inject.Singleton
@@ -8,7 +9,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import models.protocols.JsonProtocols
 import play.api.data.Form
 import play.api.data.Forms._
-import play.api.libs.json.Json
+import play.api.libs.json.{JsObject, Json}
 import play.api.mvc.{Action, Controller}
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
@@ -16,6 +17,7 @@ import controllers.{ActionUtils,SessionKey}
 import models.dao.{WebSaveDao,UserDao}
 import util.SecureUtil._
 import common.errorcode.{CustomerErrorCode}
+import javalucene._
 
 @Singleton
 class WebSave @Inject() (webSaveDao:WebSaveDao,
@@ -33,6 +35,7 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
     val label=(postData \ "label").as[Int]
     val secret=(postData \ "secret").as[Int]
     val userId=request.session.get(SessionKey.userId).get.toLong
+//    val nickName=request.session.get(SessionKey.nickName).get
     webSaveDao.getSaveByUrl(url,userId).flatMap { urlOpt =>
       if(urlOpt.isDefined){
         Future.successful(Ok(CustomerErrorCode.urlExist))
@@ -334,6 +337,43 @@ println("!!!!!!!!!!!! " +res)
       Ok(successResult(Json.obj("result" ->result)))
 
     }
+  }
+
+  def searchContent(keyWord:String) = customerAuth.async{implicit request=>
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    val filed=new File ("/public/index/" + userId)
+    if(filed.exists()){
+      if(filed.isDirectory){
+        val files=filed.listFiles()
+        for (filedd<-files){filedd.delete()}
+        filed.delete()
+      }
+    }
+    TestFileIndexer.foundIndex(userId)
+    val res = TestQuery.foundResult(userId,keyWord)
+    val pattern="[0-9]+".r
+    val length = res.size()
+    val result = scala.collection.mutable.ListBuffer[JsObject]()
+    for( i<-0 until length){
+      val message= res.get(i).split("-")
+      val j=message(0).indexOf(keyWord)
+      if(j>0){
+        val mess=message(0).subSequence(j,j+30).toString
+        val seque=pattern.findAllIn(message(1))
+        var k=0
+        for(mm<-seque)
+        { k=mm.toInt}
+        val item=Json.obj(
+          "info"->mess,
+          "id"-> k
+        )
+        result.append(item)
+      }
+
+      }
+    val endResult = result.toList
+    Future.successful(Ok(successResult(Json.obj("result" ->endResult))))
+
   }
 
 }

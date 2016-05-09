@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestQuery {
-    public static List<String> foundResult (String name,String keyword) throws  IOException, ParseException  {
-        String index="C:\\Users\\caoshuai\\wangyetest\\public\\index\\mm"+name;//搜索的索引路径
+    public static List<String> foundResult (Long id,String keyword) throws  IOException, ParseException  {
+        String index="public\\index\\mm"+id;//搜索的索引路径
         //   IndexReader reader=IndexReader.open(FSDirectory.open(Paths.get(index));    //v3.6.0的写法
         IndexReader reader = DirectoryReader.open(FSDirectory.open(Paths.get(index)));
         IndexSearcher searcher=new IndexSearcher(reader);//检索工具

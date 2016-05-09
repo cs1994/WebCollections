@@ -1,5 +1,6 @@
 package models.dao
 
+import java.io.File
 import javax.inject.Inject
 
 import com.google.inject.Singleton
@@ -40,6 +41,14 @@ class UserDao @Inject()(
     db.run(uCustomer.map(t=>(t.email,t.headImg,t.sex,t.phone,t.birthday,t.secure,t.nickName,t.insertTime,t.ip,t.commentNum)).returning(
       uCustomer.map(_.id))+=(email,headImg,sex,phone,birthday,nickName,secure,insertTime,ip,0)).mapTo[Long]
 }
+  def addDir(id:Long): Unit ={
+    val file=new File ("public/web/"+id+"//a.txt")
+    file.getParentFile().mkdir()
+    val filea=new File ("/public//source//"+id+"//a.txt")
+    filea.getParentFile().mkdir()
+    val fileb=new File ("/public//index//"+id+"//a.txt")
+    fileb.getParentFile().mkdir()
+  }
 
   def updatePwdByEmail(user:rUser,pwd:String) = {
     val secure = SecureUtil.getSecurePassword(pwd, user.ip, user.insertTime)

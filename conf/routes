@@ -47,6 +47,7 @@ GET         /customer/userInfo/get                @controllers.customer.Manage.g
 POST        /customer/personal/web/add            @controllers.content.WebSave.addSave
 GET         /customer/personal/web/list           @controllers.content.WebSave.getPersonalSaveById
 GET         /customer/personal/web/delete         @controllers.content.WebSave.deletePersonalSave(id:Long)
+GET         /customer/personal/web/search         @controllers.content.WebSave.searchContent(keyWord:String)
 
 ###### all save
 GET         /customer/web/list                    @controllers.content.WebSave.getAllSave
