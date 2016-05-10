@@ -304,6 +304,7 @@
         },
         render:function(){
             var dom = null;
+            var self =this;
             if(this.state.data.webList.length==0){
                 dom=
                     <div className="panel panel-default">
@@ -406,14 +407,16 @@
                                         if(c.replyComment.id == undefined) {
                                             replyDom=
                                                 <form className="form-inline">
-                                                    <div className="form-group">
-                                                        <div className="input-group">
-                                                            <input type="text" className="form-control" id={"replyInput"+i} placeholder="请输入回复内容"
-                                                                   style={{width: '470px'}}/>
-                                                            <div  className="input-group-addon" onClick={this.replyComment.bind(this,c.id,e.id,c.userInfo.id,index,i)}>回复</div>
-                                                        </div>
-
-                                                    </div>
+                                                   {
+                                                       //<div className="form-group">
+                                                       //    <div className="input-group">
+                                                       //        <input type="text" className="form-control" id={"replyInput"+i} placeholder="请输入回复内容"
+                                                       //               style={{width: '470px'}}/>
+                                                       //        <div  className="input-group-addon" onClick={self.replyComment.bind(self,c.id,e.id,c.userInfo.id,index,i)}>回复</div>
+                                                       //    </div>
+                                                       //
+                                                       //</div>
+                                                   }
                                                 </form>
                                         }
                                         else {
