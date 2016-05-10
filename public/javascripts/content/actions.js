@@ -7,6 +7,7 @@
         'submitComment',
         'replyComment',
         'deleteSave',
+        'getRecommend',
     ]);
     global.actions.personalAction = Reflux.createActions([
         'choseLabel',
@@ -35,7 +36,7 @@
         'getAllReply',
     ]);
     global.actions.searchAction = Reflux.createActions([
-        'getAllComments',
+        'searchResult',
 
     ]);
 

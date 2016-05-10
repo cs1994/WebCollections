@@ -24,6 +24,7 @@
             <Route name="personalSave" path="/personalSave" handler={Components.PersonalSave}/>
             <Route name="task" path="/task" handler={Components.Tasks}/>
             <Route name="comment" path="/relate" handler={Components.Comment}/>
+            <Route name="search" path="/search" handler={Components.Search}/>
         </Route>
     );
     Router.run(routes, function(Handler) {

@@ -11,9 +11,9 @@ import slick.driver.MySQLDriver.api._
 import scala.io.Source
 import java.io._
 import controllers.WebGet
-
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 
 @Singleton
 class WebSaveDao @Inject()(
@@ -92,7 +92,20 @@ class WebSaveDao @Inject()(
     db.run{uSave.filter(_.secret===2).join(uLabel).on(_.id===_.taskId).result}
   }
 
+  def getUserById(id:Long)={
+    db.run{uCustomer.filter(_.id===id).result.head}
+  }
+
   def addComment(fromId:Long,saveId:Long,toId:Long,content:String) = {
+
+    val commentNum= Await.result(getUserById(toId).map{result=>
+     result.commentNum+1
+    },Duration(10, concurrent.duration.SECONDS))
+    val saveNum = Await.result(getSaveById(saveId).map{result=>
+      result.commentNum+1
+    },Duration(10, concurrent.duration.SECONDS))
+    db.run{uCustomer.filter(_.id===toId).map(_.commentNum).update(commentNum)}
+    db.run{uSave.filter(_.id===saveId).map(_.commentNum).update(saveNum)}
     db.run{uComment.map(c=>(c.fromId,c.saveId,c.toId,c.content,c.state,c.flag)).returning(
       uComment.map(_.id))+=(fromId,saveId,toId,content,0,0)}.mapTo[Long]
   }
@@ -130,4 +143,10 @@ class WebSaveDao @Inject()(
       (fromId,toId)}.mapTo[Long]
   }
 
+  def getRecommendUser={
+    db.run{
+      uCustomer.sortBy(_.commentNum).take(6).result}}
+  def getRecommendSave={
+    db.run{
+      uSave.sortBy(_.commentNum).take(6).result}}
 }

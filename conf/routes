@@ -66,6 +66,11 @@ GET         /customer/task/getByState             @controllers.customer.Manage.g
 GET         /customer/task/unFinshed              @controllers.customer.Manage.getUnfinishedTask
 GET         /customer/task/unStart                @controllers.customer.Manage.getUnstartTask
 
+####recommend
+GET         /customer/recommend/user              @controllers.content.WebSave.getRecommendUser
+GET         /customer/recommend/save              @controllers.content.WebSave.getRecommendSave
+
+
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/lib/*file                     controllers.WebJarAssets.at(file)
 GET         /assets/*file                         controllers.Assets.versioned(path="/public", file: Asset)

@@ -6,19 +6,35 @@
         listenables: [global.actions.allAction],
         init: function(){
             this.webList = [];
+            this.userList = [];
+            this.saveList = [];
 
         },
         getInitialState:function(){
             return{
                 webList:this.webList,
-
+                userList:this.userList,
+                saveList:this.saveList,
             }
         },
         updateStore: function(){
             this.trigger({
                 webList:this.webList,
-
+                userList:this.userList,
+                saveList:this.saveList,
             })
+        },
+        onGetRecommend:function(){
+            var url="/customer/recommend/user"
+            var urlTwo="/customer/recommend/save"
+            var self =this;
+            ajaxGet(url,function(json){
+                self.userList = json.result;
+            })
+            ajaxGet(urlTwo,function(json){
+                self.saveList = json.result;
+            })
+            self.updateStore();
         },
         onGetAllSave: function () {
             var url="/customer/web/list";
@@ -333,21 +349,28 @@
     });
 
     global.stores.SearchStore = Reflux.createStore({
-        listenables: [global.actions.commentAction],
+        listenables: [global.actions.searchAction],
         init: function(){
-            this.commentList = [];
+            this.resultList = [];
         },
         getInitialState:function(){
             return{
-                commentList:this.commentList,
+                resultList:this.resultList,
             }
         },
         updateStore: function(){
             this.trigger({
-                commentList:this.commentList,
+                resultList:this.resultList,
             })
         },
-
+        onSearchResult:function(keyword){
+            var url = "/customer/personal/web/search?keyWord="+keyword;
+            var self=this;
+            ajaxGet(url,function(json){
+                self.resultList = json.result;
+                self.updateStore();
+            })
+        }
     });
 
 }(window.React, window.ReactRouter, window.Reflux, window));

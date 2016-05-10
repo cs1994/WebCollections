@@ -376,4 +376,26 @@ println("!!!!!!!!!!!! " +res)
 
   }
 
+  def getRecommendSave =loggingAction.async{implicit request=>
+    webSaveDao.getRecommendSave.map{res=>
+      if(res.nonEmpty){
+        Ok(successResult(Json.obj("result" -> res.reverse.map(rSaveWriter.writes))))
+      }
+      else{
+        Ok(CustomerErrorCode.empty)
+      }
+    }
+  }
+
+  def getRecommendUser =loggingAction.async{implicit request=>
+    webSaveDao.getRecommendUser.map{res=>
+      if(res.nonEmpty){
+        Ok(successResult(Json.obj("result" -> res.map(rUserWriter.writes))))
+      }
+      else{
+        Ok(CustomerErrorCode.empty)
+      }
+    }
+  }
+
 }

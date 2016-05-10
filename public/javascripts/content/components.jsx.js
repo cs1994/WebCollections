@@ -153,11 +153,15 @@
                                         <Link to="personalSave" activeClassName={activeHeaderClassSet}>个人收藏</Link>
                                     </li>
                                     <li>
-                                        <Link to="task" activeClassName={activeHeaderClassSet}>我的任务</Link>
-                                    </li>
-                                    <li>
                                         <Link to="comment" activeClassName={activeHeaderClassSet}>与我相关</Link>
                                     </li>
+                                    <li>
+                                        <Link to="search" activeClassName={activeHeaderClassSet}>搜索</Link>
+                                    </li>
+                                    <li>
+                                        <Link to="task" activeClassName={activeHeaderClassSet}>我的任务</Link>
+                                    </li>
+
                                 </ul>
 
                                 <ul className="nav navbar-nav navbar-right">
@@ -260,6 +264,7 @@
             Reflux.connect(stores.AllStore,"data")],
         componentWillMount:function(){
             global.actions.allAction.getAllSave()
+            global.actions.allAction.getRecommend()
         },
         closePanel:function(index){
             var id="#save"+index;
@@ -476,7 +481,15 @@
                                 <div className="panel-heading">
                                     <h3 className="panel-title">用户推荐</h3>
                                 </div>
-                                <div className="panel-body">用户</div>
+                                <div className="panel-body">
+                                    <ul className="list-group">
+                                        {this.state.data.userList.map(function(u,index){
+                                            return(
+                                            <li className="list-group-item">{u.nickName}</li>
+                                            )
+                                        })}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                         <div className="col-md-6" >
@@ -488,7 +501,16 @@
                                 <div className="panel-heading">
                                     <h3 className="panel-title">收藏推荐</h3>
                                 </div>
-                                <div className="panel-body">收藏</div>
+                                <div className="panel-body">
+                                    <ul className="list-group">
+                                        {this.state.data.saveList.map(function(s,index){
+                                            return(
+                                                <li className="list-group-item">
+                                                    <a href={"assets/web/"+s.userId+"/"+s.id+".html"} target="_blank">{s.url}</a></li>
+                                            )
+                                        })}
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -594,7 +616,7 @@
                                     <span>{time}</span>
                                     <span style={{marginLeft:"20px"}} className="label label-success">{labelTitle}</span>
                                 </div>
-                                <p>链接：<a href="">{e.url}</a></p>
+                                <p>链接：<a href={"assets/web/"+$CONF$.id+"/"+e.id+".html"} target="_blank">{e.url}</a></p>
                                 <p>内容：{e.content}</p>
                             </div>
                             <div className="panel-footer">
@@ -939,7 +961,14 @@
             ReactRouter.State],
         componentWillMount:function(){
         },
-        searchContent:function(){},
+        searchContent:function(){
+            var keyword = $("#searchInput").val();
+            if(keyword==""){
+                toastr.warning("请输入搜索内容")
+                return;
+            }
+            global.actions.searchAction.searchResult(keyword)
+        },
         render:function(){
             var self =this;
             return(
@@ -958,52 +987,18 @@
                     <hr/>
                     <div className="row">
                         <div className="col-sm-12">
-                            <table className="table table-striped table-condensed">
-                                <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>头像</th>
-                                    <th>昵称</th>
-                                    <th>手机号</th>
-                                    <th>邮箱</th>
-                                    <th>状态</th>
-                                    <th>上次登录时间</th>
-                                    <th>创建时间</th>
-                                    <th>操作</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                            <ul className="list-group">
                                 {
-                                //    userList.map(function(e, index){
-                                //    var stateBtnDom = null;
-                                //    if(e.state == 0){
-                                //        stateBtnDom = <button className="btn btn-success btn-sm" onClick={this.handleChangeState.bind(this,index,e.id, 1)}>启用</button>;
-                                //    }else if(e.state == 1){
-                                //        stateBtnDom = <button className="btn btn-warning btn-sm" onClick={this.handleChangeState.bind(this,index,e.id, 0)}>禁用</button>;
-                                //    }
-                                //    return(
-                                //        <tr key={e.id}>
-                                //            <td>{e.id}</td>
-                                //            <td>
-                                //                <img src={e.headImg} width="40" height="40" alt=""/>
-                                //            </td>
-                                //            <td>{e.nickName}</td>
-                                //            <td>{e.mobile}</td>
-                                //            <td>{e.email}</td>
-                                //            <td>{e.state == 1 ? "已启用" : "已禁用"}</td>
-                                //            <td>{timeFormat(e.lastlogininTime)}</td>
-                                //            <td>{timeFormat(e.insertTime)}</td>
-                                //            <td>
-                                //                {stateBtnDom}
-                                //            </td>
-                                //        </tr>
-                                //    )
-                                //}.bind(this))
+                                    self.state.data.resultList.map(function(r,index){
+                                        return(
+                                            <li className="list-group-item">
+                                                <a href={"assets/web/"+$CONF$.id+"/"+r.id+".html"} target="_blank">{r.info}</a>
+                                            </li>
+                                        )
+                                    })
                                 }
 
-
-                                </tbody>
-                            </table>
+                            </ul>
                         </div>
 
                     </div>

@@ -31,5 +31,16 @@ trait JsonProtocols extends BaseJsonProtocols{
    )
   }
  }
+
+ implicit val rSaveWriter: Writes[rSave] = new Writes[rSave] {
+  override def writes(obj: rSave): JsValue = {
+   Json.obj (
+    "id" -> obj.id,
+    "userId" -> obj.userId,
+    "url" -> obj.url
+   )
+  }
+ }
+
  }
 
