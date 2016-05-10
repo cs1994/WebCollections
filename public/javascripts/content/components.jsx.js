@@ -464,7 +464,7 @@
                                     <span>{time}</span>
                                     <span style={{marginLeft:"20px"}} className="label label-success">{labelTitle}</span>
                                 </div>
-                                <p>链接：<a href="/assets/">{e.url}</a></p>
+                                <p>链接：<a href={"assets/web/"+e.userId+"/"+e.id+".html"} target="_blank">{e.url}</a></p>
                                 <p>内容：{e.content}</p>
                             </div>
                             {panelFooter}
@@ -523,11 +523,13 @@
     components.PersonalSave = React.createClass({
         mixins:[
             Reflux.connect(stores.PersonalStore,"data"),
+            Reflux.connect(stores.AllStore,"recommend"),
             ReactRouter.Navigation,
             ReactRouter.State],
 
         componentWillMount:function(){
             global.actions.personalAction.getPersonalSave()
+            global.actions.allAction.getRecommend()
         },
         onConfirm:function(){
             var url = $("#url").val();
@@ -700,7 +702,15 @@
                               <div className="panel-heading">
                                   <h3 className="panel-title">用户推荐</h3>
                               </div>
-                              <div className="panel-body">用户</div>
+                              <div className="panel-body">
+                                  <ul className="list-group">
+                                      {this.state.recommend.userList.map(function(u,index){
+                                          return(
+                                              <li className="list-group-item">{u.nickName}</li>
+                                          )
+                                      })}
+                                  </ul>
+                              </div>
                           </div>
                       </div>
                       <div className="col-md-6" >
@@ -712,7 +722,16 @@
                               <div className="panel-heading">
                                   <h3 className="panel-title">收藏推荐</h3>
                               </div>
-                              <div className="panel-body">收藏</div>
+                              <div className="panel-body">
+                                  <ul className="list-group">
+                                      {this.state.recommend.saveList.map(function(s,index){
+                                          return(
+                                              <li className="list-group-item">
+                                                  <a href={"assets/web/"+s.userId+"/"+s.id+".html"} target="_blank">{s.url}</a></li>
+                                          )
+                                      })}
+                                  </ul>
+                              </div>
                           </div>
                       </div>
                   </div>
