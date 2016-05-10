@@ -378,8 +378,9 @@ println("!!!!!!!!!!!! " +res)
 
   def getRecommendSave =loggingAction.async{implicit request=>
     webSaveDao.getRecommendSave.map{res=>
+      val result = res.reverse
       if(res.nonEmpty){
-        Ok(successResult(Json.obj("result" -> res.reverse.map(rSaveWriter.writes))))
+        Ok(successResult(Json.obj("result" -> result.map(rSaveWriter.writes))))
       }
       else{
         Ok(CustomerErrorCode.empty)
@@ -389,8 +390,9 @@ println("!!!!!!!!!!!! " +res)
 
   def getRecommendUser =loggingAction.async{implicit request=>
     webSaveDao.getRecommendUser.map{res=>
+      val result = res.reverse
       if(res.nonEmpty){
-        Ok(successResult(Json.obj("result" -> res.map(rUserWriter.writes))))
+        Ok(successResult(Json.obj("result" -> result.map(rUserWriter.writes))))
       }
       else{
         Ok(CustomerErrorCode.empty)
