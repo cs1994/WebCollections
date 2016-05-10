@@ -64,7 +64,7 @@ body {
     border:2px solid whitesmoke;
     background-image: url("/assets/images/login.jpg");
     background-color: red;
-    background-repeat:no-repeat;
+    /*background-repeat:no-repeat;*/
     background-position:center;
     height:600px;
     background-size: 100%;

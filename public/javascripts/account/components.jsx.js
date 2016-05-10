@@ -5,6 +5,9 @@
     var stores = global.stores;
     var actions = global.actions;
     components.RegisterHeader = React.createClass({
+        gotoLogin:function(){
+            location.href="/login"
+        },
         render:function(){
             return(
                 <div className="registerHeader">
@@ -14,7 +17,7 @@
                     </div>
                     <div style={{width:'50%',display:"inline-block",textAlign:"right"}}>
                         <p style={{fontSize:"18px"}}>已有账号？</p>
-                        <button>登录</button>
+                        <button onClick={this.gotoLogin}>登录</button>
                     </div>
                 </div>
             )
@@ -177,6 +180,9 @@
                 //actions.registerAction.setPassWord(data)
             }
         },
+        gotoLogin:function(){
+            location.href="/login"
+        },
         render:function(){
             var Dom= null;
                 switch(this.state.data.findState){
@@ -227,7 +233,7 @@
                         </div>
                         <div style={{width:'50%',display:"inline-block",textAlign:"right"}}>
                             <p style={{fontSize:"18px"}}>已有账号？</p>
-                            <button>登录</button>
+                            <button onClick={this.gotoLogin}>登录</button>
                         </div>
                     </div>
                     {Dom}
@@ -264,9 +270,12 @@
             return(
                 <div id="login-app">
                     <div className="loginPage">
-                        <div className="logo">
-                            <img style={{height: '100%',width: '100%'}} src="/assets/images/logo.png"/>
-                        </div>
+                        {
+                            //<div className="logo">
+                            //    <img style={{height: '100%',width: '100%'}} src="/assets/images/logo.png"/>
+                            //</div>
+                        }
+
                         <div className="tongtu">
                         </div>
                         <div className="formArea">

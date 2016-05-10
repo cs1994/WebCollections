@@ -44,9 +44,9 @@ class UserDao @Inject()(
   def addDir(id:Long): Unit ={
     val file=new File ("public/web/"+id+"/a.txt")
     file.getParentFile().mkdir()
-    val filea=new File ("/public/source/"+id+"/a.txt")
+    val filea=new File ("public/source/"+id+"/a.txt")
     filea.getParentFile().mkdir()
-    val fileb=new File ("/public/index/mm"+id+"/a.txt")
+    val fileb=new File ("public/index/mm"+id+"/a.txt")
     fileb.getParentFile().mkdir()
   }
 
