@@ -8,6 +8,9 @@
         'replyComment',
         'deleteSave',
         'getRecommend',
+        'setEditId',
+        'editSave',
+        'choseLabel',
     ]);
     global.actions.personalAction = Reflux.createActions([
         'choseLabel',
@@ -19,6 +22,8 @@
         'changeUserInfo',
         'getuserInfo',
         'replyComment',
+        'setEditId',
+        'editSave',
     ]);
     global.actions.taskAction = Reflux.createActions([
         'addTask',

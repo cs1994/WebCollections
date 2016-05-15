@@ -269,6 +269,25 @@
             global.actions.allAction.getAllSave()
             global.actions.allAction.getRecommend()
         },
+        openEditModal:function(e,index){
+            $("#editDescription").val(e.des);
+            global.actions.allAction.choseLabel(e.label);
+            global.actions.allAction.setEditId(e.id,index);
+            $("input[type='radio'][value="+e.secret+"]").attr("checked",true);
+            this.refs.editSave.open();
+        },
+        onConfirmEdit:function(){
+            var description = $("#editDescription").val();
+            var secret = $('input:radio:checked').val()
+            var data={description:description,secret:parseInt(secret),label:this.state.data.labelNum}
+            if(secret==undefined || this.state.data.labelNum==0){
+                toastr.warning("必填项有空");return;
+            }
+            global.actions.allAction.editSave(data,this)
+        },
+        choseLabel:function(num){
+            global.actions.allAction.choseLabel(num)
+        },
         closePanel:function(index){
             var id="#save"+index;
             $(id).css({display:"none"})
@@ -335,6 +354,10 @@
                         panelFooter =
                             <div className="panel-footer">
                                 <div>
+                                    <p onClick={this.openEditModal.bind(this,e,index)}>
+                                        <i className="fa fa-pencil-square-o"></i>
+                                        <span>编辑</span>
+                                    </p>
                                     <p onClick={this.deleteSave.bind(this,e.id,index)}>
                                         <i className="fa fa-trash" aria-hidden="true"></i>
                                         <span>删除</span>
@@ -471,6 +494,7 @@
                                     <span style={{marginLeft:"20px"}} className="label label-success">{labelTitle}</span>
                                 </div>
                                 <p>链接：<a href={"assets/web/"+e.userId+"/"+e.id+".html"} target="_blank">{e.url}</a></p>
+                                <p style={{display:e.des==""?"none":"block"}}>描述：{e.des}</p>
                                 <p>内容：{e.content}</p>
                             </div>
                             {panelFooter}
@@ -520,6 +544,30 @@
                             </div>
                         </div>
                     </div>
+                    <BootstrapModalPc ref="editSave" id="editSave" title="编辑收藏" onConfirm={this.onConfirmEdit}>
+                        <div className="input-group">
+                            <div className="form-group">
+                                <label for="nameCh"> 简介(选填)</label>
+                                <input type="text" className="form-control" id="editDescription"
+                                       name="description" maxLength="200" placeholder=""/>
+                                <p className="help-block"></p>
+                            </div>
+                            <div className="form-group">
+                                <label for="nameCh"> 标签(必填)</label>
+                                <br/>
+                                <span className={this.state.data.labelNum==1?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,1)}>学习</span>
+                                <span className={this.state.data.labelNum==2?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,2)}>娱乐</span>
+                                <span className={this.state.data.labelNum==3?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,3)}>资料</span>
+                                <span className={this.state.data.labelNum==4?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,4)}>购物</span>
+                                <span className={this.state.data.labelNum==5?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,5)}>其他</span>
+                            </div>
+                            <div className="form-group">
+                                <p><input type="radio" name="editSOption" value={1} />私密</p>
+                                <p><input type="radio" name="editSOption" value={2} />公开</p>
+                            </div>
+                        </div>
+                    </BootstrapModalPc>
+
                 </div>
 
             )
@@ -548,11 +596,32 @@
             global.actions.personalAction.addSave(data,this)
         },
         openModal:function(){
+            $("#url").val("");
+            $("#description").val("");
+            global.actions.personalAction.choseLabel(0);
+            $("input[type='radio']").attr("checked",false);
             this.refs.addSave.open();
+        },
+        openEditModal:function(e,index){
+            $("#editDescription").val(e.des);
+            global.actions.personalAction.choseLabel(e.label);
+            global.actions.personalAction.setEditId(e.id,index);
+            $("input[type='radio'][value="+e.secret+"]").attr("checked",true);
+            this.refs.editSave.open();
+        },
+        onConfirmEdit:function(){
+            var description = $("#editDescription").val();
+            var secret = $('input:radio:checked').val()
+            var data={description:description,secret:parseInt(secret),label:this.state.data.labelNum}
+            if(secret==undefined || this.state.data.labelNum==0){
+                toastr.warning("必填项有空");return;
+            }
+            global.actions.personalAction.editSave(data,this)
         },
         choseLabel:function(num){
             global.actions.personalAction.choseLabel(num)
         },
+
         handleKeyDown:function(evt){
             if(evt.which === 13){
                 //this.searchUser(evt);
@@ -625,10 +694,15 @@
                                     <span style={{marginLeft:"20px"}} className="label label-success">{labelTitle}</span>
                                 </div>
                                 <p>链接：<a href={"assets/web/"+$CONF$.id+"/"+e.id+".html"} target="_blank">{e.url}</a></p>
+                                <p style={{display:e.des==""?"none":"block"}}>描述：{e.des}</p>
                                 <p>内容：{e.content}</p>
                             </div>
                             <div className="panel-footer">
                                 <div>
+                                    <p onClick={this.openEditModal.bind(this,e,index)}>
+                                        <i className="fa fa-pencil-square-o"></i>
+                                        <span>编辑</span>
+                                    </p>
                                     <p onClick={this.deleteSave.bind(this,e.id,index)}>
                                         <i className="fa fa-trash" aria-hidden="true"></i>
                                         <span>删除</span>
@@ -770,6 +844,30 @@
                           </div>
                       </div>
                   </BootstrapModalPc>
+                  <BootstrapModalPc ref="editSave" id="editSave" title="编辑收藏" onConfirm={this.onConfirmEdit}>
+                      <div className="input-group">
+                          <div className="form-group">
+                              <label for="nameCh"> 简介(选填)</label>
+                              <input type="text" className="form-control" id="editDescription"
+                                     name="description" maxLength="200" placeholder=""/>
+                              <p className="help-block"></p>
+                          </div>
+                          <div className="form-group">
+                              <label for="nameCh"> 标签(必填)</label>
+                              <br/>
+                              <span className={this.state.data.labelNum==1?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,1)}>学习</span>
+                              <span className={this.state.data.labelNum==2?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,2)}>娱乐</span>
+                              <span className={this.state.data.labelNum==3?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,3)}>资料</span>
+                              <span className={this.state.data.labelNum==4?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,4)}>购物</span>
+                              <span className={this.state.data.labelNum==5?"label label-success":"label label-default"} onClick={this.choseLabel.bind(this,5)}>其他</span>
+                          </div>
+                          <div className="form-group">
+                              <p><input type="radio" name="editSOption" value={1} />私密</p>
+                              <p><input type="radio" name="editSOption" value={2} />公开</p>
+                          </div>
+                      </div>
+                  </BootstrapModalPc>
+
               </div>
 
             )

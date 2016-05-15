@@ -53,6 +53,28 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
     }
   }
 
+  def editSave(id:Long) = customerAuth.async{implicit request=>
+    val postData=request.body.asJson.get
+//    val url=(postData \ "url").as[String]
+    val description=(postData \ "description").as[String]
+    val label=(postData \ "label").as[Int]
+    val secret=(postData \ "secret").as[Int]
+    val userId=request.session.get(SessionKey.userId).get.toLong
+    //    val nickName=request.session.get(SessionKey.nickName).get
+
+    val cur = System.currentTimeMillis()
+    val result= webSaveDao.editSave(id,userId,description,label,secret)
+    result.map{id=>
+      if(id>0){
+        Ok(success)
+      }else{
+        Ok(CustomerErrorCode.editFail)
+      }
+    }
+  }
+
+
+
   def getPersonalSaveById =  customerAuth.async{implicit request=>
     val userId=request.session.get(SessionKey.userId).get.toLong
     webSaveDao.getPersonalSave(userId).flatMap { saveList =>
@@ -215,8 +237,8 @@ class WebSave @Inject() (webSaveDao:WebSaveDao,
 
     webSaveDao.addComment(userId,saveId,toId,content).map { res =>
       if(res>0){
-        userDao.addUserCommentNumber(toId)
-        webSaveDao.addSaveCommentNumber(saveId)
+//        userDao.addUserCommentNumber(toId)
+        //        webSaveDao.addSaveCommentNumber(saveId)
         Ok(successResult(Json.obj("id" ->res)))
       }else{
         Ok(CustomerErrorCode.addCommentFail)

@@ -64,7 +64,14 @@ class WebSaveDao @Inject()(
 //      case e:Exception => Future.successful(0)
 //    }
 //  }
-
+  def editSave(id:Long,userId:Long,description:String,label:Int,secret:Int)={
+  db.run{
+    uSave.filter(s=>(s.id===id)&&(s.userId===userId)).map(s=>(s.description,s.secret)).update(description,secret)
+  }
+  db.run{
+    uLabel.filter(s=>(s.taskId===id)&&(s.userId===userId)).map(_.labelNum).update(label)
+  }
+}
   def getPersonalSave(userId:Long) = {
     db.run{
       uSave.filter(_.userId===userId).sortBy(_.insertTime).join(uLabel).on(_.id===_.taskId).result}
@@ -76,8 +83,8 @@ class WebSaveDao @Inject()(
   }
 
   def deletePersonalSave(id:Long,userId:Long)={
-    val htmlFile = new File("public/web/"+id+".html")
-    val txtFile = new File("public/source/"+id+".txt")
+    val htmlFile = new File("public/web/"+userId+"/"+id+".html")
+    val txtFile = new File("public/source/"+userId+"/"+id+".txt")
     if (!htmlFile.exists() || !txtFile.exists()) {
       Future(0)
     }

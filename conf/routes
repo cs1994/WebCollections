@@ -45,6 +45,7 @@ GET         /customer/userInfo/get                @controllers.customer.Manage.g
 
 ######## personal save
 POST        /customer/personal/web/add            @controllers.content.WebSave.addSave
+POST        /customer/personal/web/edit           @controllers.content.WebSave.editSave(id:Long)
 GET         /customer/personal/web/list           @controllers.content.WebSave.getPersonalSaveById
 GET         /customer/personal/web/delete         @controllers.content.WebSave.deletePersonalSave(id:Long)
 GET         /customer/personal/web/search         @controllers.content.WebSave.searchContent(keyWord:String)

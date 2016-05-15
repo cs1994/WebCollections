@@ -28,4 +28,5 @@ object CustomerErrorCode extends BaseJsonProtocols{
   def addCommentFail = jsonResult(100618,"add comment fail")
   def allreadyExits = jsonResult(100619,"allready exits")
   def empty = jsonResult(100620,"empty")
+  def editFail = jsonResult(100621,"editFail")
 }

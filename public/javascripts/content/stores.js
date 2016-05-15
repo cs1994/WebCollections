@@ -5,16 +5,19 @@
     global.stores.AllStore = Reflux.createStore({
         listenables: [global.actions.allAction],
         init: function(){
+            this.labelNum = 0;
             this.webList = [];
             this.userList = [];
             this.saveList = [];
-
+            this.editId={};
         },
         getInitialState:function(){
             return{
                 webList:this.webList,
                 userList:this.userList,
                 saveList:this.saveList,
+                editId:this.editId,
+                labelNum:this.labelNum,
             }
         },
         updateStore: function(){
@@ -22,6 +25,35 @@
                 webList:this.webList,
                 userList:this.userList,
                 saveList:this.saveList,
+                editId:this.editId,
+                labelNum:this.labelNum,
+            })
+        },
+        onChoseLabel:function(num){
+            this.labelNum=num;
+            this.updateStore();
+        },
+        onSetEditId:function(editId,index){
+            this.editId={editId:editId,index:index};
+            this.updateStore();
+        },
+        onEditSave:function(data,me){
+            var url="/customer/personal/web/edit?id="+this.editId.editId;
+            var self =this;
+            ajaxJsonPost(url,data,function(json){
+                me.refs.editSave.close();
+                var index = self.editId.index;
+                var list = self.webList;
+                var item= list[index];
+                item.des = data.description;
+                item.secret = data.secret;
+                item.label = data.label;
+                var newList = list.slice(0,index)
+                newList.push(item)
+                var endResult = newList.concat(list.slice(index+1))
+                self.webList = endResult;
+                self.updateStore();
+                toastr.success("编辑成功")
             })
         },
         onGetRecommend:function(){
@@ -90,6 +122,7 @@
             this.passFlag = 0;
             this.saveList = [];
             this.userInfo={};
+            this.editId={};
         },
         getInitialState:function(){
             return{
@@ -97,6 +130,7 @@
                 passFlag:this.passFlag,
                 saveList:this.saveList,
                 userInfo:this.userInfo,
+                editId:this.editId,
             }
         },
         updateStore: function(){
@@ -105,6 +139,7 @@
                 passFlag:this.passFlag,
                 saveList:this.saveList,
                 userInfo:this.userInfo,
+                editId:this.editId,
             })
         },
         onGetuserInfo:function(){
@@ -149,6 +184,29 @@
                 self.saveList = list;
                 self.updateStore();
                 toastr.success("收藏成功")
+            })
+        },
+        onSetEditId:function(editId,index){
+            this.editId={editId:editId,index:index};
+            this.updateStore();
+        },
+        onEditSave:function(data,me){
+            var url="/customer/personal/web/edit?id="+this.editId.editId;
+            var self =this;
+            ajaxJsonPost(url,data,function(json){
+                me.refs.editSave.close();
+                var index = self.editId.index;
+                var list = self.saveList;
+                var item= list[index];
+                item.des = data.description;
+                item.secret = data.secret;
+                item.label = data.label;
+                var newList = list.slice(0,index)
+                newList.push(item)
+                var endResult = newList.concat(list.slice(index+1))
+                self.saveList = endResult;
+                self.updateStore();
+                toastr.success("编辑成功")
             })
         },
         onGetPersonalSave: function () {
