@@ -99,6 +99,27 @@ function ajaxGet(url,successFunc){
         }.bind(this)
     })
 }
+function ajaxGetTwo(url,successFunc,errCode,failFunc){
+    $.ajax({
+        url:url,
+        dataType:'json',
+        type:'GET',
+        async: false,
+        success:function(res){
+            console.log("@@@@@@@@@ "+ JSON.stringify(res))
+            if(res.errCode == 0) successFunc(res);
+            else if(res.errCode==errCode){
+                failFunc()
+                //toastr.error(res.errmsg);
+                //Debugger.log("errcode: " + res.errcode + ", errmsg: " + res.errmsg);
+            }
+
+        }.bind(this),
+        error:function(xhr,status,err){
+            console.log(xhr,status,err.toString());
+        }.bind(this)
+    })
+}
 
 
 function ajaxDataGet(url,data,successFunc){

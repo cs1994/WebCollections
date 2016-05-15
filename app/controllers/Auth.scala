@@ -12,7 +12,7 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.mvc.{Action, Controller}
 import scala.concurrent.duration._
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 import common.email.Email
 import models.dao.{EmailValidateDao,UserDao}
 import controllers.{ActionUtils,SessionKey}
@@ -60,21 +60,30 @@ class Auth @Inject()(  emailFunc:Email,
       val token = GenCodeUtil.get64Token()
       val curTimestamp = System.currentTimeMillis()
       val expiredTime = curTimestamp + 24*60*60*1000L
-      emailFunc.SendRegisterEmailTask(token,email).flatMap{res =>
-        if(res > 0){
-          emailValidateDao.add(email,token,expiredTime,curTimestamp).map{
-            result =>
-              println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + result)
-              if(result>0){
-                Ok(success)
-              }
-              else {
-                Ok(CustomerErrorCode.failInsert)
-              }
+      val flag = Await.result(userDao.getUserByEmail(email).map{u=>
+        if(u.isDefined) false
+        else true
+    },Duration(3, concurrent.duration.SECONDS))
+      if(flag) {
+        emailFunc.SendRegisterEmailTask(token,email).flatMap{res =>
+          if(res > 0){
+            emailValidateDao.add(email,token,expiredTime,curTimestamp).map{
+              result =>
+                println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! " + result)
+                if(result>0){
+                  Ok(success)
+                }
+                else {
+                  Ok(CustomerErrorCode.failInsert)
+                }
+            }
+          }else{
+            Future.successful(Ok(CustomerErrorCode.sendConfirmEmailFail))
           }
-        }else{
-          Future.successful(Ok(CustomerErrorCode.sendConfirmEmailFail))
         }
+      }
+      else{
+        Future.successful(Ok(CustomerErrorCode.allreadyExits))
       }
     }else{
       Future.successful(Ok(CustomerErrorCode.invalidEmailFormat))

@@ -2,6 +2,10 @@
 (function(React, ReactRouter, Reflux, global) {
     var Link = ReactRouter.Link;
     global.components = {};
+    toastr.options = {
+        "positionClass": "toast-top-center",
+        "hideDuration": "10000",
+    };
     var stores = global.stores;
     var actions = global.actions;
     components.RegisterHeader = React.createClass({
@@ -35,6 +39,7 @@
                 console.log("@@@@@@@@@@@@@ " + email)
                 actions.registerAction.sendEmail(email)
             }
+            else toastr.warning("请输入正确的邮箱！")
         },
         loginEmail:function(){
             var emailType = this.state.data.email.split("@")[1].split(".")[0]
@@ -248,6 +253,7 @@
             ReactRouter.Navigation,
             ReactRouter.State],
         emailLogin:function(){
+
             console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!")
             var loginForm = $(".form-group");
             var email = loginForm.find("input[name=account]").val().trim();
@@ -257,10 +263,10 @@
                 if(pwd){
                     var data = {account:email,password:pwd}
                     var url ="/login/submit";
-                    ajaxPost(url,data, function (res) {
+                    ajaxJsonPostTwo(url,data, function (res) {
                         console.log("登录成功")
                         location.href="/#/allSave";
-                    })
+                    },function(){toastr.warning("账户不存在或密码不正确")})
                 }
                 else toastr.warning("请输入密码")
             }

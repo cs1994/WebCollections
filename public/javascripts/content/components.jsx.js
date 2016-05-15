@@ -139,9 +139,12 @@
                         <div className="container-fluid">
 
                             <div className="navbar-header">
-                                <a className="navbar-brand" href="#">
-                                    <img src="/assets/images/brand.png" alt="brand picture"/>
-                                </a>
+                                {
+                                    //<a className="navbar-brand" href="#">
+                                    //    <img src="/assets/images/brand.png" alt="brand picture"/>
+                                    //</a>
+                                }
+
                             </div>
 
                             <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

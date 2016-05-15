@@ -36,7 +36,9 @@
                 this.updateStore();
                 //console.log("@@@@@@@@@@@@@@@@ " +this.state)
             }.bind(this);
-            ajaxGet(url,successFunc);
+            ajaxGetTwo(url,successFunc,100619,function(){
+                toastr.warning("此邮箱已被注册！")
+            });
         },
         onSetPassWord:function(data){
             ajaxPost("/customer/register/email", data, function(res){
